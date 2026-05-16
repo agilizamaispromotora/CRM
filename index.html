@@ -637,7 +637,7 @@ const USUARIOS = {
   nicoly:   {nome:'Nicoly',    senha:'Nic@123',  role:'consultora', iniciais:'NC'}
 };
 
-const SHEETS_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzBoehJY0KVIJtb8zUE4Nch_U1rXi9EtPcr9CrSMndfwqfFPGOdfsBoHZi1Fe_ILCOW/exec';
 
 let usuarioAtual = null;
 
@@ -1195,8 +1195,26 @@ function renderClientes(){
 }
 
 // ═══════════ SHEETS ═══════════
-function enviarSheets(dados){
-  if(!SHEETS_URL||SHEETS_URL==='COLE_AQUI_A_URL_DO_APPS_SCRIPT')return;
+function enviarSheets(prop){
+  if(!SHEETS_URL) return;
+  const dados={
+    data: prop.data||'',
+    consultora: prop.consultora||'',
+    cliente: prop.cliente||'',
+    cpf: prop.cpf||'',
+    telefone: prop.tel||'',
+    convenio: prop.convenio||'',
+    promotora: prop.promotora||'',
+    banco: prop.banco||'',
+    tipoProposta: prop.tipo||'',
+    valorContrato: prop.valor||'0',
+    parcela: prop.parcela||'0',
+    prazo: prop.prazo||'',
+    percentualComissao: prop.comissaoPct||'0',
+    origem: prop.origem||'',
+    status: prop.status||'',
+    obs: prop.obs||''
+  };
   fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)}).catch(()=>{});
 }
 
