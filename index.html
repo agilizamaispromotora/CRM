@@ -1415,9 +1415,9 @@ function rDash(){
   document.getElementById('dash-cards').innerHTML=
     dc('','Total Propostas',fp.length,'no período')+
     dc('la','Em Andamento',emAn,'formalização + análise')+
-    dc('ok','Volume Total',fmtK(totVol),'todas as propostas')+
-    dc('wn','Com. Agiliza',fmtK(totAg),'total')+
-    dc('rx','Com. Vendedoras',fmtK(totVd),'a pagar')+
+    dc('ok','Volume Total',fmt(totVol),'todas as propostas')+
+    dc('wn','Com. Agiliza',fmt(totAg),'total')+
+    dc('rx','Com. Vendedoras',fmt(totVd),'a pagar')+
     dc('pe','Canceladas',fp.filter(function(p){return p.status==='CANCELADA'||p.status==='REPROVADA';}).length,'no período');
   const sts=['FORMALIZAÇÃO','EM ANÁLISE','AG DESBLOQUEIO','AG SALDO DEVEDOR','PAGA','CANCELADA','REPROVADA'];
   document.getElementById('status-grid').innerHTML=sts.map(function(s){
