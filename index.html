@@ -246,6 +246,164 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
   .hm{display:none} .main{padding:10px}
   .dash-grid{grid-template-columns:repeat(2,1fr)}
 }
+
+:root {
+  --blue:#1a3f7a; --blue-mid:#2558b0; --blue-light:#3a78e0;
+  --orange:#f07020; --orange-light:#ff8c38;
+  --white:#fff; --bg:#f4f6fb;
+  --g100:#eef1f7; --g200:#dde3ef; --g300:#b8c3d8; --g500:#6b7a9a; --g700:#3d4a65; --g900:#1a2235;
+  --green:#18a058; --red:#e53e3e;
+  --r:12px; --rs:8px;
+  --sh:0 2px 12px rgba(26,63,122,.10); --shm:0 4px 24px rgba(26,63,122,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--g900);min-height:100vh}
+
+/* HEADER */
+.hdr{background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,63,122,.13);border-bottom:1px solid var(--g200)}
+.hdr-inner{max-width:1140px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:0 22px;height:70px}
+.logo-img{height:54px;width:auto;object-fit:contain}
+.hdr-divider{width:1px;height:38px;background:var(--g200);flex-shrink:0}
+.hdr-sub{font-size:.73rem;color:var(--g500);font-weight:600;margin-left:auto;background:var(--g100);padding:4px 13px;border-radius:20px;border:1px solid var(--g200)}
+.hdr-title{display:flex;flex-direction:column;gap:2px}
+.hdr-t1{font-family:'Sora',sans-serif;font-size:1.08rem;font-weight:800;color:var(--blue);letter-spacing:-.4px}
+.hdr-t2{font-size:.66rem;color:var(--g500);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+
+/* TABS */
+.tabs-bar{background:#fff;border-bottom:2px solid var(--g100);overflow-x:auto;scrollbar-width:none}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tabs-inner{max-width:1140px;margin:0 auto;display:flex;padding:0 16px;gap:2px}
+.tab-btn{flex-shrink:0;font-family:'Sora',sans-serif;font-size:.75rem;font-weight:700;color:var(--g500);background:none;border:none;padding:11px 17px 9px;cursor:pointer;border-bottom:3px solid transparent;transition:all .18s;letter-spacing:.3px;text-transform:uppercase;margin-bottom:-2px}
+.tab-btn:hover{color:var(--blue-mid)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--orange)}
+
+/* MAIN */
+.main{max-width:1140px;margin:0 auto;padding:26px 18px 60px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--g100);margin-bottom:18px;overflow:hidden}
+.card-hdr{padding:14px 22px 12px;border-bottom:2px solid var(--g100);display:flex;align-items:center;gap:10px}
+.card-hdr h2{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:700;color:var(--blue)}
+.ca{width:4px;height:20px;border-radius:2px;background:linear-gradient(to bottom,var(--orange),var(--orange-light));flex-shrink:0}
+.card-body{padding:18px 22px}
+
+/* FORMS */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:13px}
+.fgi{display:flex;flex-direction:column;gap:4px}
+.fgi.s2{grid-column:span 2}
+.fgi.s3{grid-column:span 3}
+.fgi.full{grid-column:1/-1}
+label{font-size:.72rem;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{font-family:'DM Sans',sans-serif;font-size:.91rem;font-weight:500;color:var(--g900);background:var(--g100);border:1.5px solid var(--g200);border-radius:var(--rs);padding:9px 12px;transition:all .17s;outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--blue-light);background:#fff;box-shadow:0 0 0 3px rgba(58,120,224,.12)}
+input::placeholder{color:var(--g300)}
+textarea{resize:vertical;min-height:110px}
+select{cursor:pointer}
+
+/* BUTTONS */
+.btn{font-family:'Sora',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.3px;padding:9px 18px;border-radius:var(--rs);border:none;cursor:pointer;transition:all .17s;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));color:#fff;box-shadow:0 2px 8px rgba(37,88,176,.28)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,88,176,.35)}
+.btn-o{background:linear-gradient(135deg,var(--orange),var(--orange-light));color:#fff;box-shadow:0 2px 8px rgba(240,112,32,.28)}
+.btn-o:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(240,112,32,.35)}
+.btn-out{background:transparent;color:var(--blue-mid);border:1.5px solid var(--blue-mid)}
+.btn-out:hover{background:var(--blue-mid);color:#fff}
+.btn-ghost{background:var(--g100);color:var(--g700)}
+.btn-ghost:hover{background:var(--g200)}
+.btn-sm{padding:6px 13px;font-size:.75rem}
+.btn-grp{display:flex;gap:9px;flex-wrap:wrap;margin-top:5px}
+.btn-danger{background:var(--red);color:#fff}
+
+/* RESULT */
+.res-box{background:linear-gradient(135deg,#f0f6ff,#e8f0fe);border:1.5px solid var(--g200);border-radius:var(--r);padding:14px 18px;margin-top:10px}
+.res-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.res-lbl{font-size:.78rem;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.4px}
+.res-val{font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:800;color:var(--blue)}
+.res-val.or{color:var(--orange)}
+
+/* TOTAIS */
+.totais{background:linear-gradient(135deg,var(--blue),var(--blue-mid));border-radius:var(--r);padding:18px 22px;color:#fff;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.t-item .t-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:3px}
+.t-item .t-val{font-family:'Sora',sans-serif;font-size:1.55rem;font-weight:800}
+.t-item .t-val.or{color:var(--orange-light)}
+
+/* MSG */
+.msg-box{background:var(--g100);border:1.5px solid var(--g200);border-radius:var(--rs);padding:14px;font-size:.86rem;line-height:1.75;color:var(--g700);white-space:pre-wrap;font-family:'Courier New',monospace;max-height:300px;overflow-y:auto}
+
+/* PORT / REFIN items */
+.pitem{border:1.5px solid var(--g200);border-radius:var(--rs);padding:12px 16px;margin-bottom:10px;background:var(--g100);position:relative}
+.pitem .rm{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--red);cursor:pointer;font-size:.9rem;padding:2px 6px;border-radius:4px}
+.pitem .rm:hover{background:#fff5f5}
+.add-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Sora',sans-serif;font-size:.78rem;font-weight:700;color:var(--blue-mid);background:none;border:1.5px dashed var(--blue-light);border-radius:var(--rs);padding:7px 14px;cursor:pointer;transition:all .17s;margin-top:2px}
+.add-btn:hover{background:#f0f6ff;border-style:solid}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:.73rem;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:4px}
+.b-ok{background:#d4edda;color:#1a6b36}
+.b-no{background:#fde8e8;color:#c0392b}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-mid) 60%,var(--blue-light) 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:#fff;border-radius:20px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(0,0,0,.25);text-align:center}
+.login-logo{height:70px;margin-bottom:20px}
+.login-title{font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:800;color:var(--blue);margin-bottom:4px}
+.login-sub{font-size:.82rem;color:var(--g500);margin-bottom:28px}
+.login-box .lfgi{text-align:left;margin-bottom:14px;display:flex;flex-direction:column;gap:4px}
+.login-btn{width:100%;padding:13px;font-size:.95rem;border-radius:var(--rs);margin-top:6px}
+.login-err{background:#fde8e8;color:#c0392b;border-radius:var(--rs);padding:10px 14px;font-size:.83rem;margin-top:12px;display:none}
+/* USER BADGE */
+.user-badge{display:flex;align-items:center;gap:8px;margin-left:auto}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue-mid),var(--orange));display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0}
+.user-info{display:flex;flex-direction:column}
+.user-name{font-size:.78rem;font-weight:700;color:var(--g700);line-height:1.2}
+.user-role{font-size:.67rem;color:var(--g500)}
+.btn-logout{font-size:.72rem;padding:4px 10px;background:var(--g100);border:1px solid var(--g200);border-radius:20px;color:var(--g500);cursor:pointer;font-family:'Sora',sans-serif;font-weight:700;margin-left:4px}
+.btn-logout:hover{background:#fde8e8;color:var(--red);border-color:#f5c6c6}
+
+/* HISTORICO TABLE */
+.htable{width:100%;border-collapse:collapse;font-size:.82rem}
+.htable th{background:var(--g100);color:var(--g500);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:9px 11px;text-align:left;border-bottom:2px solid var(--g200)}
+.htable td{padding:9px 11px;border-bottom:1px solid var(--g100);color:var(--g700);vertical-align:middle}
+.htable tr:hover td{background:#f5f8ff}
+.ctag{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase}
+.ti{background:#dbeafe;color:#1d4ed8}
+.tp{background:#d1fae5;color:#065f46}
+.ts{background:#ede9fe;color:#5b21b6}
+.tc{background:#fef3c7;color:#92400e}
+.tf{background:#ffedd5;color:#9a3412}
+
+/* ALERT */
+.alert{border-radius:var(--rs);padding:10px 14px;font-size:.82rem;margin-top:7px}
+.a-info{background:#eff6ff;color:#1d4ed8;border-left:3px solid #3b82f6}
+.a-warn{background:#fffbeb;color:#92400e;border-left:3px solid #f59e0b}
+
+/* EMPTY */
+.empty{text-align:center;padding:38px 20px;color:var(--g300)}
+.empty .eico{font-size:2.2rem;margin-bottom:8px}
+.empty p{font-size:.86rem}
+
+/* SECTION TITLE */
+.stitle{font-family:'Sora',sans-serif;font-size:.82rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--g200)}
+
+/* FGTS ANOS */
+.fgts-anos{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.fgts-ano{display:flex;flex-direction:column;gap:4px}
+.fgts-ano label{font-size:.7rem}
+.fgts-ano input{width:108px}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .fg{grid-template-columns:1fr 1fr}
+  .fgi.s2,.fgi.s3{grid-column:span 2}
+  .totais{flex-direction:column}
+  .t-item .t-val{font-size:1.2rem}
+  .card-body{padding:14px}
+}
+
+/* FIM CSS SIMULADOR */
 </style>
 </head>
 <body>
@@ -375,18 +533,484 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 
     <!-- SIMULADOR -->
     <div id="asim" style="display:none">
-      <div class="sim-wrap">
-        <div class="sim-tabs">
-          <button class="sim-tab ativo" onclick="simTab(this,'sinss')">&#128203; INSS</button>
-          <button class="sim-tab" onclick="simTab(this,'sgovpr')">&#127984; Gov. PR</button>
-          <button class="sim-tab" onclick="simTab(this,'ssiape')">&#128307; SIAPE</button>
-          <button class="sim-tab" onclick="simTab(this,'spref')">&#127963; Prefeitura</button>
-          <button class="sim-tab" onclick="simTab(this,'sclt')">&#128998; CLT</button>
-          <button class="sim-tab" onclick="simTab(this,'sfgts')">&#128999; FGTS</button>
+      <div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);overflow:hidden;box-shadow:var(--sombra)">
+        <div class="tabs-bar" style="background:var(--branco)">
+          <div class="tabs-inner">
+            <button class="tab-btn active" onclick="switchTab('inss')">&#128203; INSS</button>
+            <button class="tab-btn" onclick="switchTab('govpr')">&#127984; Gov. PR</button>
+            <button class="tab-btn" onclick="switchTab('siape')">&#128307; SIAPE</button>
+            <button class="tab-btn" onclick="switchTab('prefeitura')">&#127963; Prefeitura</button>
+            <button class="tab-btn" onclick="switchTab('clt')">&#128998; CLT</button>
+            <button class="tab-btn" onclick="switchTab('fgts')">&#128999; FGTS</button>
+          </div>
         </div>
-        <div class="sim-body" id="sim-body">
-          <div class="vazio"><div class="ico">&#129518;</div><p>Selecione um tipo acima para simular</p></div>
+        <div style="padding:16px">
+
+<!-- ══════════════════════════ INSS ══════════════════════════ -->
+<div id="tab-inss" class="tab-content active">
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Dados do Cliente — INSS</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi s2"><label>Cliente</label><input type="text" id="inss-nome" placeholder="Nome completo"></div>
+        <div class="fgi"><label>CPF</label><input type="text" id="inss-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fgi"><label>Telefone</label><input type="text" id="inss-tel" placeholder="(41) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fgi"><label>Tipo de Benefício</label>
+          <select id="inss-beneficio">
+            <option value="Aposentadoria">Aposentadoria</option>
+            <option value="Pensão por Morte">Pensão por Morte</option>
+          </select>
         </div>
+        <div class="fgi"><label>1ª Parcela para</label><input type="text" id="inss-parc1" placeholder="Ex: Julho/2026"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Margem Nova (40%)</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi"><label>Banco</label><input type="text" id="inss-mn-banco" placeholder="Ex: FACTA"></div>
+        <div class="fgi"><label>Prazo</label><input type="number" id="inss-mn-prazo" placeholder="Ex: 108"></div>
+        <div class="fgi"><label>Coeficiente</label><input type="text" id="inss-mn-coef" placeholder="Ex: 0,022680"></div>
+        <div class="fgi"><label>Parcela (R$)</label><input type="text" id="inss-mn-parcela" placeholder="Ex: 175,57"></div>
+        <div class="fgi"><label>Valor Liberado (R$)</label><input type="text" id="inss-mn-vl" placeholder="Calculado auto"></div>
+      </div>
+      <div class="btn-grp" style="margin-top:12px">
+        <button class="btn btn-out btn-sm" onclick="calcVL('inss-mn-parcela','inss-mn-coef','inss-mn-vl')">→ Calcular Valor Liberado</button>
+        <button class="btn btn-out btn-sm" onclick="calcParc('inss-mn-vl','inss-mn-coef','inss-mn-parcela')">→ Calcular Parcela</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Portabilidade + Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="inss-port-list"></div>
+      <button class="add-btn" onclick="addItem('inss-port-list','port')">+ Adicionar Portabilidade + Refin</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="inss-refin-list"></div>
+      <button class="add-btn" onclick="addItem('inss-refin-list','refin')">+ Adicionar Refinanciamento</button>
+    </div>
+  </div>
+
+  <div id="inss-totais" class="totais" style="display:none">
+    <div class="t-item"><div class="t-lbl">Total Liberado</div><div class="t-val" id="inss-ttl-lib">R$ 0,00</div></div>
+    <div class="t-item"><div class="t-lbl">Total de Parcela</div><div class="t-val or" id="inss-ttl-parc">R$ 0,00</div></div>
+  </div>
+  <div class="btn-grp">
+    <button class="btn btn-p" onclick="gerar('inss')">📄 Gerar Simulação</button>
+    <button class="btn btn-o" onclick="copiarWpp('inss')">💬 Copiar WhatsApp</button>
+    <button class="btn btn-ghost" onclick="salvar('inss')">💾 Salvar</button>
+    <button class="btn btn-ghost" onclick="limpar('inss')">🗑 Limpar</button>
+  </div>
+  <div id="inss-msg-card" class="card" style="display:none;margin-top:18px">
+    <div class="card-hdr"><div class="ca"></div><h2>Mensagem Pronta</h2></div>
+    <div class="card-body"><div class="msg-box" id="inss-msg"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ GOV PR ══════════════════════════ -->
+<div id="tab-govpr" class="tab-content">
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Dados do Cliente — Governo Estadual</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi s2"><label>Cliente</label><input type="text" id="pr-nome" placeholder="Nome completo"></div>
+        <div class="fgi"><label>CPF</label><input type="text" id="pr-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fgi"><label>Telefone</label><input type="text" id="pr-tel" placeholder="(41) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fgi"><label>Estado</label>
+          <select id="pr-estado">
+            <option value="AC">AC — Acre</option>
+            <option value="AL">AL — Alagoas</option>
+            <option value="AP">AP — Amapá</option>
+            <option value="AM">AM — Amazonas</option>
+            <option value="BA">BA — Bahia</option>
+            <option value="CE">CE — Ceará</option>
+            <option value="DF">DF — Distrito Federal</option>
+            <option value="ES">ES — Espírito Santo</option>
+            <option value="GO">GO — Goiás</option>
+            <option value="MA">MA — Maranhão</option>
+            <option value="MT">MT — Mato Grosso</option>
+            <option value="MS">MS — Mato Grosso do Sul</option>
+            <option value="MG">MG — Minas Gerais</option>
+            <option value="PA">PA — Pará</option>
+            <option value="PB">PB — Paraíba</option>
+            <option value="PR" selected>PR — Paraná</option>
+            <option value="PE">PE — Pernambuco</option>
+            <option value="PI">PI — Piauí</option>
+            <option value="RJ">RJ — Rio de Janeiro</option>
+            <option value="RN">RN — Rio Grande do Norte</option>
+            <option value="RS">RS — Rio Grande do Sul</option>
+            <option value="RO">RO — Rondônia</option>
+            <option value="RR">RR — Roraima</option>
+            <option value="SC">SC — Santa Catarina</option>
+            <option value="SP">SP — São Paulo</option>
+            <option value="SE">SE — Sergipe</option>
+            <option value="TO">TO — Tocantins</option>
+          </select>
+        </div>
+        <div class="fgi"><label>Tipo</label>
+          <select id="pr-tipo">
+            <option value="Servidor Ativo">Servidor Ativo</option>
+            <option value="Aposentado">Aposentado</option>
+            <option value="Pensionista">Pensionista</option>
+          </select>
+        </div>
+        <div class="fgi"><label>1ª Parcela para</label><input type="text" id="pr-parc1" placeholder="Ex: Julho/2026"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Margem Nova (40%) — Prazo até 120x</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi"><label>Banco</label><input type="text" id="pr-mn-banco" placeholder="Ex: BANRISUL"></div>
+        <div class="fgi"><label>Prazo</label><input type="number" id="pr-mn-prazo" placeholder="Máx: 120" max="120"></div>
+        <div class="fgi"><label>Coeficiente</label><input type="text" id="pr-mn-coef" placeholder="Ex: 0,020500"></div>
+        <div class="fgi"><label>Parcela (R$)</label><input type="text" id="pr-mn-parcela" placeholder="Ex: 200,00"></div>
+        <div class="fgi"><label>Valor Liberado (R$)</label><input type="text" id="pr-mn-vl" placeholder="Calculado auto"></div>
+      </div>
+      <div class="btn-grp" style="margin-top:12px">
+        <button class="btn btn-out btn-sm" onclick="calcVL('pr-mn-parcela','pr-mn-coef','pr-mn-vl')">→ Calc. Valor Liberado</button>
+        <button class="btn btn-out btn-sm" onclick="calcParc('pr-mn-vl','pr-mn-coef','pr-mn-parcela')">→ Calc. Parcela</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Cartão Benefício — Margem 5%</h2></div>
+    <div class="card-body">
+      <div class="alert a-info">💳 <strong>Como funciona:</strong> A margem do cartão é de 5% do benefício. O banco libera um valor total pelo coeficiente, mas o cliente <strong>paga apenas 70%</strong> dessa parcela mensalmente — os outros 30% ficam disponíveis como crédito rotativo no cartão. O cliente também <strong>saca apenas 70%</strong> do valor total liberado.</div>
+      <div class="fg" style="margin-top:14px">
+        <div class="fgi"><label>Banco do Cartão</label><input type="text" id="pr-cart-banco" placeholder="Ex: BMG"></div>
+        <div class="fgi"><label>Margem Disponível (R$)</label><input type="text" id="pr-cart-margem" placeholder="Ex: 150,00" oninput="calcCartaoAuto('pr')"></div>
+        <div class="fgi"><label>Prazo</label><input type="number" id="pr-cart-prazo" placeholder="Ex: 120" max="120"></div>
+        <div class="fgi"><label>Coeficiente</label><input type="text" id="pr-cart-coef" placeholder="Ex: 0,031260" oninput="calcCartaoAuto('pr')"></div>
+        <div class="fgi"><label>Parcela Total (R$)</label><input type="text" id="pr-cart-parcela" placeholder="Calculado auto" readonly style="background:#e8f0fe;font-weight:700"></div>
+      </div>
+      <button class="btn btn-out btn-sm" style="margin-top:10px" onclick="calcCartaoAuto('pr')">⚡ Calcular Cartão</button>
+      <div id="pr-cart-result" style="display:none" class="res-box">
+        <div class="res-row"><span class="res-lbl">Parcela Total (100%)</span><span class="res-val" id="pr-cart-parcela-total">—</span></div>
+        <div class="res-row"><span class="res-lbl">💳 Parcela que o Cliente Paga (70%)</span><span class="res-val or" id="pr-cart-paga">—</span></div>
+        <div class="res-row"><span class="res-lbl">Crédito Rotativo Cartão (30%)</span><span class="res-val" id="pr-cart-cred">—</span></div>
+        <div class="res-row"><span class="res-lbl">Valor Total Liberado</span><span class="res-val" id="pr-cart-lib-total">—</span></div>
+        <div class="res-row"><span class="res-lbl">💰 Valor que o Cliente Saca (70%)</span><span class="res-val or" id="pr-cart-lib">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Portabilidade + Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="pr-port-list"></div>
+      <button class="add-btn" onclick="addItem('pr-port-list','port')">+ Adicionar Portabilidade + Refin</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="pr-refin-list"></div>
+      <button class="add-btn" onclick="addItem('pr-refin-list','refin')">+ Adicionar Refinanciamento</button>
+    </div>
+  </div>
+
+  <div id="pr-totais" class="totais" style="display:none">
+    <div class="t-item"><div class="t-lbl">Total Liberado</div><div class="t-val" id="pr-ttl-lib">R$ 0,00</div></div>
+    <div class="t-item"><div class="t-lbl">Total de Parcela</div><div class="t-val or" id="pr-ttl-parc">R$ 0,00</div></div>
+  </div>
+  <div class="btn-grp">
+    <button class="btn btn-p" onclick="gerar('govpr')">📄 Gerar Simulação</button>
+    <button class="btn btn-o" onclick="copiarWpp('govpr')">💬 Copiar WhatsApp</button>
+    <button class="btn btn-ghost" onclick="salvar('govpr')">💾 Salvar</button>
+    <button class="btn btn-ghost" onclick="limpar('govpr')">🗑 Limpar</button>
+  </div>
+  <div id="govpr-msg-card" class="card" style="display:none;margin-top:18px">
+    <div class="card-hdr"><div class="ca"></div><h2>Mensagem Pronta</h2></div>
+    <div class="card-body"><div class="msg-box" id="govpr-msg"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ SIAPE ══════════════════════════ -->
+<div id="tab-siape" class="tab-content">
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Dados do Cliente — SIAPE (Servidor Federal)</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi s2"><label>Cliente</label><input type="text" id="si-nome" placeholder="Nome completo"></div>
+        <div class="fgi"><label>CPF</label><input type="text" id="si-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fgi"><label>Telefone</label><input type="text" id="si-tel" placeholder="(41) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fgi"><label>Tipo</label>
+          <select id="si-tipo">
+            <option value="Servidor Ativo Federal">Servidor Ativo Federal</option>
+            <option value="Aposentado Federal">Aposentado Federal</option>
+            <option value="Pensionista Federal">Pensionista Federal</option>
+          </select>
+        </div>
+        <div class="fgi"><label>1ª Parcela para</label><input type="text" id="si-parc1" placeholder="Ex: Julho/2026"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Margem Nova (40%) — Prazo até 120x</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi"><label>Banco</label><input type="text" id="si-mn-banco" placeholder="Ex: CAIXA"></div>
+        <div class="fgi"><label>Prazo</label><input type="number" id="si-mn-prazo" placeholder="Máx: 120" max="120"></div>
+        <div class="fgi"><label>Coeficiente</label><input type="text" id="si-mn-coef" placeholder="Ex: 0,019800"></div>
+        <div class="fgi"><label>Parcela (R$)</label><input type="text" id="si-mn-parcela" placeholder="Ex: 250,00"></div>
+        <div class="fgi"><label>Valor Liberado (R$)</label><input type="text" id="si-mn-vl" placeholder="Calculado auto"></div>
+      </div>
+      <div class="btn-grp" style="margin-top:12px">
+        <button class="btn btn-out btn-sm" onclick="calcVL('si-mn-parcela','si-mn-coef','si-mn-vl')">→ Calc. Valor Liberado</button>
+        <button class="btn btn-out btn-sm" onclick="calcParc('si-mn-vl','si-mn-coef','si-mn-parcela')">→ Calc. Parcela</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Portabilidade + Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="si-port-list"></div>
+      <button class="add-btn" onclick="addItem('si-port-list','port')">+ Adicionar Portabilidade + Refin</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="si-refin-list"></div>
+      <button class="add-btn" onclick="addItem('si-refin-list','refin')">+ Adicionar Refinanciamento</button>
+    </div>
+  </div>
+
+  <div id="si-totais" class="totais" style="display:none">
+    <div class="t-item"><div class="t-lbl">Total Liberado</div><div class="t-val" id="si-ttl-lib">R$ 0,00</div></div>
+    <div class="t-item"><div class="t-lbl">Total de Parcela</div><div class="t-val or" id="si-ttl-parc">R$ 0,00</div></div>
+  </div>
+  <div class="btn-grp">
+    <button class="btn btn-p" onclick="gerar('siape')">📄 Gerar Simulação</button>
+    <button class="btn btn-o" onclick="copiarWpp('siape')">💬 Copiar WhatsApp</button>
+    <button class="btn btn-ghost" onclick="salvar('siape')">💾 Salvar</button>
+    <button class="btn btn-ghost" onclick="limpar('siape')">🗑 Limpar</button>
+  </div>
+  <div id="siape-msg-card" class="card" style="display:none;margin-top:18px">
+    <div class="card-hdr"><div class="ca"></div><h2>Mensagem Pronta</h2></div>
+    <div class="card-body"><div class="msg-box" id="siape-msg"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ PREFEITURA ══════════════════════════ -->
+<div id="tab-prefeitura" class="tab-content">
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Dados do Cliente — Prefeitura Municipal</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi s2"><label>Cliente</label><input type="text" id="pref-nome" placeholder="Nome completo"></div>
+        <div class="fgi"><label>CPF</label><input type="text" id="pref-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fgi"><label>Telefone</label><input type="text" id="pref-tel" placeholder="(41) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fgi"><label>Município</label><input type="text" id="pref-municipio" placeholder="Ex: Curitiba, Londrina..."></div>
+        <div class="fgi"><label>Tipo</label>
+          <select id="pref-tipo">
+            <option value="Servidor Ativo Municipal">Servidor Ativo Municipal</option>
+            <option value="Aposentado Municipal">Aposentado Municipal</option>
+            <option value="Pensionista Municipal">Pensionista Municipal</option>
+          </select>
+        </div>
+        <div class="fgi"><label>1ª Parcela para</label><input type="text" id="pref-parc1" placeholder="Ex: Julho/2026"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Margem Nova (40%) — Prazo até 120x</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi"><label>Banco</label><input type="text" id="pref-mn-banco" placeholder="Ex: BANRISUL"></div>
+        <div class="fgi"><label>Prazo</label><input type="number" id="pref-mn-prazo" placeholder="Máx: 120" max="120"></div>
+        <div class="fgi"><label>Coeficiente</label><input type="text" id="pref-mn-coef" placeholder="Ex: 0,020500"></div>
+        <div class="fgi"><label>Parcela (R$)</label><input type="text" id="pref-mn-parcela" placeholder="Ex: 200,00"></div>
+        <div class="fgi"><label>Valor Liberado (R$)</label><input type="text" id="pref-mn-vl" placeholder="Calculado auto"></div>
+      </div>
+      <div class="btn-grp" style="margin-top:12px">
+        <button class="btn btn-out btn-sm" onclick="calcVL('pref-mn-parcela','pref-mn-coef','pref-mn-vl')">→ Calc. Valor Liberado</button>
+        <button class="btn btn-out btn-sm" onclick="calcParc('pref-mn-vl','pref-mn-coef','pref-mn-parcela')">→ Calc. Parcela</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Cartão Benefício — Margem 5%</h2></div>
+    <div class="card-body">
+      <div class="alert a-info">💳 <strong>Como funciona:</strong> A margem do cartão é de 5% do benefício. O banco libera um valor total pelo coeficiente, mas o cliente <strong>paga apenas 70%</strong> dessa parcela mensalmente — os outros 30% ficam disponíveis como crédito rotativo no cartão. O cliente também <strong>saca apenas 70%</strong> do valor total liberado.</div>
+      <div class="fg" style="margin-top:14px">
+        <div class="fgi"><label>Banco do Cartão</label><input type="text" id="pref-cart-banco" placeholder="Ex: BMG"></div>
+        <div class="fgi"><label>Margem Disponível (R$)</label><input type="text" id="pref-cart-margem" placeholder="Ex: 150,00" oninput="calcCartaoAuto('pref')"></div>
+        <div class="fgi"><label>Prazo</label><input type="number" id="pref-cart-prazo" placeholder="Ex: 120" max="120"></div>
+        <div class="fgi"><label>Coeficiente</label><input type="text" id="pref-cart-coef" placeholder="Ex: 0,031260" oninput="calcCartaoAuto('pref')"></div>
+        <div class="fgi"><label>Parcela Total (R$)</label><input type="text" id="pref-cart-parcela" placeholder="Calculado auto" readonly style="background:#e8f0fe;font-weight:700"></div>
+        <div class="fgi"><label>Parcela Total (R$)</label><input type="text" id="pref-cart-parcela" placeholder="Calculado auto" readonly style="background:#e8f0fe;font-weight:700"></div>
+      </div>
+      <button class="btn btn-out btn-sm" style="margin-top:10px" onclick="calcCartaoAuto('pref')">⚡ Calcular Cartão</button>
+      <div id="pref-cart-result" style="display:none" class="res-box">
+        <div class="res-row"><span class="res-lbl">Parcela Total (100%)</span><span class="res-val" id="pref-cart-parcela-total">—</span></div>
+        <div class="res-row"><span class="res-lbl">💳 Parcela que o Cliente Paga (70%)</span><span class="res-val or" id="pref-cart-paga">—</span></div>
+        <div class="res-row"><span class="res-lbl">Crédito Rotativo Cartão (30%)</span><span class="res-val" id="pref-cart-cred">—</span></div>
+        <div class="res-row"><span class="res-lbl">Valor Total Liberado</span><span class="res-val" id="pref-cart-lib-total">—</span></div>
+        <div class="res-row"><span class="res-lbl">💰 Valor que o Cliente Saca (70%)</span><span class="res-val or" id="pref-cart-lib">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Portabilidade + Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="pref-port-list"></div>
+      <button class="add-btn" onclick="addItem('pref-port-list','port')">+ Adicionar Portabilidade + Refin</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Refinanciamento</h2></div>
+    <div class="card-body">
+      <div id="pref-refin-list"></div>
+      <button class="add-btn" onclick="addItem('pref-refin-list','refin')">+ Adicionar Refinanciamento</button>
+    </div>
+  </div>
+
+  <div id="pref-totais" class="totais" style="display:none">
+    <div class="t-item"><div class="t-lbl">Total Liberado</div><div class="t-val" id="pref-ttl-lib">R$ 0,00</div></div>
+    <div class="t-item"><div class="t-lbl">Total de Parcela</div><div class="t-val or" id="pref-ttl-parc">R$ 0,00</div></div>
+  </div>
+  <div class="btn-grp">
+    <button class="btn btn-p" onclick="gerar('prefeitura')">📄 Gerar Simulação</button>
+    <button class="btn btn-o" onclick="copiarWpp('prefeitura')">💬 Copiar WhatsApp</button>
+    <button class="btn btn-ghost" onclick="salvar('prefeitura')">💾 Salvar</button>
+    <button class="btn btn-ghost" onclick="limpar('prefeitura')">🗑 Limpar</button>
+  </div>
+  <div id="prefeitura-msg-card" class="card" style="display:none;margin-top:18px">
+    <div class="card-hdr"><div class="ca"></div><h2>Mensagem Pronta</h2></div>
+    <div class="card-body"><div class="msg-box" id="prefeitura-msg"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ CLT ══════════════════════════ -->
+<div id="tab-clt" class="tab-content">
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Dados do Cliente — CLT (Carteira Assinada)</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi s2"><label>Cliente</label><input type="text" id="clt-nome" placeholder="Nome completo"></div>
+        <div class="fgi"><label>Telefone</label><input type="text" id="clt-tel" placeholder="(41) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fgi"><label>Data de Nascimento</label><input type="text" id="clt-nasc" placeholder="DD/MM/AAAA" oninput="maskData(this)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Proposta por Banco</h2></div>
+    <div class="card-body">
+      <div id="clt-banco-list"></div>
+      <button class="add-btn" onclick="addCLTBanco()">+ Adicionar Banco</button>
+    </div>
+  </div>
+
+  <div class="btn-grp">
+    <button class="btn btn-p" onclick="gerar('clt')">📄 Gerar Simulação</button>
+    <button class="btn btn-o" onclick="copiarWpp('clt')">💬 Copiar WhatsApp</button>
+    <button class="btn btn-ghost" onclick="salvar('clt')">💾 Salvar</button>
+    <button class="btn btn-ghost" onclick="limpar('clt')">🗑 Limpar</button>
+  </div>
+  <div id="clt-msg-card" class="card" style="display:none;margin-top:18px">
+    <div class="card-hdr"><div class="ca"></div><h2>Mensagem para o Lojista</h2></div>
+    <div class="card-body"><div class="msg-box" id="clt-msg"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ FGTS ══════════════════════════ -->
+<div id="tab-fgts" class="tab-content">
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Dados do Cliente — FGTS (Antecipação Saque-Aniversário)</h2></div>
+    <div class="card-body">
+      <div class="fg">
+        <div class="fgi s2"><label>Cliente</label><input type="text" id="fg-nome" placeholder="Nome completo"></div>
+        <div class="fgi"><label>CPF</label><input type="text" id="fg-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fgi"><label>Telefone</label><input type="text" id="fg-tel" placeholder="(41) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fgi"><label>Banco</label><input type="text" id="fg-banco" placeholder="Ex: CAIXA / ITAÚ"></div>
+        <div class="fgi"><label>Prazo (anos)</label><input type="number" id="fg-prazo" placeholder="Ex: 5" min="1" max="10"></div>
+        <div class="fgi"><label>Valor Liberado (R$)</label><input type="text" id="fg-vl" placeholder="Ex: 3.500,00"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ca"></div><h2>Parcelas Anuais (opcional — para detalhamento)</h2></div>
+    <div class="card-body">
+      <p style="font-size:.83rem;color:var(--g500);margin-bottom:10px">Preencha o valor de cada parcela anual de saque se quiser incluir o detalhamento na mensagem.</p>
+      <div class="fgts-anos" id="fg-anos-list"></div>
+      <button class="add-btn" style="margin-top:10px" onclick="addFgtsAno()">+ Adicionar Ano</button>
+    </div>
+  </div>
+
+  <div class="btn-grp">
+    <button class="btn btn-p" onclick="gerar('fgts')">📄 Gerar Simulação</button>
+    <button class="btn btn-o" onclick="copiarWpp('fgts')">💬 Copiar WhatsApp</button>
+    <button class="btn btn-ghost" onclick="gerarSemSaldo()">⏳ Sem Saldo — Registrar</button>
+    <button class="btn btn-ghost" onclick="salvar('fgts')">💾 Salvar</button>
+    <button class="btn btn-ghost" onclick="limpar('fgts')">🗑 Limpar</button>
+  </div>
+  <div id="fgts-msg-card" class="card" style="display:none;margin-top:18px">
+    <div class="card-hdr"><div class="ca"></div><h2>Mensagem Pronta</h2></div>
+    <div class="card-body"><div class="msg-box" id="fgts-msg"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ HISTÓRICO ══════════════════════════ -->
+<div id="tab-historico" class="tab-content">
+  <div class="card">
+    <div class="card-hdr">
+      <div class="ca"></div><h2>Histórico de Simulações</h2>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="exportarCSV()">⬇ Exportar CSV</button>
+        <button class="btn btn-danger btn-sm" onclick="limparHistorico()">🗑 Limpar Tudo</button>
+      </div>
+    </div>
+    <div class="card-body" style="overflow-x:auto">
+      <div id="hist-empty" class="empty"><div class="eico">📋</div><p>Nenhuma simulação salva ainda.<br>Preencha os dados e clique em <strong>Salvar</strong>.</p></div>
+      <table class="htable" id="hist-table" style="display:none">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Usuário</th>
+            <th>Convênio</th>
+            <th>Cliente</th>
+            <th>CPF/Tel</th>
+            <th>Total Liberado</th>
+            <th>Parcela</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="hist-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
       </div>
     </div>
 
@@ -555,7 +1179,7 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 <div class="toast" id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbzv9ygYj0PWCzNYMYu1L_D_jE9oSjYA3qU00TPQWhWaGVqu-w_DModCT0RBzjcVaVBQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbxc_AxGzBvaTfmVzLGqT-9HGV20HmakEKNz0uT7UflJrGVOkbtvzbXRu1A3Ojb3ppXC/exec";
 const US = {"Ana Lucia":"Facta15@","Tatielle":"Taty@123","Nicoly":"Nic@123"};
 const GESTOR = "Ana Lucia";
 let S = {u:null,props:[],agenda:[],ftProps:[],pg:1,pp:15,ed:null,det:null,periodo:"mes",rankPeriodo:"mes"};
@@ -1038,20 +1662,7 @@ function rGest(){
     </div>`).join("");
 }
 
-// ── SIMULADOR ──
-function simTab(btn,id){
-  document.querySelectorAll(".sim-tab").forEach(b=>b.classList.remove("ativo"));
-  btn.classList.add("ativo");
-  const conteudos={
-    sinss:"<p style='padding:20px;color:var(--cinza-txt)'>Simulador INSS — Use o simulador completo em agilizamaispromotora.github.io/radardevendas</p>",
-    sgovpr:"<p style='padding:20px;color:var(--cinza-txt)'>Simulador Governo PR</p>",
-    ssiape:"<p style='padding:20px;color:var(--cinza-txt)'>Simulador SIAPE</p>",
-    spref:"<p style='padding:20px;color:var(--cinza-txt)'>Simulador Prefeitura</p>",
-    sclt:"<p style='padding:20px;color:var(--cinza-txt)'>Simulador CLT</p>",
-    sfgts:"<p style='padding:20px;color:var(--cinza-txt)'>Simulador FGTS</p>"
-  };
-  document.getElementById("sim-body").innerHTML=conteudos[id]||"";
-}
+// Simulador integrado abaixo
 
 // ── HELPERS ──
 function badgeSt(s){
@@ -1059,7 +1670,17 @@ function badgeSt(s){
   return`<span class="badge ${m[s]||"b-grey"}">${X(s)||"—"}</span>`;
 }
 function X(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function fDH(d,h){if(!d)return"—";return new Date(d+"T12:00").toLocaleDateString("pt-BR")+(h?" "+h:"")}
+function fDH(d,h){
+  if(!d||d==="")return"—";
+  try{
+    const parts=d.split("-");
+    if(parts.length===3){
+      const dt=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+      return dt.toLocaleDateString("pt-BR")+(h?" "+h:"");
+    }
+    return d+(h?" "+h:"");
+  }catch(e){return d+(h?" "+h:"");}
+}
 function aM(id){document.getElementById(id).classList.add("aberto")}
 function fM(id){document.getElementById(id).classList.remove("aberto")}
 document.querySelectorAll(".mov").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("aberto")}));
@@ -1071,6 +1692,570 @@ function mTel(el){let v=el.value.replace(/\D/g,"").slice(0,11);if(v.length>10)v=
 function mVal(el){let v=el.value.replace(/\D/g,"");if(!v){el.value="";return}v=(parseFloat(v)/100).toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".");el.value=v}
 function mVal2(el){mVal(el)}
 function toast(msg,tipo=""){const t=document.getElementById("toast");t.textContent=msg;t.className="toast visivel "+tipo;setTimeout(()=>t.className="toast",3500)}
+
+// ═══════════════════ USUÁRIOS E LOGIN ═══════════════════
+function switchTab(id){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(id==='historico') renderHistorico();
+}
+
+// ═══════════════════ MASKS ═══════════════════
+function maskCPF(el){
+  let v=el.value.replace(/\D/g,'');
+  v=v.slice(0,11);
+  if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+  else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
+  else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
+  el.value=v;
+}
+function maskTel(el){
+  let v=el.value.replace(/\D/g,'');
+  v=v.slice(0,11);
+  if(v.length>6) v=v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');
+  else if(v.length>2) v=v.replace(/(\d{2})(\d{0,5})/,'($1) $2');
+  el.value=v;
+}
+function maskData(el){
+  let v=el.value.replace(/\D/g,'');
+  v=v.slice(0,8);
+  if(v.length>4) v=v.replace(/(\d{2})(\d{2})(\d{0,4})/,'$1/$2/$3');
+  else if(v.length>2) v=v.replace(/(\d{2})(\d{0,2})/,'$1/$2');
+  el.value=v;
+}
+
+// ═══════════════════ PARSING / FORMAT ═══════════════════
+function parseBR(str){
+  if(!str) return 0;
+  str=String(str).trim().replace(/\./g,'').replace(',','.');
+  return parseFloat(str)||0;
+}
+function fmtBR(n){
+  return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+// ═══════════════════ CALC HELPERS ═══════════════════
+function calcVL(parcId, coefId, vlId){
+  const parc=parseBR(document.getElementById(parcId).value);
+  const coef=parseBR(document.getElementById(coefId).value);
+  if(parc&&coef){ document.getElementById(vlId).value=fmtBR(parc/coef); }
+  else alert('Preencha Parcela e Coeficiente para calcular o Valor Liberado.');
+}
+function calcParc(vlId, coefId, parcId){
+  const vl=parseBR(document.getElementById(vlId).value);
+  const coef=parseBR(document.getElementById(coefId).value);
+  if(vl&&coef){ document.getElementById(parcId).value=fmtBR(vl*coef); }
+  else alert('Preencha Valor Liberado e Coeficiente para calcular a Parcela.');
+}
+function calcCartaoAuto(pref){
+  const margem=parseBR(document.getElementById(pref+'-cart-margem').value);
+  const coef=parseBR(document.getElementById(pref+'-cart-coef').value);
+  if(!margem||!coef){ return; }
+  // margem = parcela total (100%)
+  // cliente paga apenas 70% dessa parcela
+  // valor liberado = parcela70 / coeficiente
+  const parc70=margem*0.7;             // parcela que o cliente paga
+  const parc30=margem*0.3;             // fica como crédito rotativo
+  const vlLiberado=parc70/coef;        // valor que o cliente saca
+  document.getElementById(pref+'-cart-parcela').value=fmtBR(parc70);
+  document.getElementById(pref+'-cart-parcela-total').textContent='R$ '+fmtBR(margem);
+  document.getElementById(pref+'-cart-paga').textContent='R$ '+fmtBR(parc70);
+  document.getElementById(pref+'-cart-cred').textContent='R$ '+fmtBR(parc30);
+  document.getElementById(pref+'-cart-lib-total').textContent='R$ '+fmtBR(vlLiberado);
+  document.getElementById(pref+'-cart-lib').textContent='R$ '+fmtBR(vlLiberado);
+  document.getElementById(pref+'-cart-result').style.display='block';
+}
+
+// ═══════════════════ PORT / REFIN ITEMS ═══════════════════
+function addItem(listId, tipo){
+  const el=document.getElementById(listId);
+  const idx=el.children.length;
+  const title=tipo==='port'?'Portabilidade + Refin':'Refinanciamento';
+  const hint=tipo==='port'?'Parcela atual debitada no benefício':'Parcela atual do contrato';
+  const div=document.createElement('div');
+  div.className='pitem';
+  div.dataset.tipo=tipo;
+  div.innerHTML=`
+    <button class="rm" onclick="this.parentElement.remove()">✕</button>
+    <div class="fg" style="padding-right:30px">
+      <div class="fgi"><label>${hint} (R$)</label><input type="text" class="pr-parcela-atual" placeholder="Ex: 120,36"></div>
+      <div class="fgi"><label>Estende para</label><input type="number" class="pr-prazo" placeholder="Ex: 108"></div>
+      <div class="fgi"><label>Libera (R$)</label><input type="text" class="pr-libera" placeholder="Ex: 585,00"></div>
+    </div>
+    ${tipo==='port'?`<div class="alert a-info" style="margin-top:8px">ℹ️ Essa parcela já é descontada no benefício — não entra no total de novas parcelas.</div>`:''}
+  `;
+  el.appendChild(div);
+}
+
+// ═══════════════════ CLT BANCO ITEMS ═══════════════════
+function addCLTBanco(){
+  const el=document.getElementById('clt-banco-list');
+  const div=document.createElement('div');
+  div.className='banco-item';
+  div.innerHTML=`
+    <button class="rm" onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:10px;background:none;border:none;color:var(--red);cursor:pointer;font-size:.9rem;padding:2px 6px">✕</button>
+    <div class="fg" style="padding-right:30px">
+      <div class="fgi"><label>Banco</label><input type="text" class="clt-banco" placeholder="Ex: BANRISUL"></div>
+      <div class="fgi"><label>Parcela (R$)</label><input type="text" class="clt-parcela" placeholder="Ex: 350,00"></div>
+      <div class="fgi"><label>Prazo</label><input type="number" class="clt-prazo" placeholder="Ex: 48"></div>
+      <div class="fgi"><label>Valor Liberado (R$)</label><input type="text" class="clt-vliberado" placeholder="Ex: 12.000,00"></div>
+      <div class="fgi"><label>Status</label>
+        <select class="clt-status">
+          <option value="Aprovado">✅ Aprovado</option>
+          <option value="Não Aprovado">❌ Não Aprovado</option>
+          <option value="Análise">🔄 Em Análise</option>
+        </select>
+      </div>
+    </div>
+  `;
+  el.appendChild(div);
+}
+
+// ═══════════════════ FGTS ANO ═══════════════════
+function addFgtsAno(){
+  const el=document.getElementById('fg-anos-list');
+  const n=el.children.length+1;
+  const div=document.createElement('div');
+  div.className='fgts-ano';
+  div.innerHTML=`<label>Ano ${n} (R$)</label><input type="text" class="fg-ano-val" placeholder="Ex: 700,00">`;
+  el.appendChild(div);
+}
+
+// ═══════════════════ GERAR MSG ═══════════════════
+function gerar(conv){
+  const msgId=conv+'-msg', cardId=conv+'-msg-card';
+  const msg=buildMsg(conv);
+  if(!msg) return;
+  document.getElementById(msgId).textContent=msg;
+  const prefMap={inss:'inss',govpr:'pr',siape:'si',prefeitura:'pref'};
+  const pref=prefMap[conv];
+  if(pref){
+    calcTotais(conv);
+    const totEl=document.getElementById(pref+'-totais');
+    if(totEl) totEl.style.display='flex';
+  }
+  document.getElementById(cardId).style.display='block';
+  document.getElementById(cardId).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function buildMsg(conv){
+  if(conv==='inss') return buildINSS();
+  if(conv==='govpr') return buildGovPR();
+  if(conv==='siape') return buildSIAPE();
+  if(conv==='prefeitura') return buildPrefeitura();
+  if(conv==='clt') return buildCLT();
+  if(conv==='fgts') return buildFGTS();
+}
+
+function collectPortRefin(listId, tipo){
+  const items=document.querySelectorAll('#'+listId+' .pitem');
+  let lines=[]; let totalLib=0; let totalParc=0;
+  items.forEach(item=>{
+    const pa=item.querySelector('.pr-parcela-atual').value||'';
+    const pr=item.querySelector('.pr-prazo').value||'';
+    const lib=item.querySelector('.pr-libera').value||'';
+    if(!pa&&!lib) return;
+    if(tipo==='port'){
+      lines.push(`*Portabilidade + Refinanciamento* da parcela *R$ ${pa}* que estende para ${pr} libera *R$ ${lib}*`);
+      lines.push(`ℹ️ *Essa parcela já é descontada atualmente no benefício do cliente.*\n*O valor da parcela continua o mesmo e apenas o prazo é estendido.*\n*Por esse motivo, essa parcela não entra na soma de novas parcelas.*`);
+    } else {
+      lines.push(`Refinanciamento da parcela *R$ ${pa}* — estende para ${pr}x — libera *R$ ${lib}*`);
+      totalLib+=parseBR(lib);
+      totalParc+=parseBR(pa);
+    }
+  });
+  return {lines, totalLib, totalParc};
+}
+
+function buildINSS(){
+  const nome=document.getElementById('inss-nome').value;
+  const cpf=document.getElementById('inss-cpf').value;
+  const tel=document.getElementById('inss-tel').value;
+  const ben=document.getElementById('inss-beneficio').value;
+  const p1=document.getElementById('inss-parc1').value;
+  const banco=document.getElementById('inss-mn-banco').value;
+  const prazo=document.getElementById('inss-mn-prazo').value;
+  const parc=document.getElementById('inss-mn-parcela').value;
+  const vl=document.getElementById('inss-mn-vl').value;
+  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  const port=collectPortRefin('inss-port-list','port');
+  const refin=collectPortRefin('inss-refin-list','refin');
+  let totalLib=parseBR(vl)+refin.totalLib;
+  let totalParc=parseBR(parc)+refin.totalParc;
+  let msg=`📱 SIMULAÇÃO\n\n`;
+  msg+=`*Cliente: ${nome}*\n`;
+  if(cpf) msg+=`CPF: ${cpf}\n`;
+  if(tel) msg+=`Telefone: ${tel}\n`;
+  msg+=`Tipo de Benefício: ${ben}\n`;
+  if(p1) msg+=`Primeira parcela para: ${p1}\n`;
+  if(banco||vl) msg+=`\nMargem Nova — Parcela: R$ ${parc} que libera R$ ${vl} em ${prazo}x\n`;
+  if(port.lines.length){ msg+=`\n${port.lines.join('\n\n')}\n`; }
+  if(refin.lines.length){ msg+=`\n${refin.lines.join('\n')}\n`; }
+  msg+=`\n*TOTAL LIBERADO : R$ ${fmtBR(totalLib)}*\n*TOTAL DE PARCELA: R$ ${fmtBR(totalParc)}*`;
+  return msg;
+}
+
+function buildGovPR(){
+  const nome=document.getElementById('pr-nome').value;
+  const cpf=document.getElementById('pr-cpf').value;
+  const tel=document.getElementById('pr-tel').value;
+  const estado=document.getElementById('pr-estado').value;
+  const tipo=document.getElementById('pr-tipo').value;
+  const p1=document.getElementById('pr-parc1').value;
+  const banco=document.getElementById('pr-mn-banco').value;
+  const prazo=document.getElementById('pr-mn-prazo').value;
+  const parc=document.getElementById('pr-mn-parcela').value;
+  const vl=document.getElementById('pr-mn-vl').value;
+  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  const port=collectPortRefin('pr-port-list','port');
+  const refin=collectPortRefin('pr-refin-list','refin');
+  let totalLib=parseBR(vl)+refin.totalLib;
+  let totalParc=parseBR(parc)+refin.totalParc;
+  // cartão
+  const cartMargem=document.getElementById('pr-cart-margem').value;
+  const cartSaque=document.getElementById('pr-cart-lib').textContent;
+  let msg=`📱 SIMULAÇÃO — GOVERNO DO ESTADO — ${estado}\n\n`;
+  msg+=`*Cliente: ${nome}*\n`;
+  if(cpf) msg+=`CPF: ${cpf}\n`;
+  if(tel) msg+=`Telefone: ${tel}\n`;
+  msg+=`Tipo: ${tipo}\n`;
+  if(p1) msg+=`Primeira parcela para: ${p1}\n`;
+  if(banco||vl) msg+=`\nMargem Nova — Parcela: R$ ${parc} que libera R$ ${vl} em ${prazo}x\n`;
+  if(cartMargem&&cartSaque&&cartSaque!=='—'){
+    const parc70=parseBR(document.getElementById('pr-cart-parcela').value);
+    const vlLib=parseBR(document.getElementById('pr-cart-lib').textContent.replace('R$ ',''));
+    const cartPrazo=document.getElementById('pr-cart-prazo').value||'120';
+    const cartBanco=document.getElementById('pr-cart-banco').value;
+    msg+=`\nCartão Benefício${cartBanco?' — '+cartBanco:''} — Parcela: R$ ${fmtBR(parc70)} em ${cartPrazo}x que libera R$ ${fmtBR(vlLib)}\n`;
+    totalLib+=vlLib;
+    totalParc+=parc70;
+  }
+  if(port.lines.length){ msg+=`\n${port.lines.join('\n\n')}\n`; }
+  if(refin.lines.length){ msg+=`\n${refin.lines.join('\n')}\n`; }
+  msg+=`\n*TOTAL LIBERADO : R$ ${fmtBR(totalLib)}*\n*TOTAL DE PARCELA: R$ ${fmtBR(totalParc)}*`;
+  return msg;
+}
+
+function buildPrefeitura(){
+  const nome=document.getElementById('pref-nome').value;
+  const cpf=document.getElementById('pref-cpf').value;
+  const tel=document.getElementById('pref-tel').value;
+  const tipo=document.getElementById('pref-tipo').value;
+  const municipio=document.getElementById('pref-municipio').value;
+  const p1=document.getElementById('pref-parc1').value;
+  const banco=document.getElementById('pref-mn-banco').value;
+  const prazo=document.getElementById('pref-mn-prazo').value;
+  const parc=document.getElementById('pref-mn-parcela').value;
+  const vl=document.getElementById('pref-mn-vl').value;
+  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  const port=collectPortRefin('pref-port-list','port');
+  const refin=collectPortRefin('pref-refin-list','refin');
+  let totalLib=parseBR(vl)+refin.totalLib;
+  let totalParc=parseBR(parc)+refin.totalParc;
+  const cartMargem=document.getElementById('pref-cart-margem').value;
+  const cartPaga=document.getElementById('pref-cart-paga').textContent;
+  const cartCred=document.getElementById('pref-cart-cred').textContent;
+  const cartSaque=document.getElementById('pref-cart-lib').textContent;
+  let msg=`📱 SIMULAÇÃO — PREFEITURA${municipio?' DE '+municipio.toUpperCase():''}\n\n`;
+  msg+=`*Cliente: ${nome}*\n`;
+  if(cpf) msg+=`CPF: ${cpf}\n`;
+  if(tel) msg+=`Telefone: ${tel}\n`;
+  msg+=`Tipo: ${tipo}\n`;
+  if(municipio) msg+=`Município: ${municipio}\n`;
+  if(p1) msg+=`Primeira parcela para: ${p1}\n`;
+  if(banco||vl) msg+=`\nMargem Nova — Parcela: R$ ${parc} que libera R$ ${vl} em ${prazo}x\n`;
+  if(cartMargem&&cartSaque&&cartSaque!=='—'){
+    const parc70=parseBR(document.getElementById('pref-cart-parcela').value);
+    const vlLib=parseBR(document.getElementById('pref-cart-lib').textContent.replace('R$ ',''));
+    const cartPrazo=document.getElementById('pref-cart-prazo').value||'120';
+    const cartBanco=document.getElementById('pref-cart-banco').value;
+    msg+=`\nCartão Benefício${cartBanco?' — '+cartBanco:''} — Parcela: R$ ${fmtBR(parc70)} em ${cartPrazo}x que libera R$ ${fmtBR(vlLib)}\n`;
+    totalLib+=vlLib;
+    totalParc+=parc70;
+  }
+  if(port.lines.length){ msg+=`\n${port.lines.join('\n\n')}\n`; }
+  if(refin.lines.length){ msg+=`\n${refin.lines.join('\n')}\n`; }
+  msg+=`\n*TOTAL LIBERADO : R$ ${fmtBR(totalLib)}*\n*TOTAL DE PARCELA: R$ ${fmtBR(totalParc)}*`;
+  return msg;
+}
+
+function buildSIAPE(){
+  const nome=document.getElementById('si-nome').value;
+  const cpf=document.getElementById('si-cpf').value;
+  const tel=document.getElementById('si-tel').value;
+  const tipo=document.getElementById('si-tipo').value;
+  const p1=document.getElementById('si-parc1').value;
+  const banco=document.getElementById('si-mn-banco').value;
+  const prazo=document.getElementById('si-mn-prazo').value;
+  const parc=document.getElementById('si-mn-parcela').value;
+  const vl=document.getElementById('si-mn-vl').value;
+  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  const port=collectPortRefin('si-port-list','port');
+  const refin=collectPortRefin('si-refin-list','refin');
+  let totalLib=parseBR(vl)+refin.totalLib;
+  let totalParc=parseBR(parc)+refin.totalParc;
+  let msg=`📱 SIMULAÇÃO — SIAPE (SERVIDOR FEDERAL)\n\n`;
+  msg+=`*Cliente: ${nome}*\n`;
+  if(cpf) msg+=`CPF: ${cpf}\n`;
+  if(tel) msg+=`Telefone: ${tel}\n`;
+  msg+=`Tipo: ${tipo}\n`;
+  if(p1) msg+=`Primeira parcela para: ${p1}\n`;
+  if(banco||vl) msg+=`\nMargem Nova — Parcela: R$ ${parc} que libera R$ ${vl} em ${prazo}x\n`;
+  if(port.lines.length){ msg+=`\n${port.lines.join('\n\n')}\n`; }
+  if(refin.lines.length){ msg+=`\n${refin.lines.join('\n')}\n`; }
+  msg+=`\n*TOTAL LIBERADO : R$ ${fmtBR(totalLib)}*\n*TOTAL DE PARCELA: R$ ${fmtBR(totalParc)}*`;
+  return msg;
+}
+
+function buildCLT(){
+  const nome=document.getElementById('clt-nome').value;
+  const tel=document.getElementById('clt-tel').value;
+  const nasc=document.getElementById('clt-nasc').value;
+  const emp=document.getElementById('clt-empresa').value;
+  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  const bancos=document.querySelectorAll('#clt-banco-list .banco-item');
+  let msg=`📱 SIMULAÇÃO — CLT (CRÉDITO COM CARTEIRA ASSINADA)\n\n`;
+  msg+=`*Cliente: ${nome}*\n`;
+  if(tel) msg+=`Telefone: ${tel}\n`;
+  if(nasc) msg+=`Data de Nascimento: ${nasc}\n`;
+  if(emp) msg+=`Empresa: ${emp}\n\n`;
+  if(bancos.length===0){ msg+=`Nenhum banco adicionado.\n`; }
+  else {
+    bancos.forEach(b=>{
+      const banco=b.querySelector('.clt-banco').value||'—';
+      const parc=b.querySelector('.clt-parcela').value;
+      const prazo=b.querySelector('.clt-prazo').value;
+      const vl=b.querySelector('.clt-vliberado').value;
+      const status=b.querySelector('.clt-status').value;
+      if(status==='Não Aprovado'){
+        msg+=`❌ *${banco}* — Não Aprovado\n`;
+      } else {
+        msg+=`${status==='Aprovado'?'✅':'🔄'} *${banco}* — ${status}\n`;
+        if(parc) msg+=`   Parcela: R$ ${parc}`;
+        if(prazo) msg+=` | Prazo: ${prazo}x`;
+        if(vl) msg+=` | Libera: R$ ${vl}`;
+        msg+=`\n`;
+      }
+    });
+  }
+  return msg;
+}
+
+function buildFGTS(){
+  const nome=document.getElementById('fg-nome').value;
+  const cpf=document.getElementById('fg-cpf').value;
+  const tel=document.getElementById('fg-tel').value;
+  const banco=document.getElementById('fg-banco').value;
+  const prazo=document.getElementById('fg-prazo').value;
+  const vl=document.getElementById('fg-vl').value;
+  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  const anos=document.querySelectorAll('#fg-anos-list .fg-ano-val');
+  let msg=`📱 SIMULAÇÃO — FGTS\n\n`;
+  msg+=`*Cliente: ${nome}*\n`;
+  if(cpf) msg+=`CPF: ${cpf}\n`;
+  if(tel) msg+=`Telefone: ${tel}\n`;
+  msg+=`\n💰 Com base no saldo disponível no seu FGTS, é possível antecipar:\n`;
+  if(vl) msg+=`\n*Valor liberado: R$ ${vl}*\n`;
+  if(banco) msg+=`Banco: ${banco}\n`;
+  if(prazo) msg+=`Prazo: ${prazo} ano(s)\n`;
+  if(anos.length>0){
+    let temValor=false;
+    anos.forEach(a=>{ if(a.value) temValor=true; });
+    if(temValor){
+      msg+=`\n📅 Parcelas anuais:\n`;
+      anos.forEach((a,i)=>{ if(a.value) msg+=`   Ano ${i+1}: R$ ${a.value}\n`; });
+    }
+  }
+  msg+=`\n✅ *Sem parcelas mensais! O desconto é feito diretamente no seu saldo do FGTS, uma vez por ano, no mês do seu aniversário.*`;
+  return msg;
+}
+
+function gerarSemSaldo(){
+  const nome=document.getElementById('fg-nome').value;
+  const cpf=document.getElementById('fg-cpf').value;
+  const tel=document.getElementById('fg-tel').value;
+  if(!nome){ alert('Preencha ao menos o nome do cliente.'); return; }
+
+  const msg=`📱 FGTS\n\n*Cliente: ${nome}*\n${cpf?'CPF: '+cpf+'\n':''}${tel?'Telefone: '+tel+'\n':''}\n❌ Sem saldo disponível no momento.`;
+
+  document.getElementById('fgts-msg').textContent=msg;
+  document.getElementById('fgts-msg-card').style.display='block';
+  document.getElementById('fgts-msg-card').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Salva automaticamente no histórico
+  const now=new Date();
+  const data=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const rec={id:Date.now(),data,conv:'fgts',nome,cpf,tel,totalLib:'Sem saldo',totalParc:'—',msg};
+  const hist=getHistorico();
+  hist.unshift(rec);
+  setHistorico(hist);
+}
+function calcTotais(conv){
+  let mnVl,mnParc,portList,refinList,pref;
+  if(conv==='inss'){ mnVl='inss-mn-vl'; mnParc='inss-mn-parcela'; portList='inss-port-list'; refinList='inss-refin-list'; pref='inss'; }
+  else if(conv==='govpr'){ mnVl='pr-mn-vl'; mnParc='pr-mn-parcela'; portList='pr-port-list'; refinList='pr-refin-list'; pref='pr'; }
+  else if(conv==='siape'){ mnVl='si-mn-vl'; mnParc='si-mn-parcela'; portList='si-port-list'; refinList='si-refin-list'; pref='si'; }
+  else if(conv==='prefeitura'){ mnVl='pref-mn-vl'; mnParc='pref-mn-parcela'; portList='pref-port-list'; refinList='pref-refin-list'; pref='pref'; }
+  else return;
+  const mn_vl_el=document.getElementById(mnVl), mn_parc_el=document.getElementById(mnParc);
+  let totalLib=parseBR(mn_vl_el?mn_vl_el.value:'');
+  let totalParc=parseBR(mn_parc_el?mn_parc_el.value:'');
+  document.querySelectorAll('#'+refinList+' .pitem').forEach(item=>{
+    totalLib+=parseBR(item.querySelector('.pr-libera').value);
+    totalParc+=parseBR(item.querySelector('.pr-parcela-atual').value);
+  });
+  // cartão (70% saque)
+  const cartSaque=document.getElementById(pref+'-cart-lib');
+  const cartPaga=document.getElementById(pref+'-cart-paga');
+  if(cartSaque&&cartSaque.textContent!=='—'){ totalLib+=parseBR(cartSaque.textContent.replace('R$ ','')); }
+  if(cartPaga&&cartPaga.textContent!=='—'){ totalParc+=parseBR(cartPaga.textContent.replace('R$ ','')); }
+  const tlEl=document.getElementById(pref+'-ttl-lib');
+  const tpEl=document.getElementById(pref+'-ttl-parc');
+  if(tlEl) tlEl.textContent='R$ '+fmtBR(totalLib);
+  if(tpEl) tpEl.textContent='R$ '+fmtBR(totalParc);
+  const totBox=document.getElementById(pref+'-totais');
+  if(totBox) totBox.style.display='flex';
+}
+
+// ═══════════════════ COPIAR WHATSAPP ═══════════════════
+function copiarWpp(conv){
+  const msg=buildMsg(conv);
+  if(!msg) return;
+  navigator.clipboard.writeText(msg).then(()=>{ 
+    alert('✅ Mensagem copiada! Cole no WhatsApp.');
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=msg; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    alert('✅ Mensagem copiada!');
+  });
+}
+
+// ═══════════════════ SALVAR ═══════════════════
+function salvar(conv){
+  const msg=buildMsg(conv);
+  if(!msg) return;
+  const now=new Date();
+  const data=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  let nome='',cpf='',tel='',totalLib='',totalParc='';
+  if(conv==='inss'){ nome=document.getElementById('inss-nome').value; cpf=document.getElementById('inss-cpf').value; tel=document.getElementById('inss-tel').value; totalLib=document.getElementById('inss-ttl-lib').textContent; totalParc=document.getElementById('inss-ttl-parc').textContent; }
+  else if(conv==='govpr'){ nome=document.getElementById('pr-nome').value; cpf=document.getElementById('pr-cpf').value; tel=document.getElementById('pr-tel').value; totalLib=document.getElementById('pr-ttl-lib').textContent; totalParc=document.getElementById('pr-ttl-parc').textContent; }
+  else if(conv==='siape'){ nome=document.getElementById('si-nome').value; cpf=document.getElementById('si-cpf').value; tel=document.getElementById('si-tel').value; totalLib=document.getElementById('si-ttl-lib').textContent; totalParc=document.getElementById('si-ttl-parc').textContent; }
+  else if(conv==='prefeitura'){ nome=document.getElementById('pref-nome').value; cpf=document.getElementById('pref-cpf').value; tel=document.getElementById('pref-tel').value; totalLib=document.getElementById('pref-ttl-lib').textContent; totalParc=document.getElementById('pref-ttl-parc').textContent; }
+  else if(conv==='clt'){ nome=document.getElementById('clt-nome').value; tel=document.getElementById('clt-tel').value; totalLib='—'; totalParc='—'; }
+  else if(conv==='fgts'){ nome=document.getElementById('fg-nome').value; cpf=document.getElementById('fg-cpf').value; tel=document.getElementById('fg-tel').value; totalLib=document.getElementById('fg-vl').value||'—'; totalParc='—'; }
+  const rec={id:Date.now(),data,conv,usuario:usuarioAtual?usuarioAtual.nome:'—',nome,cpf,tel,totalLib,totalParc,msg};
+  const hist=getHistorico();
+  hist.unshift(rec);
+  setHistorico(hist);
+  // Envia para Google Sheets
+  enviarParaSheets({data,usuario:rec.usuario,convenio:convLabels[conv]||conv,nome,cpf,tel,totalLib,totalParc,msg});
+  alert('✅ Simulação salva com sucesso!');
+}
+
+// ═══════════════════ LIMPAR ═══════════════════
+function limpar(conv){
+  // prefixo interno de cada convênio
+  const prefMap={inss:'inss',govpr:'pr',siape:'si',prefeitura:'pref',clt:'clt',fgts:'fg'};
+  const pref=prefMap[conv];
+
+  // 1. Zera todos os inputs e selects da aba
+  document.querySelectorAll('#tab-'+conv+' input, #tab-'+conv+' select, #tab-'+conv+' textarea').forEach(el=>{
+    if(el.tagName==='SELECT') el.selectedIndex=0;
+    else el.value='';
+  });
+
+  // 2. Limpa listas dinâmicas
+  ['inss-port-list','inss-refin-list',
+   'pr-port-list','pr-refin-list',
+   'si-port-list','si-refin-list',
+   'pref-port-list','pref-refin-list',
+   'clt-banco-list','fg-anos-list'
+  ].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=''; });
+
+  // 3. Esconde card de mensagem
+  const msgCard=document.getElementById(conv+'-msg-card');
+  if(msgCard) msgCard.style.display='none';
+
+  // 4. Esconde totais
+  const totBox=document.getElementById(pref+'-totais');
+  if(totBox) totBox.style.display='none';
+
+  // 5. Reseta resultado do cartão
+  const cRes=document.getElementById(pref+'-cart-result');
+  if(cRes){
+    cRes.style.display='none';
+    cRes.querySelectorAll('.res-val').forEach(s=>s.textContent='—');
+  }
+
+  // 6. Reseta spans de totais
+  const ttlLib=document.getElementById(pref+'-ttl-lib');
+  const ttlParc=document.getElementById(pref+'-ttl-parc');
+  if(ttlLib) ttlLib.textContent='R$ 0,00';
+  if(ttlParc) ttlParc.textContent='R$ 0,00';
+}
+
+// ═══════════════════ HISTORICO ═══════════════════
+const convLabels={inss:'INSS',govpr:'Gov. PR',siape:'SIAPE',prefeitura:'Prefeitura',clt:'CLT',fgts:'FGTS'};
+const convClasses={inss:'ti',govpr:'tp',siape:'ts',prefeitura:'tp',clt:'tc',fgts:'tf'};
+
+function renderHistorico(){
+  const hist=getHistorico();
+  const empty=document.getElementById('hist-empty');
+  const table=document.getElementById('hist-table');
+  const tbody=document.getElementById('hist-tbody');
+  if(hist.length===0){ empty.style.display='block'; table.style.display='none'; return; }
+  empty.style.display='none'; table.style.display='table';
+  tbody.innerHTML='';
+  hist.forEach(rec=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${rec.data}</td>
+      <td><strong>${rec.usuario||'—'}</strong></td>
+      <td><span class="ctag ${convClasses[rec.conv]||'ti'}">${convLabels[rec.conv]||rec.conv}</span></td>
+      <td><strong>${rec.nome||'—'}</strong></td>
+      <td><span style="font-size:.78rem">${rec.cpf||rec.tel||'—'}</span></td>
+      <td><strong>${rec.totalLib||'—'}</strong></td>
+      <td>${rec.totalParc||'—'}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="verMsg(${rec.id})">👁 Ver</button>
+        <button class="btn btn-danger btn-sm" onclick="delRec(${rec.id})">✕</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+function verMsg(id){
+  const hist=getHistorico();
+  const rec=hist.find(r=>r.id===id);
+  if(rec) alert(rec.msg);
+}
+function delRec(id){
+  if(!confirm('Excluir este registro?')) return;
+  setHistorico(getHistorico().filter(r=>r.id!==id));
+  renderHistorico();
+}
+function limparHistorico(){
+  if(!confirm('Excluir TODOS os registros do histórico?')) return;
+  setHistorico([]);
+  renderHistorico();
+}
+function exportarCSV(){
+  const hist=getHistorico();
+  if(!hist.length){ alert('Nenhum registro para exportar.'); return; }
+  const header='Data;Convênio;Cliente;CPF;Telefone;Total Liberado;Parcela\n';
+  const rows=hist.map(r=>`${r.data};${convLabels[r.conv]||r.conv};${r.nome||''};${r.cpf||''};${r.tel||''};${r.totalLib||''};${r.totalParc||''}`).join('\n');
+  const blob=new Blob(['\uFEFF'+header+rows],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='agiliza_credi_historico.csv'; a.click();
+}
+
+// Init
+renderHistorico();
+
+// FIM JS SIMULADOR
 </script>
 </body>
 </html>
