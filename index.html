@@ -1788,6 +1788,14 @@ document.head.appendChild(rankStyle);
 // ═══════════════════ INTEGRAÇÃO SIMULADOR → CRM ═══════════════════
 var SHEETS_URL = API; // usa o mesmo backend do CRM
 
+// Substituir localStorage por memória (não disponível em iframe/github pages)
+var _historico = [];
+function getHistorico(){ return _historico; }
+function setHistorico(arr){ _historico = arr; }
+
+// usuarioAtual compatibilidade
+var usuarioAtual = null;
+
 function enviarParaSheets(dados){
   // Montar objeto limpo com dados essenciais apenas
   var d = {
@@ -2285,8 +2293,27 @@ function salvar(conv){
   hist.unshift(rec);
   setHistorico(hist);
   // Envia para Google Sheets
-  enviarParaSheets({data,usuario:rec.usuario,convenio:convLabels[conv]||conv,nome,cpf,tel,totalLib,totalParc,msg});
-  toast('✅ Simulação salva!', 'ok');
+  // Salvar na planilha via GET (mais confiável)
+  var simDados = {
+    id: 'sim_' + Date.now(),
+    data: data,
+    usuario: (typeof S !== 'undefined' && S.u) ? S.u : 'Desconhecido',
+    convenio: convLabels[conv] || conv,
+    nome: nome,
+    cpf: cpf,
+    telefone: tel,
+    totalLib: totalLib,
+    totalParc: totalParc,
+    msg: msg.substring(0, 300)
+  };
+  var p = new URLSearchParams({acao:'salvarSimulacao', dados: JSON.stringify(simDados)});
+  fetch(API + '?' + p.toString())
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.status === 'ok') toast('\u2705 Simulação salva!', 'ok');
+      else toast('Erro ao salvar simulação.', 'er');
+    })
+    .catch(function(){ toast('Erro de conexão.', 'er'); });
 }
 
 // ═══════════════════ LIMPAR ═══════════════════
