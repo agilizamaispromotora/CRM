@@ -1789,25 +1789,40 @@ document.head.appendChild(rankStyle);
 var SHEETS_URL = API; // usa o mesmo backend do CRM
 
 function enviarParaSheets(dados){
-  dados.id = 'sim_' + Date.now();
-  dados.usuario = (typeof S !== 'undefined' && S.u) ? S.u : (dados.usuario || 'Desconhecido');
-  // Garantir que msg não ultrapasse limite de URL
-  if(dados.msg && dados.msg.length > 1000) dados.msg = dados.msg.substring(0, 1000);
-  var dadosStr = JSON.stringify(dados);
-  var p = new URLSearchParams({acao:'salvarSimulacao'});
-  p.append('dados', dadosStr);
-  fetch(API + '?' + p.toString())
-    .then(function(r){ return r.json(); })
-    .then(function(res){
-      if(res.status === 'ok'){
-        toast('\u2705 Simulação salva!', 'ok');
-      } else {
-        toast('Erro ao salvar: ' + (res.mensagem||'desconhecido'), 'er');
-      }
-    })
-    .catch(function(e){
-      toast('Erro de conexão: ' + e.message, 'er');
-    });
+  // Montar objeto limpo com dados essenciais apenas
+  var d = {
+    id: 'sim_' + Date.now(),
+    data: dados.data || new Date().toLocaleDateString('pt-BR'),
+    usuario: (typeof S !== 'undefined' && S.u) ? S.u : (dados.usuario || 'Desconhecido'),
+    convenio: dados.convenio || '',
+    nome: dados.nome || '',
+    cpf: dados.cpf || '',
+    telefone: dados.tel || dados.telefone || '',
+    totalLib: dados.totalLib || '',
+    totalParc: dados.totalParc || '',
+    msg: (dados.msg || '').substring(0, 500)
+  };
+  // Usar POST via fetch para evitar limite de URL
+  fetch(API, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(d)
+  }).then(function(){
+    toast('\u2705 Simulação salva!', 'ok');
+  }).catch(function(){
+    // Fallback: tentar via GET com dados reduzidos
+    var semMsg = Object.assign({}, d);
+    semMsg.msg = '';
+    var p = new URLSearchParams({acao:'salvarSimulacao', dados: JSON.stringify(semMsg)});
+    fetch(API + '?' + p.toString())
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(res.status === 'ok') toast('\u2705 Simulação salva!', 'ok');
+        else toast('Erro: ' + (res.mensagem||''), 'er');
+      })
+      .catch(function(e){ toast('Erro: ' + e.message, 'er'); });
+  });
 }
 
 function switchTab(id, btn){
