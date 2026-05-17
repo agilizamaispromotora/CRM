@@ -1791,15 +1791,23 @@ var SHEETS_URL = API; // usa o mesmo backend do CRM
 function enviarParaSheets(dados){
   dados.id = 'sim_' + Date.now();
   dados.usuario = (typeof S !== 'undefined' && S.u) ? S.u : (dados.usuario || 'Desconhecido');
-  var p = new URLSearchParams({acao:'salvarSimulacao', dados: JSON.stringify(dados)});
+  // Garantir que msg não ultrapasse limite de URL
+  if(dados.msg && dados.msg.length > 1000) dados.msg = dados.msg.substring(0, 1000);
+  var dadosStr = JSON.stringify(dados);
+  var p = new URLSearchParams({acao:'salvarSimulacao'});
+  p.append('dados', dadosStr);
   fetch(API + '?' + p.toString())
     .then(function(r){ return r.json(); })
     .then(function(res){
       if(res.status === 'ok'){
-        toast('\u2705 Simulação salva na planilha!', 'ok');
+        toast('\u2705 Simulação salva!', 'ok');
+      } else {
+        toast('Erro ao salvar: ' + (res.mensagem||'desconhecido'), 'er');
       }
     })
-    .catch(function(){});
+    .catch(function(e){
+      toast('Erro de conexão: ' + e.message, 'er');
+    });
 }
 
 function switchTab(id, btn){
@@ -1934,8 +1942,9 @@ function addFgtsAno(){
 // ═══════════════════ GERAR MSG ═══════════════════
 function gerar(conv){
   const msgId=conv+'-msg', cardId=conv+'-msg-card';
-  const msg=buildMsg(conv)||'Simulação registrada';
-  if(!msg && !document.getElementById(conv+'-nome')?.value && !document.getElementById(conv+'-cpf')?.value) return;
+  var msg = '';
+  try { msg = buildMsg(conv) || ''; } catch(e){ msg = ''; }
+  // Permite salvar mesmo sem mensagem completa
   document.getElementById(msgId).textContent=msg;
   const prefMap={inss:'inss',govpr:'pr',siape:'si',prefeitura:'pref'};
   const pref=prefMap[conv];
@@ -2229,8 +2238,9 @@ function calcTotais(conv){
 
 // ═══════════════════ COPIAR WHATSAPP ═══════════════════
 function copiarWpp(conv){
-  const msg=buildMsg(conv)||'Simulação registrada';
-  if(!msg && !document.getElementById(conv+'-nome')?.value && !document.getElementById(conv+'-cpf')?.value) return;
+  var msg = '';
+  try { msg = buildMsg(conv) || ''; } catch(e){ msg = ''; }
+  // Permite salvar mesmo sem mensagem completa
   navigator.clipboard.writeText(msg).then(()=>{ 
     toast('✅ Mensagem copiada! Cole no WhatsApp.','ok');
   }).catch(()=>{
@@ -2243,8 +2253,9 @@ function copiarWpp(conv){
 
 // ═══════════════════ SALVAR ═══════════════════
 function salvar(conv){
-  const msg=buildMsg(conv)||'Simulação registrada';
-  if(!msg && !document.getElementById(conv+'-nome')?.value && !document.getElementById(conv+'-cpf')?.value) return;
+  var msg = '';
+  try { msg = buildMsg(conv) || ''; } catch(e){ msg = ''; }
+  // Permite salvar mesmo sem mensagem completa
   const now=new Date();
   const data=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   let nome='',cpf='',tel='',totalLib='',totalParc='';
