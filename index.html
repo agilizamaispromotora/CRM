@@ -70,7 +70,7 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .dcard.wn{border-left-color:var(--warn)}.dcard.rx{border-left-color:var(--roxo)}
 .dcard.pe{border-left-color:var(--perigo)}
 .dcard .lbl{font-size:10px;color:var(--cinza-txt);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:4px}
-.dcard .val{font-family:"Montserrat",sans-serif;font-size:22px;font-weight:800;color:var(--azul)}
+.dcard .val{font-family:"Montserrat",sans-serif;font-size:18px;font-weight:800;color:var(--azul);line-height:1.2}
 .dcard.la .val{color:var(--laranja)}.dcard.ok .val{color:var(--ok)}
 .dcard.wn .val{color:var(--warn)}.dcard.rx .val{color:var(--roxo)}.dcard.pe .val{color:var(--perigo)}
 .dcard .sub{font-size:10px;color:var(--cinza-txt);margin-top:2px}
@@ -89,7 +89,7 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .tr{display:grid;padding:11px 14px;border-bottom:1px solid var(--cinza-brd);align-items:center;transition:background .15s;cursor:pointer}
 .tr:hover{background:var(--cinza-bg)}.tr:last-child{border-bottom:none}
 .cprop .th,.cprop .tr{grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 90px}
-.crank .th,.crank .tr{grid-template-columns:40px 2fr 1fr 1fr 1fr 1fr}
+.crank .th,.crank .tr{grid-template-columns:40px 2fr 1fr 1fr}
 .cfin .th,.cfin .tr{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px}
 .cag .th,.cag .tr{grid-template-columns:1fr 1.5fr 1.5fr 1fr 70px}
 .badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
@@ -458,7 +458,7 @@ select{cursor:pointer}
         <button class="pbtn" id="rp-tot">Total</button>
       </div>
       <div class="tw crank">
-        <div class="th"><span>#</span><span>Consultora</span><span>Propostas</span><span>Volume</span><span>Com. Agiliza</span><span>Com. Vendedora</span></div>
+        <div class="th" style="grid-template-columns:40px 2fr 1fr 1fr"><span>#</span><span>Consultora</span><span>Propostas</span><span>Volume de Vendas</span></div>
         <div class="tb" id="rank-body"></div>
       </div>
     </div>
@@ -1631,7 +1631,7 @@ function rRank(){
   const body=document.getElementById('rank-body');
   if(!sorted.length){body.innerHTML='<div class="vazio"><div class="ico">🏆</div><p>Sem dados no período</p></div>';return;}
   body.innerHTML=sorted.map(function(c,i){
-    return '<div class="tr '+(i<3?'rank-'+(i+1):'')+'"><span class="medal">'+(med[i]||i+1)+'</span><span style="font-weight:700;font-size:14px">'+X(c.n)+'</span><span style="font-weight:600">'+c.qtd+'</span><span style="font-weight:700;color:var(--azul)">'+fmt(c.vol)+'</span><span style="font-weight:700;color:var(--ok)">'+fmt(c.ag)+'</span><span style="font-weight:700;color:var(--laranja)">'+fmt(c.vd)+'</span></div>';
+    return '<div class="tr '+(i<3?'rank-'+(i+1):'')+'"><span class="medal">'+(med[i]||i+1)+'</span><span style="font-weight:700;font-size:14px">'+X(c.n)+'</span><span style="font-weight:600">'+c.qtd+'</span><span style="font-weight:700;color:var(--azul)">'+fmt(c.vol)+'</span></div>';
   }).join('');
 }
 
