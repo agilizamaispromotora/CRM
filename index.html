@@ -20,8 +20,8 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
   background:linear-gradient(150deg,#0c1e3e 0%,#1B3A6B 60%,#1e4a8a 100%);padding:10px;overflow:hidden}
 .login-card{background:var(--branco);border-radius:18px;padding:20px 32px 18px;
   width:100%;max-width:370px;box-shadow:var(--sombra-lg);text-align:center;position:relative}
-.llogo{position:absolute;top:8px;left:50%;transform:translateX(-50%);height:200px;width:auto;mix-blend-mode:multiply}
-.lspacer{height:110px}
+.llogo{position:absolute;top:-30px;left:50%;transform:translateX(-50%);height:200px;width:auto;mix-blend-mode:multiply}
+.lspacer{height:130px}
 .login-card label{display:block;font-size:11px;color:var(--cinza-txt);text-align:left;
   margin-bottom:3px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
 .login-card select,.login-card input{width:100%;padding:9px 12px;
@@ -29,7 +29,7 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
   color:var(--texto);font-family:"Open Sans",sans-serif;font-size:14px;
   margin-bottom:8px;outline:none;transition:border-color .2s}
 .login-card select:focus,.login-card input:focus{border-color:var(--azul-mid)}
-.ltitulo{font-family:"Montserrat",sans-serif;font-size:22px;font-weight:800;color:var(--azul);letter-spacing:1px;margin-bottom:1px}
+.ltitulo{font-family:"Montserrat",sans-serif;font-size:22px;font-weight:800;color:var(--azul);letter-spacing:1px;margin-bottom:1px;margin-top:8px}
 .lsub{font-family:"Montserrat",sans-serif;font-size:11px;font-weight:700;color:var(--laranja);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
 .ldiv{width:36px;height:3px;background:var(--laranja);margin:0 auto 12px;border-radius:2px}
 .btn-entrar{width:100%;padding:10px;background:var(--laranja);border:none;border-radius:8px;
@@ -1630,6 +1630,24 @@ function toast(msg,tipo){var t=document.getElementById('toast');t.textContent=ms
 const rankStyle=document.createElement('style');
 rankStyle.textContent='.rank-1{background:linear-gradient(135deg,#fef9c3,#fef3c7);border-left:4px solid #f59e0b}.rank-2{background:linear-gradient(135deg,#f1f5f9,#e2e8f0);border-left:4px solid #94a3b8}.rank-3{background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left:4px solid #f97316}.medal{font-size:18px}';
 document.head.appendChild(rankStyle);
+
+
+// ═══════════════════ INTEGRAÇÃO SIMULADOR → CRM ═══════════════════
+var SHEETS_URL = API; // usa o mesmo backend do CRM
+
+function enviarParaSheets(dados){
+  dados.id = 'sim_' + Date.now();
+  dados.usuario = (typeof S !== 'undefined' && S.u) ? S.u : (dados.usuario || 'Desconhecido');
+  var p = new URLSearchParams({acao:'salvarSimulacao', dados: JSON.stringify(dados)});
+  fetch(API + '?' + p.toString())
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.status === 'ok'){
+        toast('\u2705 Simulação salva na planilha!', 'ok');
+      }
+    })
+    .catch(function(){});
+}
 
 function switchTab(id, btn){
   document.querySelectorAll('.tab-content').forEach(function(el){el.classList.remove('active');});
