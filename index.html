@@ -1849,13 +1849,13 @@ function calcVL(parcId, coefId, vlId){
   const parc=parseBR(document.getElementById(parcId).value);
   const coef=parseBR(document.getElementById(coefId).value);
   if(parc&&coef){ document.getElementById(vlId).value=fmtBR(parc/coef); }
-  else alert('Preencha Parcela e Coeficiente para calcular o Valor Liberado.');
+  else toast('Preencha Parcela e Coeficiente para calcular o Valor Liberado.','er');
 }
 function calcParc(vlId, coefId, parcId){
   const vl=parseBR(document.getElementById(vlId).value);
   const coef=parseBR(document.getElementById(coefId).value);
   if(vl&&coef){ document.getElementById(parcId).value=fmtBR(vl*coef); }
-  else alert('Preencha Valor Liberado e Coeficiente para calcular a Parcela.');
+  else toast('Preencha Valor Liberado e Coeficiente para calcular a Parcela.','er');
 }
 function calcCartaoAuto(pref){
   const margem=parseBR(document.getElementById(pref+'-cart-margem').value);
@@ -1934,8 +1934,8 @@ function addFgtsAno(){
 // ═══════════════════ GERAR MSG ═══════════════════
 function gerar(conv){
   const msgId=conv+'-msg', cardId=conv+'-msg-card';
-  const msg=buildMsg(conv);
-  if(!msg) return;
+  const msg=buildMsg(conv)||'Simulação registrada';
+  if(!msg && !document.getElementById(conv+'-nome')?.value && !document.getElementById(conv+'-cpf')?.value) return;
   document.getElementById(msgId).textContent=msg;
   const prefMap={inss:'inss',govpr:'pr',siape:'si',prefeitura:'pref'};
   const pref=prefMap[conv];
@@ -1987,7 +1987,7 @@ function buildINSS(){
   const prazo=document.getElementById('inss-mn-prazo').value;
   const parc=document.getElementById('inss-mn-parcela').value;
   const vl=document.getElementById('inss-mn-vl').value;
-  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return null; }
   const port=collectPortRefin('inss-port-list','port');
   const refin=collectPortRefin('inss-refin-list','refin');
   let totalLib=parseBR(vl)+refin.totalLib;
@@ -2016,7 +2016,7 @@ function buildGovPR(){
   const prazo=document.getElementById('pr-mn-prazo').value;
   const parc=document.getElementById('pr-mn-parcela').value;
   const vl=document.getElementById('pr-mn-vl').value;
-  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return null; }
   const port=collectPortRefin('pr-port-list','port');
   const refin=collectPortRefin('pr-refin-list','refin');
   let totalLib=parseBR(vl)+refin.totalLib;
@@ -2057,7 +2057,7 @@ function buildPrefeitura(){
   const prazo=document.getElementById('pref-mn-prazo').value;
   const parc=document.getElementById('pref-mn-parcela').value;
   const vl=document.getElementById('pref-mn-vl').value;
-  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return null; }
   const port=collectPortRefin('pref-port-list','port');
   const refin=collectPortRefin('pref-refin-list','refin');
   let totalLib=parseBR(vl)+refin.totalLib;
@@ -2099,7 +2099,7 @@ function buildSIAPE(){
   const prazo=document.getElementById('si-mn-prazo').value;
   const parc=document.getElementById('si-mn-parcela').value;
   const vl=document.getElementById('si-mn-vl').value;
-  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return null; }
   const port=collectPortRefin('si-port-list','port');
   const refin=collectPortRefin('si-refin-list','refin');
   let totalLib=parseBR(vl)+refin.totalLib;
@@ -2122,7 +2122,7 @@ function buildCLT(){
   const tel=document.getElementById('clt-tel').value;
   const nasc=document.getElementById('clt-nasc').value;
   const emp=document.getElementById('clt-empresa').value;
-  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return null; }
   const bancos=document.querySelectorAll('#clt-banco-list .banco-item');
   let msg=`📱 SIMULAÇÃO — CLT (CRÉDITO COM CARTEIRA ASSINADA)\n\n`;
   msg+=`*Cliente: ${nome}*\n`;
@@ -2158,7 +2158,7 @@ function buildFGTS(){
   const banco=document.getElementById('fg-banco').value;
   const prazo=document.getElementById('fg-prazo').value;
   const vl=document.getElementById('fg-vl').value;
-  if(!nome){ alert('Preencha o nome do cliente.'); return null; }
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return null; }
   const anos=document.querySelectorAll('#fg-anos-list .fg-ano-val');
   let msg=`📱 SIMULAÇÃO — FGTS\n\n`;
   msg+=`*Cliente: ${nome}*\n`;
@@ -2184,7 +2184,7 @@ function gerarSemSaldo(){
   const nome=document.getElementById('fg-nome').value;
   const cpf=document.getElementById('fg-cpf').value;
   const tel=document.getElementById('fg-tel').value;
-  if(!nome){ alert('Preencha ao menos o nome do cliente.'); return; }
+  if(!nome){ toast('Preencha ao menos o nome do cliente.','er'); return; }
 
   const msg=`📱 FGTS\n\n*Cliente: ${nome}*\n${cpf?'CPF: '+cpf+'\n':''}${tel?'Telefone: '+tel+'\n':''}\n❌ Sem saldo disponível no momento.`;
 
@@ -2229,22 +2229,22 @@ function calcTotais(conv){
 
 // ═══════════════════ COPIAR WHATSAPP ═══════════════════
 function copiarWpp(conv){
-  const msg=buildMsg(conv);
-  if(!msg) return;
+  const msg=buildMsg(conv)||'Simulação registrada';
+  if(!msg && !document.getElementById(conv+'-nome')?.value && !document.getElementById(conv+'-cpf')?.value) return;
   navigator.clipboard.writeText(msg).then(()=>{ 
-    alert('✅ Mensagem copiada! Cole no WhatsApp.');
+    toast('✅ Mensagem copiada! Cole no WhatsApp.','ok');
   }).catch(()=>{
     const ta=document.createElement('textarea');
     ta.value=msg; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    alert('✅ Mensagem copiada!');
+    toast('✅ Mensagem copiada!','ok');
   });
 }
 
 // ═══════════════════ SALVAR ═══════════════════
 function salvar(conv){
-  const msg=buildMsg(conv);
-  if(!msg) return;
+  const msg=buildMsg(conv)||'Simulação registrada';
+  if(!msg && !document.getElementById(conv+'-nome')?.value && !document.getElementById(conv+'-cpf')?.value) return;
   const now=new Date();
   const data=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   let nome='',cpf='',tel='',totalLib='',totalParc='';
@@ -2254,13 +2254,13 @@ function salvar(conv){
   else if(conv==='prefeitura'){ nome=document.getElementById('pref-nome').value; cpf=document.getElementById('pref-cpf').value; tel=document.getElementById('pref-tel').value; totalLib=document.getElementById('pref-ttl-lib').textContent; totalParc=document.getElementById('pref-ttl-parc').textContent; }
   else if(conv==='clt'){ nome=document.getElementById('clt-nome').value; tel=document.getElementById('clt-tel').value; totalLib='—'; totalParc='—'; }
   else if(conv==='fgts'){ nome=document.getElementById('fg-nome').value; cpf=document.getElementById('fg-cpf').value; tel=document.getElementById('fg-tel').value; totalLib=document.getElementById('fg-vl').value||'—'; totalParc='—'; }
-  const rec={id:Date.now(),data,conv,usuario:usuarioAtual?usuarioAtual.nome:'—',nome,cpf,tel,totalLib,totalParc,msg};
+  const rec={id:Date.now(),data,conv,usuario:(typeof S!=='undefined'&&S.u)?S.u:'—',nome,cpf,tel,totalLib,totalParc,msg};
   const hist=getHistorico();
   hist.unshift(rec);
   setHistorico(hist);
   // Envia para Google Sheets
   enviarParaSheets({data,usuario:rec.usuario,convenio:convLabels[conv]||conv,nome,cpf,tel,totalLib,totalParc,msg});
-  alert('✅ Simulação salva com sucesso!');
+  toast('✅ Simulação salva!', 'ok');
 }
 
 // ═══════════════════ LIMPAR ═══════════════════
@@ -2338,7 +2338,7 @@ function renderHistorico(){
 function verMsg(id){
   const hist=getHistorico();
   const rec=hist.find(r=>r.id===id);
-  if(rec) alert(rec.msg);
+  if(rec) toast('Simulação: '+rec.msg.substring(0,50)+'...','ok');
 }
 function delRec(id){
   if(!confirm('Excluir este registro?')) return;
@@ -2352,7 +2352,7 @@ function limparHistorico(){
 }
 function exportarCSV(){
   const hist=getHistorico();
-  if(!hist.length){ alert('Nenhum registro para exportar.'); return; }
+  if(!hist.length){ toast('Nenhum registro para exportar.','er'); return; }
   const header='Data;Convênio;Cliente;CPF;Telefone;Total Liberado;Parcela\n';
   const rows=hist.map(r=>`${r.data};${convLabels[r.conv]||r.conv};${r.nome||''};${r.cpf||''};${r.tel||''};${r.totalLib||''};${r.totalParc||''}`).join('\n');
   const blob=new Blob(['\uFEFF'+header+rows],{type:'text/csv;charset=utf-8;'});
