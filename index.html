@@ -2298,7 +2298,7 @@ function salvar(conv){
     id: 'sim_' + Date.now(),
     data: data,
     usuario: (typeof S !== 'undefined' && S.u) ? S.u : 'Desconhecido',
-    convenio: convLabels[conv] || conv,
+    convenio: ({inss:'INSS',govpr:'Gov. PR',siape:'SIAPE',prefeitura:'Prefeitura',clt:'CLT',fgts:'FGTS'})[conv] || conv,
     nome: nome,
     cpf: cpf,
     telefone: tel,
