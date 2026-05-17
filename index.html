@@ -472,6 +472,9 @@ select{cursor:pointer}
     </div>
 
     <div id="asim" style="display:none">
+      <div id="sim-notify" style="display:none;background:#1a7a3c;color:#fff;padding:12px 18px;border-radius:9px;font-size:14px;font-weight:600;margin-bottom:12px;text-align:center">
+        ✅ Simulação salva na planilha!
+      </div>
       <div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);overflow:hidden;box-shadow:var(--sombra)">
         <!-- BARRA DE TABS DO SIMULADOR -->
         <div style="display:flex;gap:2px;padding:10px 16px;border-bottom:2px solid var(--cinza-brd);overflow-x:auto;background:#f8faff">
@@ -2306,14 +2309,22 @@ function salvar(conv){
     totalParc: totalParc,
     msg: msg.substring(0, 300)
   };
+  // Mostrar notificação dentro do simulador
+  var sn = document.getElementById('sim-notify');
+  if(sn){ sn.textContent = '⏳ Salvando...'; sn.style.background='#b07000'; sn.style.display='block'; }
+  toast('⏳ Salvando simulação...', '');
   var p = new URLSearchParams({acao:'salvarSimulacao', dados: JSON.stringify(simDados)});
   fetch(API + '?' + p.toString())
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res.status === 'ok') toast('\u2705 Simulação salva!', 'ok');
-      else toast('Erro ao salvar simulação.', 'er');
+      if(res.status === 'ok'){
+        toast('\u2705 Simulação salva!', 'ok');
+        var sn=document.getElementById('sim-notify');
+        if(sn){ sn.textContent='✅ Simulação salva na planilha!'; sn.style.background='#1a7a3c'; sn.style.display='block'; setTimeout(function(){sn.style.display='none';},4000); }
+      }
+      else toast('Erro ao salvar: ' + (res.mensagem||''), 'er');
     })
-    .catch(function(){ toast('Erro de conexão.', 'er'); });
+    .catch(function(e){ toast('Erro: ' + e.message, 'er'); });
 }
 
 // ═══════════════════ LIMPAR ═══════════════════
