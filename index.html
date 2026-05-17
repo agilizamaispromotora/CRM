@@ -174,6 +174,23 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .ac:hover{border-color:var(--azul);color:var(--azul);background:var(--cinza-bg)}
 .ac.del:hover{border-color:var(--perigo);color:var(--perigo);background:var(--perigo-bg)}
 .ac.okb:hover{border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
+.fnav{background:transparent;border:none;border-bottom:3px solid transparent;color:var(--cinza-txt);
+  font-family:"Open Sans",sans-serif;font-size:13px;font-weight:600;
+  padding:8px 16px;cursor:pointer;white-space:nowrap;transition:all .2s;margin-bottom:-2px}
+.fnav:hover{color:var(--azul)}
+.fnav.ativo{color:var(--azul);border-bottom-color:var(--laranja);font-weight:700}
+.desp-card{background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);
+  padding:12px 14px;box-shadow:var(--sombra)}
+.desp-card .dk{font-size:10px;color:var(--cinza-txt);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.desp-card .dv{font-family:Montserrat,sans-serif;font-size:18px;font-weight:800}
+.dre-row{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-bottom:1px solid var(--cinza-brd);font-size:14px}
+.dre-row:last-child{border-bottom:none}
+.dre-row.total{background:var(--azul);color:#fff;font-weight:800;border-radius:0 0 var(--radius) var(--radius)}
+.dre-row.saldo-pos{background:var(--ok-bg);color:var(--ok);font-weight:800}
+.dre-row.saldo-neg{background:var(--perigo-bg);color:var(--perigo);font-weight:800}
+.dre-secao{font-family:Montserrat,sans-serif;font-size:11px;font-weight:800;color:var(--azul);
+  text-transform:uppercase;letter-spacing:1px;padding:10px 14px;background:var(--cinza-bg);border-bottom:1px solid var(--cinza-brd)}
 .fcard{background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--sombra)}
 .fcard .fk{font-size:11px;color:var(--cinza-txt);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
 .fcard .fv{font-family:"Montserrat",sans-serif;font-size:20px;font-weight:800}
@@ -937,22 +954,81 @@ select{cursor:pointer}
     </div>
 
     <div id="afin" style="display:none">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="fin-res"></div>
-      <div class="barra">
-        <select id="f-fin-st"><option value="">Todas comiss&otilde;es</option>
-          <option value="pendente">A Receber</option><option value="pago">Pagas</option>
-        </select>
-        <select id="f-fin-re"><option value="">Todas consultoras</option>
-          <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
-        </select>
+      <!-- SUB-ABAS DO FINANCEIRO -->
+      <div style="display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--cinza-brd);padding-bottom:0">
+        <button class="fnav ativo" id="fn-comissoes" onclick="finAba(this,'fcomissoes')">💰 Comissões</button>
+        <button class="fnav" id="fn-despesas" onclick="finAba(this,'fdespesas')">📤 Despesas</button>
+        <button class="fnav" id="fn-dre" onclick="finAba(this,'fdre')">📊 DRE</button>
       </div>
-      <div class="tw cfin">
-        <div class="th"><span>Cliente/Consultora</span><span>Valor</span><span>Com. Agiliza</span><span>Com. Vendedora</span><span>Status</span><span>A&ccedil;&otilde;es</span></div>
-        <div class="tb" id="fin-body"></div>
+
+      <!-- COMISSÕES -->
+      <div id="fcomissoes">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="fin-res"></div>
+        <div class="barra">
+          <select id="f-fin-st" onchange="rFin()">
+            <option value="">Todas comissões</option>
+            <option value="pendente">A Receber</option>
+            <option value="pago">Pagas</option>
+          </select>
+          <select id="f-fin-re" onchange="rFin()">
+            <option value="">Todas consultoras</option>
+            <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
+          </select>
+          <select id="f-fin-mes" onchange="rFin()">
+            <option value="">Todos os meses</option>
+          </select>
+        </div>
+        <div class="tw cfin">
+          <div class="th"><span>Cliente/Consultora</span><span>Valor</span><span>Com. Agiliza</span><span>Com. Vendedora</span><span>Status</span><span>Ações</span></div>
+          <div class="tb" id="fin-body"></div>
+        </div>
+      </div>
+
+      <!-- DESPESAS -->
+      <div id="fdespesas" style="display:none">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px" id="desp-res"></div>
+        <div class="barra">
+          <select id="f-desp-cat" onchange="rDesp()">
+            <option value="">Todas categorias</option>
+            <option value="pessoal">👥 Pessoal</option>
+            <option value="sistemas">💻 Sistemas</option>
+            <option value="marketing">📣 Marketing</option>
+            <option value="indicacao">🤝 Indicação</option>
+            <option value="retirada">💰 Retirada Ana</option>
+            <option value="outras">📦 Outras</option>
+          </select>
+          <select id="f-desp-mes" onchange="rDesp()">
+            <option value="">Todos os meses</option>
+          </select>
+          <button class="btn-n" onclick="abrirDesp()">+ Nova Despesa</button>
+          <button class="btn-n" onclick="abrirRecibo(null)" style="background:var(--ok)">🧾 Gerar Recibo</button>
+        </div>
+        <div class="tw" style="margin-bottom:16px">
+          <div class="th" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr 70px">
+            <span>Descrição</span><span>Categoria</span><span>Valor</span><span>Vencimento</span><span>Status</span><span>Ações</span>
+          </div>
+          <div class="tb" id="desp-body"></div>
+        </div>
+        <!-- DESPESAS FIXAS REFERÊNCIA -->
+        <div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);padding:16px;box-shadow:var(--sombra)">
+          <div style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📋 Despesas Fixas Mensais</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px" id="desp-fixas"></div>
+        </div>
+      </div>
+
+      <!-- DRE -->
+      <div id="fdre" style="display:none">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px">
+          <select id="f-dre-mes" onchange="rDRE()" style="background:var(--branco);border:1.5px solid var(--cinza-brd);color:var(--texto);padding:7px 12px;border-radius:8px;font-size:13px;outline:none">
+            <option value="">Todos os meses</option>
+          </select>
+          <button class="btn-n" onclick="exportDRE()" style="background:var(--ok)">📄 Exportar DRE</button>
+        </div>
+        <div id="dre-body"></div>
       </div>
     </div>
 
-    <div id="agest" style="display:none">
+<div id="agest" style="display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
         <div class="tw" style="overflow:visible">
           <div style="padding:12px 16px;background:var(--azul);border-radius:10px 10px 0 0">
@@ -1089,8 +1165,84 @@ select{cursor:pointer}
 
 <div class="toast" id="toast"></div>
 
+<!-- MODAL DESPESA -->
+<div class="mov" id="mdesp">
+  <div class="modal" style="max-width:500px">
+    <div class="mhd"><div class="mtit" id="mdesp-tit">Nova Despesa</div><button class="mx" id="mdesp-x">&#10005;</button></div>
+    <div class="mbody">
+      <div class="fg2">
+        <div class="fi full"><label>Descrição *</label><input type="text" id="d-desc" placeholder="Ex: Salário Tatielle, Huggy, Tráfego..."></div>
+        <div class="fi"><label>Categoria *</label>
+          <select id="d-cat">
+            <option value="">Selecione...</option>
+            <option value="pessoal">👥 Pessoal</option>
+            <option value="sistemas">💻 Sistemas</option>
+            <option value="marketing">📣 Marketing</option>
+            <option value="indicacao">🤝 Indicação</option>
+            <option value="retirada">💰 Retirada Ana</option>
+            <option value="outras">📦 Outras</option>
+          </select>
+        </div>
+        <div class="fi"><label>Valor (R$) *</label><input type="text" id="d-valor" placeholder="0,00" oninput="mVal(this)"></div>
+        <div class="fi"><label>Vencimento *</label><input type="date" id="d-venc"></div>
+        <div class="fi"><label>Status</label>
+          <select id="d-status">
+            <option value="pendente">Pendente</option>
+            <option value="pago">Pago</option>
+          </select>
+        </div>
+        <div class="fi"><label>Forma de Pagamento</label>
+          <select id="d-forma">
+            <option value="">Selecione...</option>
+            <option>PIX</option><option>TED</option><option>Boleto</option>
+            <option>Débito</option><option>Dinheiro</option>
+          </select>
+        </div>
+        <div class="fi full"><label>Observação</label><input type="text" id="d-obs" placeholder="Detalhes..."></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="bcn" id="mdesp-can">Cancelar</button>
+      <button class="bsv" id="btn-salvar-desp">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECIBO -->
+<div class="mov" id="mrecibo">
+  <div class="modal" style="max-width:500px">
+    <div class="mhd"><div class="mtit">Gerar Recibo</div><button class="mx" id="mrecibo-x">&#10005;</button></div>
+    <div class="mbody">
+      <div class="fg2">
+        <div class="fi"><label>Consultora *</label>
+          <select id="rec-cons">
+            <option value="">Selecione...</option>
+            <option>Tatielle</option><option>Nicoly</option>
+          </select>
+        </div>
+        <div class="fi"><label>Tipo de Pagamento *</label>
+          <select id="rec-tipo">
+            <option value="">Selecione...</option>
+            <option value="salario">💼 Salário</option>
+            <option value="ajuda">🚗 Ajuda de Custo</option>
+            <option value="comissao">💰 Comissão de Vendas</option>
+            <option value="indicacao">🤝 Indicação</option>
+          </select>
+        </div>
+        <div class="fi"><label>Valor (R$) *</label><input type="text" id="rec-valor" placeholder="0,00" oninput="mVal(this)"></div>
+        <div class="fi"><label>Referência</label><input type="text" id="rec-ref" placeholder="Ex: Maio/2026, Semana 1..."></div>
+        <div class="fi full"><label>Observação</label><input type="text" id="rec-obs" placeholder="Detalhes do pagamento..."></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="bcn" id="mrecibo-can">Cancelar</button>
+      <button class="bsv" id="btn-gerar-recibo" style="background:var(--ok)">🖨️ Gerar Recibo</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbz2C6O5acSLf5UxP-okxS2s8SQI_NQ8HSI3hCdF1KvVqYV22B6upqYh5Uk60cmzCC3p/exec';
+const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
 const GESTOR = 'Ana Lucia';
 let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes'};
@@ -1206,6 +1358,7 @@ async function load(){
     if(r.status==='ok'){
       S.props = r.clientes||[];
       S.agenda = r.agenda||[];
+      S.despesas = r.despesas||[];
       filtrar(); rDash();
       setSS('Sincronizado',true);
       toast('Dados sincronizados!','ok');
@@ -2209,6 +2362,334 @@ function exportarCSV(){
 
 // Init
 // renderHistorico removido
+
+// ══════════════════════════════════════════════════
+// FINANCEIRO COMPLETO
+// ══════════════════════════════════════════════════
+
+const DESPESAS_FIXAS = [
+  {desc:'Salário Tatielle',    cat:'pessoal',  valor:1700, dia:27},
+  {desc:'Salário Nicoly',      cat:'pessoal',  valor:1700, dia:30},
+  {desc:'Aj. Custo Tatielle',  cat:'pessoal',  valor:600,  dia:0, obs:'R$150 x 4 semanas'},
+  {desc:'Aj. Custo Nicoly',    cat:'pessoal',  valor:840,  dia:0, obs:'R$210 x 4 semanas'},
+  {desc:'Huggy',               cat:'sistemas', valor:450,  dia:25},
+  {desc:'Vanguard',            cat:'sistemas', valor:180,  dia:20},
+  {desc:'Storm',               cat:'sistemas', valor:180,  dia:25},
+  {desc:'Umbler',              cat:'sistemas', valor:150,  dia:0},
+];
+
+// Eventos do financeiro
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('mdesp-x').addEventListener('click', function(){ fM('mdesp'); });
+  document.getElementById('mdesp-can').addEventListener('click', function(){ fM('mdesp'); });
+  document.getElementById('btn-salvar-desp').addEventListener('click', salvarDesp);
+  document.getElementById('mrecibo-x').addEventListener('click', function(){ fM('mrecibo'); });
+  document.getElementById('mrecibo-can').addEventListener('click', function(){ fM('mrecibo'); });
+  document.getElementById('btn-gerar-recibo').addEventListener('click', gerarRecibo);
+});
+
+function finAba(btn, id){
+  document.querySelectorAll('.fnav').forEach(function(b){ b.classList.remove('ativo'); });
+  btn.classList.add('ativo');
+  ['fcomissoes','fdespesas','fdre'].forEach(function(a){
+    document.getElementById(a).style.display = a===id ? 'block' : 'none';
+  });
+  if(id==='fdespesas') rDesp();
+  if(id==='fdre') rDRE();
+}
+
+// Preencher selects de mês
+function preencherMeses(){
+  const hoje = new Date();
+  const opts = ['<option value="">Todos os meses</option>'];
+  for(var i=0; i<12; i++){
+    var d = new Date(hoje.getFullYear(), hoje.getMonth()-i, 1);
+    var val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    var lbl = d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+    opts.push('<option value="'+val+'">'+ lbl.charAt(0).toUpperCase()+lbl.slice(1) +'</option>');
+  }
+  ['f-fin-mes','f-desp-mes','f-dre-mes'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = opts.join('');
+  });
+}
+
+// ── COMISSÕES ──
+function rFin(){
+  if(S.u !== GESTOR){ document.getElementById('afin').innerHTML='<div class="vazio"><div class="ico">🔒</div><p>Acesso restrito.</p></div>'; return; }
+  preencherMeses();
+  var fst = document.getElementById('f-fin-st').value||'';
+  var fre = document.getElementById('f-fin-re').value||'';
+  var fmes = document.getElementById('f-fin-mes').value||'';
+  
+  var props = S.props.filter(function(p){
+    var stOk = !fst||(fst==='pago'&&p.comStatus==='pago')||(fst==='pendente'&&p.comStatus!=='pago');
+    var reOk = !fre||p.consultora===fre;
+    var mesOk = !fmes||((p.data||'').startsWith(fmes));
+    return stOk && reOk && mesOk;
+  });
+
+  var tAg=props.reduce(function(s,p){return s+pV(p.comAgiliza);},0);
+  var tVd=props.reduce(function(s,p){return s+pV(p.comVendedora);},0);
+  var pg=props.filter(function(p){return p.comStatus==='pago';}).reduce(function(s,p){return s+pV(p.comVendedora);},0);
+  var ap=props.filter(function(p){return p.comStatus!=='pago';}).reduce(function(s,p){return s+pV(p.comVendedora);},0);
+
+  document.getElementById('fin-res').innerHTML=
+    fc('Com. Agiliza Total',fmt(tAg),'var(--azul)')+
+    fc('Com. Vendedoras',fmt(tVd),'var(--laranja)')+
+    fc('Comissões Pagas',fmt(pg),'var(--ok)')+
+    fc('A Pagar',fmt(ap),'var(--perigo)');
+
+  var body=document.getElementById('fin-body');
+  if(!props.length){ body.innerHTML='<div class="vazio"><div class="ico">💰</div><p>Nenhum registro.</p></div>'; return; }
+  body.innerHTML=props.map(function(p){
+    return '<div class="tr" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px">'+
+      '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+(p.data?new Date(p.data+'T12:00').toLocaleDateString('pt-BR'):'')+'</div></span>'+
+      '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
+      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza||'—')+'</span>'+
+      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora||'—')+'</span>'+
+      '<span>'+(p.comStatus==='pago'?'<span class="badge b-ok">✓ Paga</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
+      '<span>'+
+        (p.comStatus!=='pago'?'<button class="ac okb" data-baixar="'+p.id+'" title="Pagar">✓</button> ':'') +
+        '<button class="ac" data-editfin="'+p.id+'" title="Editar">✏️</button>'+
+      '</span>'+
+    '</div>';
+  }).join('');
+
+  // Delegação
+  setTimeout(function(){
+    var fb=document.getElementById('fin-body');
+    if(fb&&!fb._l2){fb._l2=true;fb.addEventListener('click',function(e){
+      var b=e.target.closest('[data-baixar]');
+      var ed=e.target.closest('[data-editfin]');
+      if(b) baixarCom(b.dataset.baixar);
+      else if(ed) editProp(ed.dataset.editfin);
+    });}
+  },100);
+}
+
+// ── DESPESAS ──
+function rDesp(){
+  preencherMeses();
+  var cat = document.getElementById('f-desp-cat').value||'';
+  var mes = document.getElementById('f-desp-mes').value||'';
+  var desps = (S.despesas||[]).filter(function(d){
+    return (!cat||d.categoria===cat) && (!mes||(d.vencimento||'').startsWith(mes));
+  });
+
+  var total = desps.reduce(function(s,d){return s+pV(d.valor);},0);
+  var pagas = desps.filter(function(d){return d.status==='pago';}).reduce(function(s,d){return s+pV(d.valor);},0);
+  var pend = total - pagas;
+
+  document.getElementById('desp-res').innerHTML=
+    '<div class="desp-card"><div class="dk">Total Despesas</div><div class="dv" style="color:var(--perigo)">'+fmt(total)+'</div></div>'+
+    '<div class="desp-card"><div class="dk">Pagas</div><div class="dv" style="color:var(--ok)">'+fmt(pagas)+'</div></div>'+
+    '<div class="desp-card"><div class="dk">Pendentes</div><div class="dv" style="color:var(--warn)">'+fmt(pend)+'</div></div>';
+
+  var body = document.getElementById('desp-body');
+  if(!desps.length){
+    body.innerHTML='<div class="vazio"><div class="ico">📤</div><p>Nenhuma despesa lançada.</p></div>';
+  } else {
+    body.innerHTML = desps.map(function(d){
+      return '<div class="tr" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr 70px">'+
+        '<span style="font-weight:600;font-size:13px">'+X(d.descricao)+'</span>'+
+        '<span>'+catLabel(d.categoria)+'</span>'+
+        '<span style="font-weight:600;color:var(--perigo)">'+fmt(pV(d.valor))+'</span>'+
+        '<span style="font-size:12px">'+(d.vencimento?new Date(d.vencimento+'T12:00').toLocaleDateString('pt-BR'):'—')+'</span>'+
+        '<span>'+(d.status==='pago'?'<span class="badge b-ok">✓ Pago</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
+        '<span><button class="ac del" data-deldesp="'+d.id+'">🗑</button></span>'+
+      '</div>';
+    }).join('');
+  }
+
+  // Despesas fixas referência
+  document.getElementById('desp-fixas').innerHTML = DESPESAS_FIXAS.map(function(d){
+    return '<div style="background:var(--cinza-bg);border:1px solid var(--cinza-brd);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">'+
+      '<div><div style="font-size:13px;font-weight:600">'+d.desc+'</div>'+
+      '<div style="font-size:11px;color:var(--cinza-txt)">'+catLabel(d.cat)+(d.dia?' · Dia '+d.dia:'')+(d.obs?' · '+d.obs:'')+'</div></div>'+
+      '<div style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--perigo)">'+fmt(d.valor)+'</div>'+
+    '</div>';
+  }).join('');
+
+  // Delegação delete
+  setTimeout(function(){
+    var db=document.getElementById('desp-body');
+    if(db&&!db._ld){db._ld=true;db.addEventListener('click',function(e){
+      var b=e.target.closest('[data-deldesp]');
+      if(b) delDesp(b.dataset.deldesp);
+    });}
+  },100);
+}
+
+function catLabel(c){
+  var m={pessoal:'👥 Pessoal',sistemas:'💻 Sistemas',marketing:'📣 Marketing',indicacao:'🤝 Indicação',retirada:'💰 Retirada',outras:'📦 Outras'};
+  return m[c]||c||'—';
+}
+
+function abrirDesp(){
+  document.getElementById('d-desc').value='';
+  document.getElementById('d-cat').value='';
+  document.getElementById('d-valor').value='';
+  document.getElementById('d-venc').value=new Date().toISOString().split('T')[0];
+  document.getElementById('d-status').value='pendente';
+  document.getElementById('d-forma').value='';
+  document.getElementById('d-obs').value='';
+  aM('mdesp');
+}
+
+async function salvarDesp(){
+  var desc = document.getElementById('d-desc').value.trim();
+  var cat = document.getElementById('d-cat').value;
+  var valor = document.getElementById('d-valor').value;
+  var venc = document.getElementById('d-venc').value;
+  if(!desc||!cat||!valor||!venc){ toast('Preencha todos os campos obrigatórios.','er'); return; }
+  var d = {
+    id: 'desp_'+Date.now(),
+    descricao: desc, categoria: cat, valor: valor,
+    vencimento: venc, status: document.getElementById('d-status').value,
+    forma: document.getElementById('d-forma').value,
+    obs: document.getElementById('d-obs').value,
+    lancadoPor: S.u, dataCriacao: new Date().toISOString()
+  };
+  try{
+    var r = await callApi('salvarDespesa', {dados: d});
+    if(r.status==='ok'){
+      toast('Despesa salva!','ok');
+      fM('mdesp');
+      if(!S.despesas) S.despesas=[];
+      S.despesas.unshift(d);
+      rDesp();
+    } else throw new Error(r.mensagem||'Erro');
+  }catch(e){ toast('Erro: '+e.message,'er'); }
+}
+
+async function delDesp(id){
+  if(!confirm('Excluir despesa?')) return;
+  try{
+    var r = await callApi('excluirDespesa', {id: id});
+    if(r.status==='ok'){
+      toast('Despesa removida.','ok');
+      S.despesas = (S.despesas||[]).filter(function(d){ return d.id!==id; });
+      rDesp();
+    } else throw new Error(r.mensagem||'Erro');
+  }catch(e){ toast('Erro: '+e.message,'er'); }
+}
+
+// ── DRE ──
+function rDRE(){
+  preencherMeses();
+  var mes = document.getElementById('f-dre-mes').value||'';
+  
+  var props = mes ? S.props.filter(function(p){ return (p.data||'').startsWith(mes); }) : S.props;
+  var desps = mes ? (S.despesas||[]).filter(function(d){ return (d.vencimento||'').startsWith(mes); }) : (S.despesas||[]);
+  
+  var recAgiliza = props.reduce(function(s,p){ return s+pV(p.comAgiliza); }, 0);
+  var pgComissoes = props.filter(function(p){ return p.comStatus==='pago'; }).reduce(function(s,p){ return s+pV(p.comVendedora); }, 0);
+  var totalDesp = desps.filter(function(d){ return d.status==='pago'; }).reduce(function(s,d){ return s+pV(d.valor); }, 0);
+  
+  var despPorCat = {};
+  desps.filter(function(d){ return d.status==='pago'; }).forEach(function(d){
+    despPorCat[d.categoria] = (despPorCat[d.categoria]||0) + pV(d.valor);
+  });
+
+  var saldo = recAgiliza - pgComissoes - totalDesp;
+
+  document.getElementById('dre-body').innerHTML =
+    '<div class="tw">'+
+      '<div class="dre-secao">📥 RECEITAS</div>'+
+      '<div class="dre-row"><span>Comissões Agiliza (propostas)</span><span style="font-weight:700;color:var(--ok)">'+fmt(recAgiliza)+'</span></div>'+
+      '<div class="dre-secao">💸 COMISSÕES CONSULTORAS</div>'+
+      '<div class="dre-row"><span>Comissões Pagas Consultoras</span><span style="font-weight:700;color:var(--perigo)">- '+fmt(pgComissoes)+'</span></div>'+
+      '<div class="dre-secao">📤 DESPESAS OPERACIONAIS</div>'+
+      Object.entries(despPorCat).map(function(e){ return '<div class="dre-row"><span>'+catLabel(e[0])+'</span><span style="color:var(--perigo)">- '+fmt(e[1])+'</span></div>'; }).join('')+
+      (Object.keys(despPorCat).length===0?'<div class="dre-row" style="color:var(--cinza-txt)">Nenhuma despesa lançada</div>':'')+
+      '<div class="dre-row" style="font-weight:700;border-top:2px solid var(--cinza-brd)"><span>Total Despesas</span><span style="color:var(--perigo)">- '+fmt(totalDesp)+'</span></div>'+
+      '<div class="dre-row '+(saldo>=0?'saldo-pos':'saldo-neg')+'">'+
+        '<span style="font-size:15px">💰 RESULTADO '+(saldo>=0?'POSITIVO':'NEGATIVO')+'</span>'+
+        '<span style="font-size:18px">'+fmt(saldo)+'</span>'+
+      '</div>'+
+    '</div>';
+}
+
+function exportDRE(){
+  var mes = document.getElementById('f-dre-mes').value||'todos';
+  var props = mes!=='todos' ? S.props.filter(function(p){ return (p.data||'').startsWith(mes); }) : S.props;
+  var desps = mes!=='todos' ? (S.despesas||[]).filter(function(d){ return (d.vencimento||'').startsWith(mes); }) : (S.despesas||[]);
+  
+  var linhas = ['Tipo;Descricao;Valor;Status'];
+  props.forEach(function(p){
+    linhas.push('Receita;Comissao Agiliza - '+p.nome+';'+p.comAgiliza+';'+(p.comStatus==='pago'?'Recebida':'Pendente'));
+    if(pV(p.comVendedora)>0) linhas.push('Comissao;'+p.consultora+' - '+p.nome+';'+p.comVendedora+';'+(p.comStatus==='pago'?'Paga':'Pendente'));
+  });
+  desps.forEach(function(d){ linhas.push('Despesa;'+d.descricao+';'+d.valor+';'+d.status); });
+  
+  var csv = '\uFEFF' + linhas.join('\n');
+  var blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href=url; a.download='DRE_'+mes+'_agiliza.csv';
+  a.click(); URL.revokeObjectURL(url);
+  toast('DRE exportado!','ok');
+}
+
+// ── RECIBO ──
+function abrirRecibo(p){
+  if(p){
+    document.getElementById('rec-cons').value = p.consultora||'';
+    document.getElementById('rec-tipo').value = 'comissao';
+    document.getElementById('rec-valor').value = p.comVendedora||'';
+    document.getElementById('rec-ref').value = p.nome||'';
+  }
+  aM('mrecibo');
+}
+
+function gerarRecibo(){
+  var cons = document.getElementById('rec-cons').value;
+  var tipo = document.getElementById('rec-tipo').value;
+  var valor = document.getElementById('rec-valor').value;
+  var ref = document.getElementById('rec-ref').value;
+  var obs = document.getElementById('rec-obs').value;
+  if(!cons||!tipo||!valor){ toast('Preencha os campos obrigatórios.','er'); return; }
+  
+  var tipoLabel = {salario:'Salário',ajuda:'Ajuda de Custo',comissao:'Comissão de Vendas',indicacao:'Indicação'}[tipo]||tipo;
+  var hoje = new Date().toLocaleDateString('pt-BR');
+  
+  var win = window.open('','_blank','width=600,height=700');
+  win.document.write(
+    '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<title>Recibo - '+cons+'</title>'+
+    '<style>'+
+      'body{font-family:Arial,sans-serif;max-width:500px;margin:40px auto;padding:20px;color:#1a2640}'+
+      'h1{color:#1B3A6B;font-size:22px;border-bottom:3px solid #E65C00;padding-bottom:10px}'+
+      '.info{margin:20px 0;line-height:2}'+
+      '.valor{background:#f2f5fb;border:2px solid #1B3A6B;border-radius:10px;padding:20px;text-align:center;margin:20px 0}'+
+      '.valor span{font-size:32px;font-weight:800;color:#1B3A6B}'+
+      '.assinatura{margin-top:50px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center}'+
+      '.linha{border-top:1px solid #333;padding-top:8px;font-size:12px}'+
+      '@media print{button{display:none}}'+
+    '</style></head><body>'+
+    '<h1>RECIBO DE PAGAMENTO</h1>'+
+    '<div class="info">'+
+      '<strong>Agiliza Credi</strong><br>'+
+      '<strong>Beneficiário:</strong> '+cons+'<br>'+
+      '<strong>Tipo:</strong> '+tipoLabel+'<br>'+
+      (ref?'<strong>Referência:</strong> '+ref+'<br>':'')+
+      '<strong>Data:</strong> '+hoje+'<br>'+
+      (obs?'<strong>Obs:</strong> '+obs+'<br>':'')+
+    '</div>'+
+    '<div class="valor"><div style="font-size:13px;color:#5a6885;margin-bottom:8px">VALOR PAGO</div><span>'+valor+'</span></div>'+
+    '<p style="font-size:12px;color:#5a6885;text-align:center">Declaro que recebi a quantia acima referente ao pagamento descrito.</p>'+
+    '<div class="assinatura">'+
+      '<div><div class="linha">'+cons+'<br><small>Recebedor</small></div></div>'+
+      '<div><div class="linha">Ana Lucia<br><small>Agiliza Credi</small></div></div>'+
+    '</div>'+
+    '<div style="text-align:center;margin-top:30px"><button onclick="window.print()" style="background:#E65C00;color:#fff;border:none;padding:12px 30px;border-radius:8px;font-size:15px;cursor:pointer">🖨️ Imprimir / Salvar PDF</button></div>'+
+    '</body></html>'
+  );
+  win.document.close();
+  fM('mrecibo');
+}
+
 
 </script>
 </body>
