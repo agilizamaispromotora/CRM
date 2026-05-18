@@ -1123,6 +1123,7 @@ select{cursor:pointer}
         <div class="fi" style="grid-column:span 2"><label>Cliente *</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
         <div class="fi"><label>CPF</label><input type="text" id="p-cpf" placeholder="000.000.000-00"></div>
         <div class="fi"><label>Telefone</label><input type="text" id="p-tel" placeholder="(00) 00000-0000"></div>
+        <div class="fi"><label>Nascimento</label><input type="date" id="p-nasc"></div>
         <div class="fi"><label>Conv&ecirc;nio</label>
           <select id="p-conv"><option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
@@ -1577,7 +1578,7 @@ function abrirProp(){
     const el=document.getElementById(i);if(el)el.value='';
   });
   document.getElementById('p-valor').value='';
-  document.getElementById('p-nasc').value='';
+  var pnasc=document.getElementById('p-nasc'); if(pnasc) pnasc.value='';
   document.getElementById('p-pct').value='';
   document.getElementById('p-cons').value=S.u||'';
   document.getElementById('p-data').value=new Date().toISOString().split('T')[0];
