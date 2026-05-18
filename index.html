@@ -61,6 +61,57 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .nbtn:hover{background:var(--cinza-bg);color:var(--azul)}
 .nbtn.ativo{background:var(--azul);color:#fff}
 .nbtn.gonly{display:none}.nbtn.gonly.vis{display:block}.nbtn.cons-only{display:none}.nbtn.cons-only.vis{display:block}
+
+/* ALERTAS DO DASHBOARD */
+.alerta-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.alerta-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;
+  border-radius:10px;border:1px solid;animation:slideIn .4s ease}
+@keyframes slideIn{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.alerta-banner.parabens{background:linear-gradient(135deg,#fef9c3,#fef3c7);border-color:#fcd34d}
+.alerta-banner.agenda{background:#e8eeff;border-color:#b3c6ff}
+.alerta-banner.venc-atr{background:var(--perigo-bg);border-color:#fca5a5}
+.alerta-banner.venc-hj{background:var(--warn-bg);border-color:#fcd34d}
+.alerta-banner.venc-prox{background:#fff0e6;border-color:#fdba74}
+.alerta-banner .ab-ico{font-size:20px}
+.alerta-banner .ab-body{flex:1}
+.alerta-banner .ab-titulo{font-family:"Montserrat",sans-serif;font-size:13px;font-weight:800;margin-bottom:1px}
+.alerta-banner.parabens .ab-titulo{color:#92400e}
+.alerta-banner.agenda .ab-titulo{color:#1e4fcc}
+.alerta-banner.venc-atr .ab-titulo{color:var(--perigo)}
+.alerta-banner.venc-hj .ab-titulo{color:var(--warn)}
+.alerta-banner.venc-prox .ab-titulo{color:var(--laranja)}
+.alerta-banner .ab-msg{font-size:12px;color:var(--cinza-txt)}
+.alerta-banner .ab-btn{background:none;border:1.5px solid currentColor;border-radius:6px;
+
+/* MODAL PARABÉNS */
+.parabens-overlay{display:none;position:fixed;inset:0;background:rgba(15,32,68,.6);
+  backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center;padding:20px}
+.parabens-overlay.aberto{display:flex}
+.parabens-modal{background:var(--branco);border-radius:20px;padding:36px 32px;
+  text-align:center;max-width:400px;width:100%;
+  box-shadow:0 20px 60px rgba(27,58,107,.3);
+  animation:popIn .4s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.parabens-emoji{font-size:64px;margin-bottom:12px;animation:bounce 1s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.parabens-titulo{font-family:"Montserrat",sans-serif;font-size:22px;font-weight:800;
+  color:var(--azul);margin-bottom:8px}
+.parabens-msg{font-size:14px;color:var(--cinza-txt);line-height:1.6;margin-bottom:20px}
+.parabens-valor{font-family:"Montserrat",sans-serif;font-size:28px;font-weight:800;
+  color:var(--ok);margin-bottom:20px}
+.parabens-btn{background:var(--laranja);border:none;border-radius:10px;color:#fff;
+  font-family:"Montserrat",sans-serif;font-size:15px;font-weight:700;
+  padding:12px 32px;cursor:pointer;transition:background .2s;width:100%}
+.parabens-btn:hover{background:var(--laranja2)}
+.confetti{position:absolute;pointer-events:none;font-size:20px;animation:confettiFall 3s ease-in forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+  padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:"Open Sans",sans-serif}
+.alerta-banner.parabens .ab-btn{color:#92400e}
+.alerta-banner.agenda .ab-btn{color:#1e4fcc}
+.alerta-banner.venc-atr .ab-btn{color:var(--perigo)}
+.alerta-banner.venc-hj .ab-btn{color:var(--warn)}
+.alerta-banner.venc-prox .ab-btn{color:var(--laranja)}
 .main{padding:18px;max-width:1400px;margin:0 auto}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
 .dcard{background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);
@@ -410,6 +461,7 @@ select{cursor:pointer}
         <button class="pbtn" id="p-ano">Este ano</button>
         <button class="pbtn" id="p-tot">Total</button>
       </div>
+      <div class="alerta-wrap" id="alerta-wrap"></div>
       <div class="dgrid" id="dash-cards"></div>
       <div style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Status das Propostas</div>
       <div class="sgrid" id="status-grid"></div>
@@ -1205,6 +1257,17 @@ select{cursor:pointer}
 
 <div class="toast" id="toast"></div>
 
+<!-- MODAL PARABÉNS -->
+<div class="parabens-overlay" id="modal-parabens" onclick="fecharParabens()">
+  <div class="parabens-modal" onclick="event.stopPropagation()">
+    <div class="parabens-emoji" id="par-emoji">🎉</div>
+    <div class="parabens-titulo" id="par-titulo">Parabéns!</div>
+    <div class="parabens-msg" id="par-msg">Ótimo trabalho!</div>
+    <div class="parabens-valor" id="par-valor" style="display:none"></div>
+    <button class="parabens-btn" onclick="fecharParabens()">Continuar 🚀</button>
+  </div>
+</div>
+
 <!-- MODAL DESPESA -->
 <div class="mov" id="mdesp">
   <div class="modal" style="max-width:500px">
@@ -1495,6 +1558,7 @@ function rDash(){
     '<div class="vazio" style="padding:20px"><div class="ico">🏆</div><p>Sem dados</p></div>':
     top.map(function(c,i){return '<div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">'+med[i]+'</span><div style="flex:1"><div style="font-weight:700;font-size:13px">'+X(c.n)+'</div><div style="font-size:11px;color:var(--cinza-txt)">'+c.qtd+' proposta'+(c.qtd!==1?'s':'')+'</div></div><div style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--ok);font-size:14px">'+fmt(c.vol)+'</div></div>';}).join('');
   const ult=[...S.props].sort(function(a,b){return new Date(b.data)-new Date(a.data);}).slice(0,5);
+  rAlertas();
   document.getElementById('dash-ult').innerHTML=ult.length===0?
     '<div class="vazio" style="padding:20px"><div class="ico">📋</div><p>Sem propostas</p></div>':
     ult.map(function(p){
@@ -1641,7 +1705,19 @@ async function salvarProp(){
   };
   try{
     const r=await callApi(d.id?'atualizar':'criar',{dados:d});
-    if(r.status==='ok'){toast(d.id?'Proposta atualizada!':'Proposta salva!','ok');fM('mprop');await load();}
+    if(r.status==='ok'){
+        fM('mprop');
+        await load();
+        if(!d.id){
+          // Nova proposta - mostrar parabéns
+          var tipo = d.status === 'PAGA' ? 'paga' : 'prop';
+          mostrarParabens(tipo, d.consultora, d.valor);
+        } else if(d.status === 'PAGA') {
+          mostrarParabens('paga', d.consultora, d.valor);
+        } else {
+          toast('Proposta atualizada!', 'ok');
+        }
+      }
     else throw new Error(r.mensagem||'Erro');
   }catch(e){toast('Erro: '+e.message,'er');}
   finally{btn.disabled=false;btn.textContent='Salvar Proposta';}
@@ -2923,6 +2999,169 @@ function rCli(){
     h+='<button class="pbtn2 '+(p===S.pgCli?'at':'')+'" onclick="S.pgCli='+p+';rCli()">'+p+'</button>';
   h+='<button class="pbtn2" onclick="S.pgCli++;rCli()" '+(S.pgCli>=tp?'disabled':'')+'>&#8250;</button>';
   pb.innerHTML = h;
+}
+
+// ══════════════════════════════════════════════════
+// ALERTAS DO DASHBOARD
+// ══════════════════════════════════════════════════
+function rAlertas(){
+  var wrap = document.getElementById('alerta-wrap');
+  if(!wrap) return;
+  var alertas = [];
+  var hoje = new Date();
+  var diaHoje = hoje.getDate();
+  var mesHoje = hoje.getMonth();
+  var anoHoje = hoje.getFullYear();
+
+  // 1. PARABÉNS — consultora com mais vendas no mês
+  var propsMes = S.props.filter(function(p){
+    if(!p.data) return false;
+    var d = new Date(p.data);
+    return d.getMonth()===mesHoje && d.getFullYear()===anoHoje;
+  });
+  var byC = {};
+  propsMes.forEach(function(p){
+    var k = p.consultora||'—';
+    if(!byC[k]) byC[k]={n:k,vol:0,qtd:0};
+    byC[k].vol += pV(p.valor);
+    byC[k].qtd++;
+  });
+  var top = Object.values(byC).sort(function(a,b){return b.vol-a.vol;})[0];
+  if(top && top.vol > 0){
+    var emoji = top.n==='Ana Lucia'?'👑':top.n==='Tatielle'?'🌟':'💫';
+    // Mostrar parabéns só para a própria consultora ou para a gestora
+    if(S.u === top.n || S.u === GESTOR){
+      alertas.push('<div class="alerta-banner parabens">'+
+        '<div class="ab-ico">🏆</div>'+
+        '<div class="ab-body">'+
+          '<div class="ab-titulo">'+emoji+' Parabéns, '+top.n+'!</div>'+
+          '<div class="ab-msg">Você está liderando este mês com '+top.qtd+' proposta'+(top.qtd!==1?'s':'')+' e '+fmt(top.vol)+' em contratos!</div>'+
+        '</div>'+
+      '</div>');
+    }
+  }
+
+  // 2. LEMBRETES DE AGENDA DO DIA
+  var hojeStr = hoje.toISOString().split('T')[0];
+  var agendaHoje = S.agenda.filter(function(a){
+    var resp = a.responsavel||'';
+    var ehMeu = !resp || resp===S.u || resp==='Todos';
+    return a.data===hojeStr && ehMeu;
+  });
+  if(agendaHoje.length > 0){
+    var txtAg = agendaHoje.length===1
+      ? '"'+agendaHoje[0].obs+'"'
+      : agendaHoje.length+' compromissos agendados para hoje';
+    alertas.push('<div class="alerta-banner agenda">'+
+      '<div class="ab-ico">📅</div>'+
+      '<div class="ab-body">'+
+        '<div class="ab-titulo">Lembrete de hoje</div>'+
+        '<div class="ab-msg">'+X(txtAg)+'</div>'+
+      '</div>'+
+      '<button class="ab-btn" onclick="document.getElementById('nav-ag').click()">Ver agenda</button>'+
+    '</div>');
+  }
+
+  // 3. ALERTAS DE VENCIMENTO (só gestora)
+  if(S.u === GESTOR){
+    var despFixas = [
+      {desc:'Salário Tatielle', valor:1700, dia:27},
+      {desc:'Salário Nicoly', valor:1700, dia:30},
+      {desc:'Huggy', valor:450, dia:25},
+      {desc:'Vanguard', valor:180, dia:20},
+      {desc:'Storm', valor:180, dia:25},
+      {desc:'Umbler', valor:150, dia:0},
+    ];
+
+    despFixas.forEach(function(d){
+      if(!d.dia) return;
+      var diasRestantes = d.dia - diaHoje;
+      var vencMes = new Date(anoHoje, mesHoje, d.dia);
+      var vencStr = vencMes.toLocaleDateString('pt-BR');
+
+      if(diasRestantes < 0){
+        // Atrasado
+        alertas.push('<div class="alerta-banner venc-atr">'+
+          '<div class="ab-ico">🔴</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">'+d.desc+' — vencido!</div>'+
+            '<div class="ab-msg">Venceu dia '+vencStr+' — R$ '+fmt(d.valor)+'</div>'+
+          '</div>'+
+          '<button class="ab-btn" onclick="document.getElementById('nav-fin').click()">Ver financeiro</button>'+
+        '</div>');
+      } else if(diasRestantes === 0){
+        // Hoje
+        alertas.push('<div class="alerta-banner venc-hj">'+
+          '<div class="ab-ico">⏰</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">'+d.desc+' vence hoje!</div>'+
+            '<div class="ab-msg">R$ '+fmt(d.valor)+' — vence hoje, dia '+vencStr+'</div>'+
+          '</div>'+
+          '<button class="ab-btn" onclick="document.getElementById('nav-fin').click()">Pagar</button>'+
+        '</div>');
+      } else if(diasRestantes <= 5){
+        // Próximo (até 5 dias)
+        alertas.push('<div class="alerta-banner venc-prox">'+
+          '<div class="ab-ico">🟠</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">'+d.desc+' vence em '+diasRestantes+' dia'+(diasRestantes!==1?'s':'')+'</div>'+
+            '<div class="ab-msg">R$ '+fmt(d.valor)+' — dia '+vencStr+'</div>'+
+          '</div>'+
+        '</div>');
+      }
+    });
+  }
+
+  wrap.innerHTML = alertas.join('');
+}
+
+// ══════════════════════════════════════════════════
+// MODAL PARABÉNS
+// ══════════════════════════════════════════════════
+var MSGS_PROP = [
+  {emoji:'🎉', titulo:'Proposta cadastrada!', msg:'Cada proposta é um passo mais perto do seu objetivo. Continue assim, {nome}!'},
+  {emoji:'💪', titulo:'Arrasou!', msg:'Mais uma proposta na manga! Você está no caminho certo, {nome}!'},
+  {emoji:'🚀', titulo:'Decolando!', msg:'Proposta registrada com sucesso! Seu esforço está valendo a pena, {nome}!'},
+  {emoji:'⭐', titulo:'Excelente trabalho!', msg:'Cada cliente atendido é uma vitória! Continue brilhando, {nome}!'},
+  {emoji:'🔥', titulo:'Tá pegando fogo!', msg:'Mais uma proposta e você está mais perto da meta do mês, {nome}!'},
+  {emoji:'💰', titulo:'Dinheiro no bolso!', msg:'Proposta registrada! Comissão a caminho, {nome}!'},
+  {emoji:'🌟', titulo:'Você brilha!', msg:'Mais uma oportunidade criada! Você é incrível, {nome}!'},
+  {emoji:'🏆', titulo:'Campeã!', msg:'Cada proposta conta! Você está fazendo história na Agiliza Credi, {nome}!'},
+];
+
+var MSGS_PAGA = [
+  {emoji:'🎊', titulo:'Contrato Fechado!', msg:'PARABÉNS! Mais um contrato pago! Você é demais, {nome}!'},
+  {emoji:'💎', titulo:'Meta batendo!', msg:'Contrato PAGO! Isso é fruto do seu trabalho duro, {nome}! 🔥'},
+  {emoji:'🥇', titulo:'Campeã do mês!', msg:'Mais um fechamento! Você está construindo algo incrível, {nome}!'},
+  {emoji:'🌈', titulo:'Sucesso!', msg:'Contrato pago e comissão garantida! Você arrasouu, {nome}!'},
+];
+
+function mostrarParabens(tipo, consultora, valor){
+  var msgs = tipo === 'paga' ? MSGS_PAGA : MSGS_PROP;
+  var idx = Math.floor(Math.random() * msgs.length);
+  var m = msgs[idx];
+  var nome = consultora ? consultora.split(' ')[0] : 'você';
+
+  document.getElementById('par-emoji').textContent = m.emoji;
+  document.getElementById('par-titulo').textContent = m.titulo;
+  document.getElementById('par-msg').textContent = m.msg.replace('{nome}', nome);
+
+  var valEl = document.getElementById('par-valor');
+  if(valor && pV(valor) > 0){
+    valEl.textContent = fmt(pV(valor));
+    valEl.style.display = 'block';
+  } else {
+    valEl.style.display = 'none';
+  }
+
+  document.getElementById('modal-parabens').classList.add('aberto');
+
+  // Auto fechar após 5 segundos
+  setTimeout(function(){ fecharParabens(); }, 5000);
+}
+
+function fecharParabens(){
+  document.getElementById('modal-parabens').classList.remove('aberto');
 }
 
 </script>
