@@ -3058,7 +3058,7 @@ function rAlertas(){
         '<div class="ab-titulo">Lembrete de hoje</div>'+
         '<div class="ab-msg">'+X(txtAg)+'</div>'+
       '</div>'+
-      '<button class="ab-btn" onclick="document.getElementById('nav-ag').click()">Ver agenda</button>'+
+      '<button class="ab-btn" onclick="navAba(\'ag\')">Ver agenda</button>'+
     '</div>');
   }
 
@@ -3087,7 +3087,7 @@ function rAlertas(){
             '<div class="ab-titulo">'+d.desc+' — vencido!</div>'+
             '<div class="ab-msg">Venceu dia '+vencStr+' — R$ '+fmt(d.valor)+'</div>'+
           '</div>'+
-          '<button class="ab-btn" onclick="document.getElementById('nav-fin').click()">Ver financeiro</button>'+
+          '<button class="ab-btn" onclick="navAba(\'fin\')">Ver financeiro</button>'+
         '</div>');
       } else if(diasRestantes === 0){
         // Hoje
@@ -3097,7 +3097,7 @@ function rAlertas(){
             '<div class="ab-titulo">'+d.desc+' vence hoje!</div>'+
             '<div class="ab-msg">R$ '+fmt(d.valor)+' — vence hoje, dia '+vencStr+'</div>'+
           '</div>'+
-          '<button class="ab-btn" onclick="document.getElementById('nav-fin').click()">Pagar</button>'+
+          '<button class="ab-btn" onclick="navAba(\'fin\')">Pagar</button>'+
         '</div>');
       } else if(diasRestantes <= 5){
         // Próximo (até 5 dias)
