@@ -1914,10 +1914,23 @@ function fmtData(d){
 }
 function aM(id){document.getElementById(id).classList.add('ab');}
 function fM(id){document.getElementById(id).classList.remove('ab');}
-function pV(v){if(!v)return 0;return parseFloat(String(v).replace(/R\$\s?/g,'').replace(/\./g,'').replace(',','.'))||0;}
+function pV(v){
+  if(!v) return 0;
+  var s = String(v).replace(/R\$\s?/g,'').trim();
+  // Formato brasileiro: 1.234,56
+  if(s.indexOf(',') > -1){
+    s = s.replace(/\./g,'').replace(',','.');
+  }
+  return parseFloat(s)||0;
+}
 function fmt(v){return 'R$ '+(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtK(v){if(v>=1000)return 'R$'+(v/1000).toFixed(0)+'k';return fmt(v);}
-function mVal(el){var v=el.value.replace(/\D/g,'');if(!v){el.value='';return;}v=(parseFloat(v)/100).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');el.value=v;}
+function mVal(el){
+  var v = el.value.replace(/[^0-9]/g,'');
+  if(!v){el.value='';return;}
+  var num = parseFloat(v)/100;
+  el.value = num.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 function toast(msg,tipo){var t=document.getElementById('toast');t.textContent=msg;t.className='toast vis '+(tipo||'');setTimeout(function(){t.className='toast';},3500);}
 
 // Ranking CSS extra
