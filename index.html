@@ -1260,16 +1260,7 @@ select{cursor:pointer}
 
 <div class="toast" id="toast"></div>
 
-<!-- MODAL PARABÉNS -->
-<div class="parabens-overlay" id="modal-parabens" onclick="fecharParabens()">
-  <div class="parabens-modal" onclick="event.stopPropagation()">
-    <div class="parabens-emoji" id="par-emoji">🎉</div>
-    <div class="parabens-titulo" id="par-titulo">Parabéns!</div>
-    <div class="parabens-msg" id="par-msg">Ótimo trabalho!</div>
-    <div class="parabens-valor" id="par-valor" style="display:none"></div>
-    <button class="parabens-btn" onclick="fecharParabens()">Continuar 🚀</button>
-  </div>
-</div>
+
 
 <!-- MODAL DESPESA -->
 <div class="mov" id="mdesp">
@@ -3145,26 +3136,39 @@ function mostrarParabens(tipo, consultora, valor){
   var m = msgs[idx];
   var nome = consultora ? consultora.split(' ')[0] : 'você';
 
-  document.getElementById('par-emoji').textContent = m.emoji;
-  document.getElementById('par-titulo').textContent = m.titulo;
-  document.getElementById('par-msg').textContent = m.msg.replace('{nome}', nome);
+  // Usar elementos temporários ocultos
+  var tmp = document.getElementById('par-tmp');
+  if(!tmp){ tmp = document.createElement('div'); tmp.id='par-tmp'; tmp.style.display='none'; tmp.innerHTML='<span id="par-emoji-tmp"></span><span id="par-titulo-tmp"></span><span id="par-msg-tmp"></span><span id="par-valor-tmp"></span>'; document.body.appendChild(tmp); }
+  document.getElementById('par-emoji-tmp').textContent = m.emoji;
+  document.getElementById('par-titulo-tmp').textContent = m.titulo;
+  document.getElementById('par-msg-tmp').textContent = m.msg.replace('{nome}', nome);
 
-  var valEl = document.getElementById('par-valor');
-  if(valor && pV(valor) > 0){
-    valEl.textContent = fmt(pV(valor));
-    valEl.style.display = 'block';
-  } else {
-    valEl.style.display = 'none';
-  }
+  var valEl = document.getElementById('par-valor-tmp');
+  valEl.textContent = (valor && pV(valor) > 0) ? fmt(pV(valor)) : '';
 
-  document.getElementById('modal-parabens').classList.add('aberto');
+  // Criar modal dinamicamente
+  var existing = document.getElementById('modal-parabens');
+  if(existing) existing.parentNode.removeChild(existing);
+  var overlay = document.createElement('div');
+  overlay.id = 'modal-parabens';
+  overlay.onclick = fecharParabens;
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,32,68,.65);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = '<div onclick="event.stopPropagation()" style="background:#fff;border-radius:20px;padding:36px 32px;text-align:center;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(27,58,107,.3)">'
+    + '<div style="font-size:60px;margin-bottom:12px">' + document.getElementById('par-emoji-tmp').textContent + '</div>'
+    + '<div style="font-family:Montserrat,sans-serif;font-size:22px;font-weight:800;color:#1B3A6B;margin-bottom:8px">' + document.getElementById('par-titulo-tmp').textContent + '</div>'
+    + '<div style="font-size:14px;color:#5a6885;line-height:1.6;margin-bottom:20px">' + document.getElementById('par-msg-tmp').textContent + '</div>'
+    + (document.getElementById('par-valor-tmp').textContent ? '<div style="font-family:Montserrat,sans-serif;font-size:28px;font-weight:800;color:#1a7a3c;margin-bottom:20px">' + document.getElementById('par-valor-tmp').textContent + '</div>' : '')
+    + '<button onclick="fecharParabens()" style="background:#E65C00;border:none;border-radius:10px;color:#fff;font-family:Montserrat,sans-serif;font-size:15px;font-weight:700;padding:12px 32px;cursor:pointer;width:100%">Continuar 🚀</button>'
+    + '</div>';
+  document.body.appendChild(overlay);
 
   // Auto fechar após 5 segundos
   setTimeout(function(){ fecharParabens(); }, 5000);
 }
 
 function fecharParabens(){
-  document.getElementById('modal-parabens').classList.remove('aberto');
+  var m = document.getElementById('modal-parabens');
+  if(m) m.parentNode.removeChild(m);
 }
 
 </script>
