@@ -1335,6 +1335,13 @@ document.getElementById('exp-mes').addEventListener('click', function(){ exportC
 document.querySelectorAll('.mov').forEach(function(m){
   m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('ab'); });
 });
+  // Eventos financeiro
+  document.getElementById('mdesp-x').addEventListener('click', function(){ fM('mdesp'); });
+  document.getElementById('mdesp-can').addEventListener('click', function(){ fM('mdesp'); });
+  document.getElementById('btn-salvar-desp').addEventListener('click', salvarDesp);
+  document.getElementById('mrecibo-x').addEventListener('click', function(){ fM('mrecibo'); });
+  document.getElementById('mrecibo-can').addEventListener('click', function(){ fM('mrecibo'); });
+  document.getElementById('btn-gerar-recibo').addEventListener('click', gerarRecibo);
 }); // fim DOMContentLoaded
 
 function fazerLogin(){
@@ -2505,14 +2512,7 @@ const DESPESAS_FIXAS = [
 ];
 
 // Eventos do financeiro
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('mdesp-x').addEventListener('click', function(){ fM('mdesp'); });
-  document.getElementById('mdesp-can').addEventListener('click', function(){ fM('mdesp'); });
-  document.getElementById('btn-salvar-desp').addEventListener('click', salvarDesp);
-  document.getElementById('mrecibo-x').addEventListener('click', function(){ fM('mrecibo'); });
-  document.getElementById('mrecibo-can').addEventListener('click', function(){ fM('mrecibo'); });
-  document.getElementById('btn-gerar-recibo').addEventListener('click', gerarRecibo);
-});
+// eventos financeiro registrados no DOMContentLoaded principal acima
 
 function finAba(btn, id){
   document.querySelectorAll('.fnav').forEach(function(b){ b.classList.remove('ativo'); });
