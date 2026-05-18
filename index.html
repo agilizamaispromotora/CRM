@@ -60,7 +60,7 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
   font-size:13px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;transition:all .2s}
 .nbtn:hover{background:var(--cinza-bg);color:var(--azul)}
 .nbtn.ativo{background:var(--azul);color:#fff}
-.nbtn.gonly{display:none}.nbtn.gonly.vis{display:block}
+.nbtn.gonly{display:none}.nbtn.gonly.vis{display:block}.nbtn.cons-only{display:none}.nbtn.cons-only.vis{display:block}
 .main{padding:18px;max-width:1400px;margin:0 auto}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
 .dcard{background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);
@@ -397,6 +397,7 @@ select{cursor:pointer}
     <button class="nbtn" id="nav-sim">&#129518; Simulador</button>
     <button class="nbtn gonly" id="nav-fin">&#128181; Financeiro</button>
     <button class="nbtn gonly" id="nav-gest">&#128274; Gestor</button>
+    <button class="nbtn cons-only" id="nav-mycom">&#128176; Minhas Comissões</button>
   </nav>
   <main class="main">
 
@@ -1031,7 +1032,22 @@ select{cursor:pointer}
       </div>
     </div>
 
-<div id="agest" style="display:none">
+<div id="amycom" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="mycom-res"></div>
+      <div class="barra">
+        <select id="f-mycom-mes" onchange="rMycom()">
+          <option value="">Todos os meses</option>
+        </select>
+      </div>
+      <div class="tw" style="margin-bottom:16px">
+        <div class="th" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr">
+          <span>Cliente</span><span>Valor Contrato</span><span>Minha Comissão</span><span>Status</span><span>Data</span>
+        </div>
+        <div class="tb" id="mycom-body"></div>
+      </div>
+    </div>
+
+    <div id="agest" style="display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
         <div class="tw" style="overflow:visible">
           <div style="padding:12px 16px;background:var(--azul);border-radius:10px 10px 0 0">
@@ -1275,6 +1291,7 @@ document.getElementById('nav-ag').addEventListener('click', function(){ navAba('
 document.getElementById('nav-sim').addEventListener('click', function(){ navAba('sim'); });
 document.getElementById('nav-fin').addEventListener('click', function(){ navAba('fin'); });
 document.getElementById('nav-gest').addEventListener('click', function(){ navAba('gest'); });
+  document.getElementById('nav-mycom').addEventListener('click', function(){ navAba('mycom'); });
 document.getElementById('p-sem').addEventListener('click', function(){ setPer('sem',this); });
 document.getElementById('p-mes').addEventListener('click', function(){ setPer('mes',this); });
 document.getElementById('p-ano').addEventListener('click', function(){ setPer('ano',this); });
@@ -1311,8 +1328,12 @@ function fazerLogin(){
   document.getElementById('p-cons').value=u;
   document.getElementById('p-data').value=new Date().toISOString().split('T')[0];
   if(u===GESTOR){
+    // Gestor vê tudo
     document.getElementById('nav-fin').classList.add('vis');
     document.getElementById('nav-gest').classList.add('vis');
+  } else {
+    // Consultoras veem Minhas Comissões
+    document.getElementById('nav-mycom').classList.add('vis');
   }
   load();
 }
@@ -1325,12 +1346,13 @@ function sair(){
   document.getElementById('lu').value='';
   document.getElementById('nav-fin').classList.remove('vis');
   document.getElementById('nav-gest').classList.remove('vis');
+  document.getElementById('nav-mycom').classList.remove('vis');
 }
 
 function navAba(id){
   document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('ativo');});
   document.getElementById('nav-'+id).classList.add('ativo');
-  ['dash','prop','rank','ag','sim','fin','gest'].forEach(function(a){
+  ['dash','prop','rank','ag','sim','fin','gest','mycom'].forEach(function(a){
     const el=document.getElementById('a'+a);
     if(el) el.style.display = a===id ? 'block' : 'none';
   });
@@ -1339,6 +1361,7 @@ function navAba(id){
   if(id==='ag') rAg();
   if(id==='fin') rFin();
   if(id==='gest') rGest();
+  if(id==='mycom') rMycom();
 }
 
 async function callApi(ac, dados){
@@ -1409,7 +1432,9 @@ function filtroPerRank(lista){
 }
 
 function rDash(){
-  const fp=filtroPer(S.props);
+  // Consultoras veem só as próprias propostas no dashboard
+  const propsVisiveis = S.u===GESTOR ? S.props : S.props.filter(function(p){ return p.consultora===S.u; });
+  const fp=filtroPer(propsVisiveis);
   const pagas=fp.filter(function(p){return p.status==='PAGA';});
   const totVol=fp.reduce(function(s,p){return s+pV(p.valor);},0);
   const totAg=fp.reduce(function(s,p){return s+pV(p.comAgiliza);},0);
@@ -1459,7 +1484,9 @@ function filtrar(){
   const re=document.getElementById('f-resp').value||'';
   S.ft=S.props.filter(function(p){
     const m=!b||[p.nome,p.cpf,p.banco,p.consultora].some(function(v){return (v||'').toLowerCase().includes(b);});
-    return m&&(!st||p.status===st)&&(!re||p.consultora===re);
+    // Consultoras só veem as próprias propostas
+    const propria = S.u===GESTOR || p.consultora===S.u;
+    return m&&(!st||p.status===st)&&(!re||p.consultora===re)&&propria;
   });
   S.pg=1; rProp();
   // Delegação de eventos para tabela propostas
@@ -2754,6 +2781,42 @@ function gerarRecibo(){
   fM('mrecibo');
 }
 
+
+// ── MINHAS COMISSÕES (consultoras) ──
+function rMycom(){
+  preencherMeses();
+  var mes = document.getElementById('f-mycom-mes').value||'';
+  
+  // Filtrar só as propostas da consultora logada
+  var minhas = S.props.filter(function(p){
+    return p.consultora === S.u && (!mes || (p.data||'').startsWith(mes));
+  });
+
+  var total = minhas.reduce(function(s,p){ return s+pV(p.comVendedora); }, 0);
+  var pagas = minhas.filter(function(p){ return p.comStatus==='pago'; }).reduce(function(s,p){ return s+pV(p.comVendedora); }, 0);
+  var pend = total - pagas;
+
+  document.getElementById('mycom-res').innerHTML =
+    fc('Total a Receber', fmt(total), 'var(--azul)') +
+    fc('Já Recebido', fmt(pagas), 'var(--ok)') +
+    fc('Pendente', fmt(pend), 'var(--perigo)');
+
+  var body = document.getElementById('mycom-body');
+  if(!minhas.length){
+    body.innerHTML = '<div class="vazio"><div class="ico">💰</div><p>Nenhuma comissão encontrada.</p></div>';
+    return;
+  }
+
+  body.innerHTML = minhas.map(function(p){
+    return '<div class="tr" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr">'+
+      '<span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.banco)+' · '+X(p.tipoProposta)+'</div></span>'+
+      '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
+      '<span style="font-weight:700;color:'+(p.comStatus==='pago'?'var(--ok)':'var(--laranja)')+'">'+X(p.comVendedora||'—')+'</span>'+
+      '<span>'+(p.comStatus==='pago'?'<span class="badge b-ok">✓ Recebida</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
+      '<span style="font-size:12px;color:var(--cinza-txt)">'+(p.data?new Date(p.data+'T12:00').toLocaleDateString('pt-BR'):'—')+'</span>'+
+    '</div>';
+  }).join('');
+}
 
 </script>
 </body>
