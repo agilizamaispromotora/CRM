@@ -84,13 +84,16 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .alerta-banner .ab-btn{background:none;border:1.5px solid currentColor;border-radius:6px;
 
 /* MODAL PARABÉNS */
-.parabens-overlay{display:none;position:fixed;inset:0;background:rgba(15,32,68,.6);
-  backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center;padding:20px}
-.parabens-overlay.aberto{display:flex}
+.parabens-overlay{visibility:hidden;opacity:0;pointer-events:none;
+  position:fixed;inset:0;background:rgba(15,32,68,.6);
+  backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;
+  transition:opacity .3s}
+.parabens-overlay.aberto{visibility:visible;opacity:1;pointer-events:all}
 .parabens-modal{background:var(--branco);border-radius:20px;padding:36px 32px;
   text-align:center;max-width:400px;width:100%;
   box-shadow:0 20px 60px rgba(27,58,107,.3);
-  animation:popIn .4s cubic-bezier(.175,.885,.32,1.275)}
+  transform:scale(0.5);transition:transform .3s}
+.parabens-overlay.aberto .parabens-modal{transform:scale(1);animation:popIn .4s cubic-bezier(.175,.885,.32,1.275)}
 @keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 .parabens-emoji{font-size:64px;margin-bottom:12px;animation:bounce 1s infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
