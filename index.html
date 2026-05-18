@@ -391,6 +391,7 @@ select{cursor:pointer}
   </header>
   <nav class="nav">
     <button class="nbtn ativo" id="nav-dash">&#128200; Dashboard</button>
+    <button class="nbtn" id="nav-cli">&#128101; Clientes</button>
     <button class="nbtn" id="nav-prop">&#128203; Propostas</button>
     <button class="nbtn" id="nav-rank">&#127942; Ranking</button>
     <button class="nbtn" id="nav-ag">&#128197; Agenda</button>
@@ -421,6 +422,25 @@ select{cursor:pointer}
           <div style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">&#218;ltimas Propostas</div>
           <div id="dash-ult"></div>
         </div>
+      </div>
+    </div>
+
+    <div id="acli" style="display:none">
+      <div class="barra">
+        <input type="text" id="busca-cli" placeholder="&#128269; Buscar nome, CPF, telefone..." oninput="filtrarCli()">
+        <select id="f-cli-conv" onchange="filtrarCli()">
+          <option value="">Todos os convênios</option>
+          <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
+          <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
+          <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
+        </select>
+      </div>
+      <div class="tw" style="overflow:hidden">
+        <div class="th" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr">
+          <span>Nome</span><span>CPF</span><span>Nascimento</span><span>Telefone</span><span>Conv&ecirc;nio</span><span>Consultora</span>
+        </div>
+        <div class="tb" id="cli-body"><div class="loading"><div class="spin"></div>Carregando...</div></div>
+        <div class="pag"><span id="cli-pag-info">0 clientes</span><div class="pbtns" id="cli-pag-btns"></div></div>
       </div>
     </div>
 
@@ -1264,7 +1284,7 @@ select{cursor:pointer}
 const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
 const GESTOR = 'Ana Lucia';
-let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes'};
+let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes',clientes:[],ftCli:[],pgCli:1};
 
 // EVENTOS
 document.addEventListener('DOMContentLoaded', function(){
@@ -1285,7 +1305,8 @@ document.getElementById('mdet-x').addEventListener('click', function(){ fM('mdet
 document.getElementById('mdet-can').addEventListener('click', function(){ fM('mdet'); });
 document.getElementById('btn-edit-det').addEventListener('click', function(){ if(S.det) editProp(S.det.id); });
 document.getElementById('nav-dash').addEventListener('click', function(){ navAba('dash'); });
-document.getElementById('nav-prop').addEventListener('click', function(){ navAba('prop'); });
+document.getElementById('nav-cli').addEventListener('click', function(){ navAba('cli'); });
+  document.getElementById('nav-prop').addEventListener('click', function(){ navAba('prop'); });
 document.getElementById('nav-rank').addEventListener('click', function(){ navAba('rank'); });
 document.getElementById('nav-ag').addEventListener('click', function(){ navAba('ag'); });
 document.getElementById('nav-sim').addEventListener('click', function(){ navAba('sim'); });
@@ -1352,13 +1373,14 @@ function sair(){
 function navAba(id){
   document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('ativo');});
   document.getElementById('nav-'+id).classList.add('ativo');
-  ['dash','prop','rank','ag','sim','fin','gest','mycom'].forEach(function(a){
+  ['dash','cli','prop','rank','ag','sim','fin','gest','mycom'].forEach(function(a){
     const el=document.getElementById('a'+a);
     if(el) el.style.display = a===id ? 'block' : 'none';
   });
   if(id==='dash') rDash();
   if(id==='rank') rRank();
   if(id==='ag') rAg();
+  if(id==='cli') rCli();
   if(id==='fin') rFin();
   if(id==='gest') rGest();
   if(id==='mycom') rMycom();
@@ -1441,6 +1463,7 @@ function rDash(){
   const totVd=fp.reduce(function(s,p){return s+pV(p.comVendedora);},0);
   const emAn=fp.filter(function(p){return p.status==='EM ANÁLISE'||p.status==='FORMALIZAÇÃO';}).length;
   document.getElementById('dash-cards').innerHTML=
+    dc('','Total Clientes',S.clientes?S.clientes.length:0,'cadastrados')+
     dc('','Total Propostas',fp.length,'no período')+
     dc('la','Em Andamento',emAn,'formalização + análise')+
     dc('ok','Volume Total',fmt(totVol),'todas as propostas')+
@@ -1547,6 +1570,7 @@ function abrirProp(){
     const el=document.getElementById(i);if(el)el.value='';
   });
   document.getElementById('p-valor').value='';
+  document.getElementById('p-nasc').value='';
   document.getElementById('p-pct').value='';
   document.getElementById('p-cons').value=S.u||'';
   document.getElementById('p-data').value=new Date().toISOString().split('T')[0];
@@ -1567,6 +1591,7 @@ function editProp(id){
   document.getElementById('p-nome').value=p.nome||'';
   document.getElementById('p-cpf').value=p.cpf||'';
   document.getElementById('p-tel').value=p.telefone||'';
+  document.getElementById('p-nasc').value=p.nascimento||'';
   document.getElementById('p-conv').value=p.convenio||'';
   document.getElementById('p-prom').value=p.promotora||'';
   document.getElementById('p-banco').value=p.banco||'';
@@ -2826,6 +2851,79 @@ function rMycom(){
       '<span style="font-size:12px;color:var(--cinza-txt)">'+fDH(p.data,'')+'</span>'+
     '</div>';
   }).join('');
+}
+
+// ── CLIENTES ──
+function buildClientes(){
+  // Extrair clientes únicos das propostas
+  var mapa = {};
+  S.props.forEach(function(p){
+    if(!p.nome) return;
+    var key = (p.cpf||p.nome).replace(/\D/g,'').toLowerCase()||p.nome.toLowerCase();
+    if(!mapa[key]){
+      mapa[key] = {
+        nome: p.nome,
+        cpf: p.cpf||'',
+        nascimento: p.nascimento||'',
+        telefone: p.telefone||'',
+        convenio: p.convenio||'',
+        cadastradoPor: p.consultora||'',
+        qtdProps: 0
+      };
+    }
+    mapa[key].qtdProps++;
+    // Atualizar dados se mais completos
+    if(!mapa[key].nascimento && p.nascimento) mapa[key].nascimento = p.nascimento;
+    if(!mapa[key].telefone && p.telefone) mapa[key].telefone = p.telefone;
+  });
+  S.clientes = Object.values(mapa);
+}
+
+function filtrarCli(){
+  buildClientes();
+  var b = (document.getElementById('busca-cli').value||'').toLowerCase();
+  var conv = document.getElementById('f-cli-conv').value||'';
+  S.ftCli = S.clientes.filter(function(c){
+    var m = !b||[c.nome,c.cpf,c.telefone].some(function(v){return (v||'').toLowerCase().includes(b);});
+    return m && (!conv||c.convenio===conv);
+  });
+  S.pgCli = 1;
+  rCli();
+}
+
+function rCli(){
+  buildClientes();
+  if(!S.ftCli.length) S.ftCli = S.clientes;
+  var tot = S.ftCli.length;
+  var pp = 20;
+  var pag = S.ftCli.slice((S.pgCli-1)*pp, S.pgCli*pp);
+  var body = document.getElementById('cli-body');
+
+  if(!pag.length){
+    body.innerHTML = '<div class="vazio"><div class="ico">👥</div><p>Nenhum cliente cadastrado.</p></div>';
+  } else {
+    body.innerHTML = pag.map(function(c){
+      return '<div class="tr" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr">'+
+        '<span style="font-weight:600;font-size:13px">'+X(c.nome)+'</span>'+
+        '<span style="font-size:12px">'+X(c.cpf||'—')+'</span>'+
+        '<span style="font-size:12px">'+fDH(c.nascimento,'')+'</span>'+
+        '<span style="font-size:12px"><a href="https://wa.me/55'+((c.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--laranja)">'+X(c.telefone||'—')+'</a></span>'+
+        '<span style="font-size:12px">'+X(c.convenio||'—')+'</span>'+
+        '<span style="font-size:12px;color:var(--cinza-txt)">'+X(c.cadastradoPor||'—')+'</span>'+
+        '<span style="text-align:center"><span class="badge b-bl">'+c.qtdProps+'</span></span>'+
+      '</div>';
+    }).join('');
+  }
+
+  document.getElementById('cli-pag-info').textContent = tot + ' cliente'+(tot!==1?'s':'');
+  var tp = Math.ceil(tot/pp);
+  var pb = document.getElementById('cli-pag-btns');
+  if(tp<=1){pb.innerHTML='';return;}
+  var h = '<button class="pbtn2" onclick="S.pgCli--; rCli()" '+(S.pgCli<=1?'disabled':'')+'>&#8249;</button>';
+  for(var p=Math.max(1,S.pgCli-2);p<=Math.min(tp,S.pgCli+2);p++)
+    h+='<button class="pbtn2 '+(p===S.pgCli?'at':'')+'" onclick="S.pgCli='+p+';rCli()">'+p+'</button>';
+  h+='<button class="pbtn2" onclick="S.pgCli++;rCli()" '+(S.pgCli>=tp?'disabled':'')+'>&#8250;</button>';
+  pb.innerHTML = h;
 }
 
 </script>
