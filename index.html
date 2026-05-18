@@ -1515,7 +1515,7 @@ function rProp(){
     body.innerHTML='<div class="vazio"><div class="ico">📋</div>'+(tot===0&&S.props.length===0?'Nenhuma proposta cadastrada.':'Nenhum resultado.')+'</div>';
   } else {
     body.innerHTML=pag.map(function(p){
-      return '<div class="tr" data-pid="'+p.id+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">\u270f\ufe0f</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">\U0001f5d1</button></span></div>';
+      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
     }).join('');
   }
   const tp=Math.ceil(tot/S.pp);
@@ -1800,6 +1800,16 @@ function fDH(d,h){
   if(!d||d==='')return'—';
   try{var pts=d.split('-');if(pts.length===3){var dt=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));return dt.toLocaleDateString('pt-BR')+(h?' '+h:'');}return d+(h?' '+h:'');}
   catch(e){return d+(h?' '+h:'');}
+}
+function fmtData(d){
+  if(!d||d==='') return '—';
+  try{
+    // Formato ISO: 2026-05-18 ou 2026-05-18T...
+    var s = String(d).split('T')[0];
+    var pts = s.split('-');
+    if(pts.length===3) return pts[2]+'/'+pts[1]+'/'+pts[0];
+    return d;
+  }catch(e){ return d||'—'; }
 }
 function aM(id){document.getElementById(id).classList.add('ab');}
 function fM(id){document.getElementById(id).classList.remove('ab');}
@@ -2813,7 +2823,7 @@ function rMycom(){
       '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
       '<span style="font-weight:700;color:'+(p.comStatus==='pago'?'var(--ok)':'var(--laranja)')+'">'+X(p.comVendedora||'—')+'</span>'+
       '<span>'+(p.comStatus==='pago'?'<span class="badge b-ok">✓ Recebida</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
-      '<span style="font-size:12px;color:var(--cinza-txt)">'+(p.data?new Date(p.data+'T12:00').toLocaleDateString('pt-BR'):'—')+'</span>'+
+      '<span style="font-size:12px;color:var(--cinza-txt)">'+fDH(p.data,'')+'</span>'+
     '</div>';
   }).join('');
 }
