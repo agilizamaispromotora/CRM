@@ -1577,13 +1577,11 @@ function abrirProp(){
   ['p-conv','p-prom','p-tipo','p-cheg','p-stat'].forEach(function(i){
     const el=document.getElementById(i);if(el)el.value='';
   });
-  document.getElementById('p-valor').value='';
+  ['p-valor','p-pct'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
+  ['p-cons','p-data'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=i==='p-data'?new Date().toISOString().split('T')[0]:S.u||''; });
   var pnasc=document.getElementById('p-nasc'); if(pnasc) pnasc.value='';
-  document.getElementById('p-pct').value='';
-  document.getElementById('p-cons').value=S.u||'';
-  document.getElementById('p-data').value=new Date().toISOString().split('T')[0];
-  document.getElementById('com-ag').textContent='R$ 0,00';
-  document.getElementById('com-vd').textContent='R$ 0,00';
+  var cag=document.getElementById('com-ag'); if(cag) cag.textContent='R$ 0,00';
+  var cvd=document.getElementById('com-vd'); if(cvd) cvd.textContent='R$ 0,00';
   aM('mprop');
 }
 
