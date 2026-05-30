@@ -1338,6 +1338,33 @@ select{cursor:pointer}
   </div>
 </div>
 
+
+<!-- MODAL EDITAR CLIENTE -->
+<div class="mov" id="mcli">
+  <div class="modal" style="max-width:480px">
+    <div class="mhd"><div class="mtit">Editar Cliente</div><button class="mx" id="mcli-x">&#10005;</button></div>
+    <div class="mbody">
+      <div class="fg2">
+        <div class="fi full"><label>Nome *</label><input type="text" id="cli-nome" placeholder="Nome completo"></div>
+        <div class="fi"><label>CPF</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" readonly style="background:#eee"></div>
+        <div class="fi"><label>Nascimento *</label><input type="date" id="cli-nasc"></div>
+        <div class="fi"><label>Telefone</label><input type="text" id="cli-tel" placeholder="(00) 00000-0000"></div>
+        <div class="fi"><label>Convênio</label>
+          <select id="cli-conv">
+            <option value="">Selecione...</option>
+            <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
+            <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
+            <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="bcn" id="mcli-can">Cancelar</button>
+      <button class="bsv" id="btn-salvar-cli">Salvar Cliente</button>
+    </div>
+  </div>
+</div>
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
@@ -1400,6 +1427,9 @@ document.querySelectorAll('.mov').forEach(function(m){
   document.getElementById('mrecibo-x').addEventListener('click', function(){ fM('mrecibo'); });
   document.getElementById('mrecibo-can').addEventListener('click', function(){ fM('mrecibo'); });
   document.getElementById('btn-gerar-recibo').addEventListener('click', gerarRecibo);
+  document.getElementById('mcli-x').addEventListener('click', function(){ fM('mcli'); });
+  document.getElementById('mcli-can').addEventListener('click', function(){ fM('mcli'); });
+  document.getElementById('btn-salvar-cli').addEventListener('click', salvarCliente);
 }); // fim DOMContentLoaded
 
 function fazerLogin(){
@@ -1604,7 +1634,7 @@ function rProp(){
     body.innerHTML='<div class="vazio"><div class="ico">📋</div>'+(tot===0&&S.props.length===0?'Nenhuma proposta cadastrada.':'Nenhum resultado.')+'</div>';
   } else {
     body.innerHTML=pag.map(function(p){
-      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
+      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+(p.data?' · '+fDH(p.data,''):'')+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
     }).join('');
   }
   const tp=Math.ceil(tot/S.pp);
@@ -3023,6 +3053,11 @@ function rCli(){
         '<span style="text-align:center"><button class="ac" data-editcli="'+c.cpf+'" title="Editar">✏️</button></span>'+
       '</div>';
     }).join('');
+    // Delegação editar cliente
+    body.addEventListener('click', function handler(e){
+      var b = e.target.closest('[data-editcli]');
+      if(b) editarCliente(b.dataset.editcli);
+    });
   }
 
   document.getElementById('cli-pag-info').textContent = tot + ' cliente'+(tot!==1?'s':'');
@@ -3220,13 +3255,60 @@ function fecharParabens(){
   if(m) m.parentNode.removeChild(m);
 }
 
-// Editar cliente — abre proposta mais recente do cliente
+// Editar cliente — abre modal de dados do cliente
 function editarCliente(cpf){
-  var props = S.props.filter(function(p){ return p.cpf === cpf; });
-  if(!props.length){ toast('Nenhuma proposta encontrada.','er'); return; }
-  // Pegar a mais recente
-  props.sort(function(a,b){ return new Date(b.dataCriacao||b.data) - new Date(a.dataCriacao||a.data); });
-  editProp(props[0].id);
+  var c = S.clientes.find(function(x){ return x.cpf === cpf; });
+  if(!c){
+    // Buscar nas propostas
+    var p = S.props.find(function(x){ return x.cpf === cpf; });
+    if(!p){ toast('Cliente não encontrado.','er'); return; }
+    c = {nome:p.nome, cpf:p.cpf, nascimento:p.nascimento||'', telefone:p.telefone||'', convenio:p.convenio||''};
+  }
+  document.getElementById('cli-nome').value = c.nome||'';
+  document.getElementById('cli-cpf').value = c.cpf||'';
+  document.getElementById('cli-nasc').value = c.nascimento||'';
+  document.getElementById('cli-tel').value = c.telefone||'';
+  document.getElementById('cli-conv').value = c.convenio||'';
+  aM('mcli');
+}
+
+// Salvar edição do cliente — atualiza todas as propostas do CPF
+async function salvarCliente(){
+  var cpf = document.getElementById('cli-cpf').value;
+  var nome = document.getElementById('cli-nome').value.trim();
+  var nasc = document.getElementById('cli-nasc').value;
+  var tel = document.getElementById('cli-tel').value;
+  var conv = document.getElementById('cli-conv').value;
+  if(!nome){ toast('Preencha o nome.','er'); return; }
+  if(!nasc){ toast('Preencha a data de nascimento.','er'); return; }
+
+  // Atualizar todas as propostas do cliente
+  var propsCliente = S.props.filter(function(p){ return p.cpf === cpf; });
+  if(!propsCliente.length){ toast('Nenhuma proposta encontrada.','er'); return; }
+
+  var btn = document.getElementById('btn-salvar-cli');
+  btn.disabled=true; btn.textContent='Salvando...';
+
+  try{
+    for(var i=0; i<propsCliente.length; i++){
+      var p = Object.assign({}, propsCliente[i]);
+      p.nome = nome;
+      p.nascimento = nasc;
+      p.telefone = tel;
+      p.convenio = conv;
+      p.atualizadoPor = S.u;
+      p.dataAtualizacao = new Date().toISOString();
+      await callApi('atualizar', {dados: p});
+    }
+    toast('Cliente atualizado!','ok');
+    fM('mcli');
+    await load();
+    rCli();
+  } catch(e){
+    toast('Erro: '+e.message,'er');
+  } finally {
+    btn.disabled=false; btn.textContent='Salvar Cliente';
+  }
 }
 
 </script>
