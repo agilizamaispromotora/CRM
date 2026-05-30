@@ -3034,6 +3034,14 @@ function rCli(){
     h+='<button class="pbtn2 '+(p===S.pgCli?'at':'')+'" onclick="S.pgCli='+p+';rCli()">'+p+'</button>';
   h+='<button class="pbtn2" onclick="S.pgCli++;rCli()" '+(S.pgCli>=tp?'disabled':'')+'>&#8250;</button>';
   pb.innerHTML = h;
+  // Delegação editar cliente
+  setTimeout(function(){
+    var cb = document.getElementById('cli-body');
+    if(cb && !cb._l){ cb._l=true; cb.addEventListener('click',function(e){
+      var b = e.target.closest('[data-editcli]');
+      if(b) editarCliente(b.dataset.editcli);
+    });}
+  },100);
 }
 
 // ══════════════════════════════════════════════════
