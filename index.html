@@ -492,7 +492,7 @@ select{cursor:pointer}
       </div>
       <div class="tw" style="overflow:hidden">
         <div class="th" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr 60px">
-          <span>Nome</span><span>CPF</span><span>Nascimento</span><span>Telefone</span><span>Conv&ecirc;nio</span><span>Consultora</span><span>Ação</span>
+          <span>Nome</span><span>CPF</span><span>Telefone</span><span>Nascimento</span><span>Conv&ecirc;nio</span><span>Consultora</span><span>Ação</span>
         </div>
         <div class="tb" id="cli-body"><div class="loading"><div class="spin"></div>Carregando...</div></div>
         <div class="pag"><span id="cli-pag-info">0 clientes</span><div class="pbtns" id="cli-pag-btns"></div></div>
@@ -1346,8 +1346,8 @@ select{cursor:pointer}
     <div class="mbody">
       <div class="fg2">
         <div class="fi full"><label>Nome *</label><input type="text" id="cli-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>CPF</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" readonly style="background:#eee"></div>
-        <div class="fi"><label>Nascimento *</label><input type="date" id="cli-nasc"></div>
+        <div class="fi"><label>CPF</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fi"><label>Nascimento *</label><input type="text" id="cli-nasc" placeholder="DD/MM/AAAA" oninput="maskData(this)" maxlength="10"></div>
         <div class="fi"><label>Telefone</label><input type="text" id="cli-tel" placeholder="(00) 00000-0000"></div>
         <div class="fi"><label>Convênio</label>
           <select id="cli-conv">
@@ -1950,30 +1950,48 @@ function bSt(s){
 }
 function X(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fDH(d,h){
-  if(!d||d===''||d==='undefined')return'—';
+  if(!d||d===''||d==='undefined'||d==='null') return '—';
   try{
     var s = String(d).trim();
+    if(s === '—' || s === 'undefined' || s === 'null') return '—';
     // Formato ISO: 2026-05-17 ou 2026-05-17T...
     var iso = s.split('T')[0];
     var pts = iso.split('-');
-    if(pts.length===3 && pts[0].length===4){
-      var dt=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));
-      if(!isNaN(dt.getTime())) return dt.toLocaleDateString('pt-BR')+(h?' '+h:'');
+    if(pts.length===3 && pts[0].length===4 && !isNaN(parseInt(pts[0]))){
+      var yr=parseInt(pts[0]), mo=parseInt(pts[1])-1, dy=parseInt(pts[2]);
+      if(yr>1900 && mo>=0 && mo<12 && dy>=1 && dy<=31){
+        var dt=new Date(yr,mo,dy);
+        if(!isNaN(dt.getTime())) return dt.toLocaleDateString('pt-BR')+(h?' '+h:'');
+      }
     }
     // Formato brasileiro: 17/05/2026
     var br = s.split('/');
-    if(br.length===3){
+    if(br.length===3 && br[2].length===4){
       var dt2=new Date(parseInt(br[2]),parseInt(br[1])-1,parseInt(br[0]));
       if(!isNaN(dt2.getTime())) return dt2.toLocaleDateString('pt-BR')+(h?' '+h:'');
     }
-    // Formato longo: Mon May 18 2026 00:00:00 GMT...
+    // Formato longo do Google Sheets: "Wed Nov 17 1971 00:00:00 GMT-0300..."
+    // Extrair apenas dia/mes/ano sem deixar fuso horário distorcer
     var dt3 = new Date(s);
     if(!isNaN(dt3.getTime())){
-      // Usar apenas dia/mes/ano ignorando fuso horário
-      var dd = String(dt3.getDate()).padStart(2,'0');
-      var mm = String(dt3.getMonth()+1).padStart(2,'0');
-      var yy = dt3.getFullYear();
-      return dd+'/'+mm+'/'+yy+(h?' '+h:'');
+      // Extrair partes da string original para evitar erro de fuso
+      var meses = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      var partes = s.split(' ');
+      // Formato: "Wed Nov 17 1971 ..."
+      if(partes.length>=4 && meses[partes[1]]!==undefined){
+        var dd2 = parseInt(partes[2]);
+        var mm2 = meses[partes[1]];
+        var yy2 = parseInt(partes[3]);
+        if(dd2>=1&&dd2<=31&&yy2>1900){
+          var dtFinal = new Date(yy2, mm2, dd2);
+          return dtFinal.toLocaleDateString('pt-BR')+(h?' '+h:'');
+        }
+      }
+      // Fallback: usar UTC para evitar problema de fuso
+      var dd=String(dt3.getUTCDate()).padStart(2,'0');
+      var mm=String(dt3.getUTCMonth()+1).padStart(2,'0');
+      var yy=dt3.getUTCFullYear();
+      if(yy>1900) return dd+'/'+mm+'/'+yy+(h?' '+h:'');
     }
     return '—';
   }
@@ -3018,24 +3036,66 @@ function buildClientes(){
   var mapa = {};
   S.props.forEach(function(p){
     if(!p.nome) return;
-    var key = (p.cpf||p.nome).replace(/\D/g,'').toLowerCase()||p.nome.toLowerCase();
+    var cpfLimpo = (p.cpf||'').replace(/\D/g,'');
+    var key = cpfLimpo || p.nome.toLowerCase().trim();
     if(!mapa[key]){
       mapa[key] = {
         nome: p.nome,
         cpf: p.cpf||'',
-        nascimento: p.nascimento||'',
-        telefone: p.telefone||'',
+        nascimento: '',
+        telefone: '',
         convenio: p.convenio||'',
         cadastradoPor: p.consultora||'',
         qtdProps: 0
       };
     }
     mapa[key].qtdProps++;
-    // Sempre atualizar para o valor mais recente e completo
-    if(p.nascimento) mapa[key].nascimento = p.nascimento;
-    if(p.telefone) mapa[key].telefone = p.telefone;
-    if(p.convenio) mapa[key].convenio = p.convenio;
     if(p.nome) mapa[key].nome = p.nome;
+    if(p.convenio) mapa[key].convenio = p.convenio;
+    if(p.consultora) mapa[key].cadastradoPor = p.consultora;
+
+    // Detectar telefone: começa com dígitos, sem hífen no meio tipo data, tem 8+ dígitos
+    function parece_telefone(v){
+      if(!v) return false;
+      var s = String(v).replace(/\D/g,'');
+      return s.length >= 8 && s.length <= 11;
+    }
+    // Detectar data: formato ISO YYYY-MM-DD ou DD/MM/YYYY ou contém "GMT"
+    function parece_data(v){
+      if(!v) return false;
+      var s = String(v).trim();
+      if(/^\d{4}-\d{2}-\d{2}/.test(s)) return true;
+      if(/^\d{2}\/\d{2}\/\d{4}/.test(s)) return true;
+      if(s.indexOf('GMT') >= 0) return true;
+      if(s.indexOf('196') >= 0 || s.indexOf('195') >= 0 || s.indexOf('197') >= 0 || s.indexOf('198') >= 0 || s.indexOf('200') >= 0) return true;
+      return false;
+    }
+
+    var rawNasc = p.nascimento || '';
+    var rawTel  = p.telefone || p.tel || '';
+
+    // Checar se estão invertidos na planilha
+    if(rawNasc && rawTel){
+      // Ambos preenchidos — confiar nos campos como vieram
+      if(rawNasc) mapa[key].nascimento = String(rawNasc).trim();
+      if(rawTel)  mapa[key].telefone   = String(rawTel).trim();
+    } else if(rawNasc && !rawTel){
+      // Só nascimento preenchido — pode ser telefone salvo no lugar errado
+      if(parece_telefone(rawNasc) && !parece_data(rawNasc)){
+        mapa[key].telefone   = String(rawNasc).trim();
+        mapa[key].nascimento = '';
+      } else {
+        mapa[key].nascimento = String(rawNasc).trim();
+      }
+    } else if(!rawNasc && rawTel){
+      // Só telefone preenchido — pode ser data salva no lugar errado
+      if(parece_data(rawTel) && !parece_telefone(rawTel)){
+        mapa[key].nascimento = String(rawTel).trim();
+        mapa[key].telefone   = '';
+      } else {
+        mapa[key].telefone = String(rawTel).trim();
+      }
+    }
   });
   S.clientes = Object.values(mapa);
 }
@@ -3067,8 +3127,8 @@ function rCli(){
       return '<div class="tr" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr 60px">'+
         '<span style="font-weight:600;font-size:13px">'+X(c.nome)+'</span>'+
         '<span style="font-size:12px">'+X(c.cpf||'—')+'</span>'+
-        '<span style="font-size:12px">'+fDH(c.nascimento,'')+'</span>'+
         '<span style="font-size:12px"><a href="https://wa.me/55'+((c.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--laranja)">'+X(c.telefone||'—')+'</a></span>'+
+        '<span style="font-size:12px">'+fDH(c.nascimento,'')+'</span>'+
         '<span style="font-size:12px">'+X(c.convenio||'—')+'</span>'+
         '<span style="font-size:12px;color:var(--cinza-txt)">'+X(c.cadastradoPor||'—')+'</span>'+
         '<span style="text-align:center"><button class="ac" data-editcli="'+c.cpf+'" title="Editar">✏️</button></span>'+
@@ -3287,7 +3347,13 @@ function editarCliente(cpf){
   }
   document.getElementById('cli-nome').value = c.nome||'';
   document.getElementById('cli-cpf').value = c.cpf||'';
-  document.getElementById('cli-nasc').value = c.nascimento||'';
+  // Converter data para DD/MM/AAAA para exibição no campo texto
+  var nascVal = c.nascimento||'';
+  if(/^\d{4}-\d{2}-\d{2}/.test(nascVal)){
+    var pts = nascVal.split('T')[0].split('-');
+    nascVal = pts[2]+'/'+pts[1]+'/'+pts[0];
+  }
+  document.getElementById('cli-nasc').value = nascVal;
   document.getElementById('cli-tel').value = c.telefone||'';
   document.getElementById('cli-conv').value = c.convenio||'';
   aM('mcli');
@@ -3303,7 +3369,13 @@ async function salvarCliente(){
   if(!cpfEl||!nomeEl||!nascEl){ toast('Erro: campos não encontrados.','er'); return; }
   var cpf = cpfEl.value;
   var nome = nomeEl.value.trim();
-  var nasc = nascEl.value;
+  // Converter DD/MM/AAAA para YYYY-MM-DD para salvar
+  var nascRaw = nascEl.value.trim();
+  var nasc = nascRaw;
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(nascRaw)){
+    var pn = nascRaw.split('/');
+    nasc = pn[2]+'-'+pn[1]+'-'+pn[0];
+  }
   var tel = telEl ? telEl.value : '';
   var conv = convEl ? convEl.value : '';
   if(!nome){ toast('Preencha o nome.','er'); return; }
