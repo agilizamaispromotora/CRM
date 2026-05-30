@@ -3295,21 +3295,25 @@ function editarCliente(cpf){
 
 // Salvar edição do cliente — atualiza todas as propostas do CPF
 async function salvarCliente(){
-  var cpf = document.getElementById('cli-cpf').value;
-  var nome = document.getElementById('cli-nome').value.trim();
-  var nasc = document.getElementById('cli-nasc').value;
-  var tel = document.getElementById('cli-tel').value;
-  var conv = document.getElementById('cli-conv').value;
+  var cpfEl = document.getElementById('cli-cpf');
+  var nomeEl = document.getElementById('cli-nome');
+  var nascEl = document.getElementById('cli-nasc');
+  var telEl = document.getElementById('cli-tel');
+  var convEl = document.getElementById('cli-conv');
+  if(!cpfEl||!nomeEl||!nascEl){ toast('Erro: campos não encontrados.','er'); return; }
+  var cpf = cpfEl.value;
+  var nome = nomeEl.value.trim();
+  var nasc = nascEl.value;
+  var tel = telEl ? telEl.value : '';
+  var conv = convEl ? convEl.value : '';
   if(!nome){ toast('Preencha o nome.','er'); return; }
   if(!nasc){ toast('Preencha a data de nascimento.','er'); return; }
-
-  // Atualizar todas as propostas do cliente
-  var cpfLimpo = cpf.replace(/\D/g,'');
+  var cpfLimpo = cpf.replace(/[^0-9]/g,'');
+  toast('Buscando propostas...','');
   var propsCliente = S.props.filter(function(p){ 
-    return (p.cpf||'').replace(/\D/g,'') === cpfLimpo; 
+    return (p.cpf||'').replace(/[^0-9]/g,'') === cpfLimpo; 
   });
-  console.log('CPF buscado:', cpfLimpo, 'Propostas encontradas:', propsCliente.length);
-  if(!propsCliente.length){ toast('Nenhuma proposta encontrada.','er'); return; }
+  if(!propsCliente.length){ toast('CPF '+cpf+' sem propostas!','er'); return; }
 
   var btn = document.getElementById('btn-salvar-cli');
   btn.disabled=true; btn.textContent='Salvando...';
