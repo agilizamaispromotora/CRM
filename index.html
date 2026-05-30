@@ -1869,7 +1869,7 @@ function rGest(){
   setTimeout(function(){var gc=document.getElementById('gest-contas');if(gc&&!gc._l){gc._l=true;gc.addEventListener('click',function(e){var b=e.target.closest('[data-pagar]');if(b)baixarCom(b.dataset.pagar);});}},200);
   document.getElementById('gest-contas').innerHTML=pend.length===0?
     '<div class="vazio"><div class="ico">✅</div><p>Nenhuma comissão pendente!</p></div>':
-    pend.map(function(p){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--cinza-brd);border-radius:8px;margin-bottom:6px"><div><div style="font-weight:600;font-size:13px">'+X(p.nome)+'</div><div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+(p.data?fDH(p.data,''):'')+' </div></div><div style="display:flex;align-items:center;gap:10px"><div style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--laranja)">'+X(p.comVendedora)+'</div><button class="ac okb" data-pagar="'+p.id+'" style="width:auto;padding:4px 10px;font-size:12px">✓ Pagar</button></div></div>';}).join('');
+    pend.map(function(p){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--cinza-brd);border-radius:8px;margin-bottom:6px"><div><div style="font-weight:600;font-size:13px">'+X(p.nome)+'</div><div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+fDH(p.data,'')+' </div></div><div style="display:flex;align-items:center;gap:10px"><div style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--laranja)">'+X(p.comVendedora)+'</div><button class="ac okb" data-pagar="'+p.id+'" style="width:auto;padding:4px 10px;font-size:12px">✓ Pagar</button></div></div>';}).join('');
 }
 
 function exportCSV(tipo){
@@ -2652,7 +2652,7 @@ function rFin(){
   if(!props.length){ body.innerHTML='<div class="vazio"><div class="ico">💰</div><p>Nenhum registro.</p></div>'; return; }
   body.innerHTML=props.map(function(p){
     return '<div class="tr" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px">'+
-      '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+(p.data?fDH(p.data,''):'')+'</div></span>'+
+      '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+fDH(p.data,'')+'</div></span>'+
       '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
       '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza||'—')+'</span>'+
       '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora||'—')+'</span>'+
