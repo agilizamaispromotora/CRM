@@ -1178,7 +1178,7 @@ select{cursor:pointer}
         <div class="fi" style="grid-column:span 2"><label>Cliente *</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
         <div class="fi"><label>CPF</label><input type="text" id="p-cpf" placeholder="000.000.000-00"></div>
         <div class="fi"><label>Telefone</label><input type="text" id="p-tel" placeholder="(00) 00000-0000"></div>
-        <div class="fi"><label>Nascimento</label><input type="date" id="p-nasc"></div>
+        <div class="fi"><label>Nascimento *</label><input type="date" id="p-nasc" required></div>
         <div class="fi"><label>Conv&ecirc;nio</label>
           <select id="p-conv"><option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
@@ -1673,7 +1673,9 @@ async function salvarProp(){
   const nome=document.getElementById('p-nome').value.trim();
   const cons=document.getElementById('p-cons').value;
   const stat=document.getElementById('p-stat').value;
+  var nascimento=document.getElementById('p-nasc').value;
   if(!nome||!cons||!stat){toast('Preencha Cliente, Consultora e Status.','er');return;}
+  if(!nascimento){toast('Preencha a data de nascimento.','er');return;}
   const val=pV(document.getElementById('p-valor').value||'0');
   const pct=parseFloat(document.getElementById('p-pct').value||'0');
   const ag=val*(pct/100), vd=ag*0.20;
@@ -1685,6 +1687,7 @@ async function salvarProp(){
     consultora:cons, status:stat, nome:nome,
     cpf:document.getElementById('p-cpf').value,
     telefone:document.getElementById('p-tel').value,
+    nascimento:document.getElementById('p-nasc').value,
     convenio:document.getElementById('p-conv').value,
     promotora:document.getElementById('p-prom').value,
     banco:document.getElementById('p-banco').value,
