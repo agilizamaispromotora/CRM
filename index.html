@@ -1374,7 +1374,7 @@ let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'me
 // EVENTOS
 document.addEventListener('DOMContentLoaded', function(){
   // Restaurar sessão após F5
-  var savedUser = sessionStorage.getItem('crm_user');
+  var savedUser = localStorage.getItem('crm_user');
   if(savedUser && US[savedUser]){
     S.u = savedUser;
     document.getElementById('tela-login').style.display='none';
@@ -1455,7 +1455,7 @@ function fazerLogin(){
   if(!u){e.textContent='Selecione um usuário.';return;}
   if(US[u]!==s){e.textContent='Senha incorreta.';return;}
   e.textContent=''; S.u=u;
-  sessionStorage.setItem('crm_user', u);
+  localStorage.setItem('crm_user', u);
   document.getElementById('tela-login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('uname').textContent=u;
@@ -1471,7 +1471,7 @@ function fazerLogin(){
 }
 
 function sair(){
-  sessionStorage.removeItem('crm_user');
+  localStorage.removeItem('crm_user');
   S={u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes'};
   document.getElementById('app').style.display='none';
   document.getElementById('tela-login').style.display='flex';
@@ -3031,9 +3031,11 @@ function buildClientes(){
       };
     }
     mapa[key].qtdProps++;
-    // Atualizar dados se mais completos
-    if(!mapa[key].nascimento && p.nascimento) mapa[key].nascimento = p.nascimento;
-    if(!mapa[key].telefone && p.telefone) mapa[key].telefone = p.telefone;
+    // Sempre atualizar para o valor mais recente e completo
+    if(p.nascimento) mapa[key].nascimento = p.nascimento;
+    if(p.telefone) mapa[key].telefone = p.telefone;
+    if(p.convenio) mapa[key].convenio = p.convenio;
+    if(p.nome) mapa[key].nome = p.nome;
   });
   S.clientes = Object.values(mapa);
 }
