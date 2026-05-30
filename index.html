@@ -1373,6 +1373,23 @@ let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'me
 
 // EVENTOS
 document.addEventListener('DOMContentLoaded', function(){
+  // Restaurar sessão após F5
+  var savedUser = sessionStorage.getItem('crm_user');
+  if(savedUser && US[savedUser]){
+    S.u = savedUser;
+    document.getElementById('tela-login').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('uname').textContent = savedUser;
+    document.getElementById('p-cons').value = savedUser;
+    document.getElementById('p-data').value = new Date().toISOString().split('T')[0];
+    if(savedUser===GESTOR){
+      document.getElementById('nav-fin').classList.add('vis');
+      document.getElementById('nav-gest').classList.add('vis');
+    } else {
+      document.getElementById('nav-mycom').classList.add('vis');
+    }
+    load();
+  }
   document.getElementById('btn-login').addEventListener('click', fazerLogin);
 document.getElementById('ls').addEventListener('keydown', function(e){ if(e.key==='Enter') fazerLogin(); });
 document.getElementById('btn-sair').addEventListener('click', sair);
@@ -1438,23 +1455,23 @@ function fazerLogin(){
   if(!u){e.textContent='Selecione um usuário.';return;}
   if(US[u]!==s){e.textContent='Senha incorreta.';return;}
   e.textContent=''; S.u=u;
+  sessionStorage.setItem('crm_user', u);
   document.getElementById('tela-login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('uname').textContent=u;
   document.getElementById('p-cons').value=u;
   document.getElementById('p-data').value=new Date().toISOString().split('T')[0];
   if(u===GESTOR){
-    // Gestor vê tudo
     document.getElementById('nav-fin').classList.add('vis');
     document.getElementById('nav-gest').classList.add('vis');
   } else {
-    // Consultoras veem Minhas Comissões
     document.getElementById('nav-mycom').classList.add('vis');
   }
   load();
 }
 
 function sair(){
+  sessionStorage.removeItem('crm_user');
   S={u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes'};
   document.getElementById('app').style.display='none';
   document.getElementById('tela-login').style.display='flex';
@@ -1685,7 +1702,7 @@ function editProp(id){
   document.getElementById('p-nome').value=p.nome||'';
   document.getElementById('p-cpf').value=p.cpf||'';
   document.getElementById('p-tel').value=p.telefone||'';
-  document.getElementById('p-nasc').value=p.nascimento||'';
+  document.getElementById('p-nasc').value=p.nascimento||p.dataNasc||'';
   document.getElementById('p-conv').value=p.convenio||'';
   document.getElementById('p-prom').value=p.promotora||'';
   document.getElementById('p-banco').value=p.banco||'';
@@ -1724,9 +1741,11 @@ async function salvarProp(){
     tipoProposta:document.getElementById('p-tipo').value,
     comoCheqou:document.getElementById('p-cheg').value,
     valor:document.getElementById('p-valor').value,
-    parcela:'',prazo:document.getElementById('p-prazo').value,
+    parcela:document.getElementById('p-parcela')?document.getElementById('p-parcela').value:'',
+    prazo:document.getElementById('p-prazo').value,
     pct:document.getElementById('p-pct').value,
     comAgiliza:fmt(ag), comVendedora:fmt(vd),
+    comStatus: S.ed ? (S.ed.comStatus||'') : '',
     obs:document.getElementById('p-obs').value,
     atualizadoPor:S.u, dataAtualizacao:new Date().toISOString()
   };
