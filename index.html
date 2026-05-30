@@ -3304,7 +3304,11 @@ async function salvarCliente(){
   if(!nasc){ toast('Preencha a data de nascimento.','er'); return; }
 
   // Atualizar todas as propostas do cliente
-  var propsCliente = S.props.filter(function(p){ return p.cpf === cpf; });
+  var cpfLimpo = cpf.replace(/\D/g,'');
+  var propsCliente = S.props.filter(function(p){ 
+    return (p.cpf||'').replace(/\D/g,'') === cpfLimpo; 
+  });
+  console.log('CPF buscado:', cpfLimpo, 'Propostas encontradas:', propsCliente.length);
   if(!propsCliente.length){ toast('Nenhuma proposta encontrada.','er'); return; }
 
   var btn = document.getElementById('btn-salvar-cli');
@@ -3324,6 +3328,9 @@ async function salvarCliente(){
     toast('Cliente atualizado!','ok');
     fM('mcli');
     await load();
+    S.ftCli = [];
+    buildClientes();
+    S.ftCli = S.clientes;
     rCli();
   } catch(e){
     toast('Erro: '+e.message,'er');
