@@ -3329,13 +3329,24 @@ async function salvarCliente(){
       p.dataAtualizacao = new Date().toISOString();
       await callApi('atualizar', {dados: p});
     }
+    // Atualizar S.props em memória imediatamente
+    propsCliente.forEach(function(p){
+      var idx = S.props.findIndex(function(x){ return x.id === p.id; });
+      if(idx >= 0){
+        S.props[idx].nome = nome;
+        S.props[idx].nascimento = nasc;
+        S.props[idx].telefone = tel;
+        S.props[idx].convenio = conv;
+      }
+    });
     toast('Cliente atualizado!','ok');
     fM('mcli');
-    await load();
     S.ftCli = [];
     buildClientes();
     S.ftCli = S.clientes;
     rCli();
+    // Sincronizar em background
+    load();
   } catch(e){
     toast('Erro: '+e.message,'er');
   } finally {
