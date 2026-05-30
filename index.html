@@ -491,8 +491,8 @@ select{cursor:pointer}
         </select>
       </div>
       <div class="tw" style="overflow:hidden">
-        <div class="th" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr">
-          <span>Nome</span><span>CPF</span><span>Nascimento</span><span>Telefone</span><span>Conv&ecirc;nio</span><span>Consultora</span>
+        <div class="th" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr 60px">
+          <span>Nome</span><span>CPF</span><span>Nascimento</span><span>Telefone</span><span>Conv&ecirc;nio</span><span>Consultora</span><span>Ação</span>
         </div>
         <div class="tb" id="cli-body"><div class="loading"><div class="spin"></div>Carregando...</div></div>
         <div class="pag"><span id="cli-pag-info">0 clientes</span><div class="pbtns" id="cli-pag-btns"></div></div>
@@ -3013,7 +3013,7 @@ function rCli(){
     body.innerHTML = '<div class="vazio"><div class="ico">👥</div><p>Nenhum cliente cadastrado.</p></div>';
   } else {
     body.innerHTML = pag.map(function(c){
-      return '<div class="tr" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr">'+
+      return '<div class="tr" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr 60px">'+
         '<span style="font-weight:600;font-size:13px">'+X(c.nome)+'</span>'+
         '<span style="font-size:12px">'+X(c.cpf||'—')+'</span>'+
         '<span style="font-size:12px">'+fDH(c.nascimento,'')+'</span>'+
@@ -3210,6 +3210,15 @@ function mostrarParabens(tipo, consultora, valor){
 function fecharParabens(){
   var m = document.getElementById('modal-parabens');
   if(m) m.parentNode.removeChild(m);
+}
+
+// Editar cliente — abre proposta mais recente do cliente
+function editarCliente(cpf){
+  var props = S.props.filter(function(p){ return p.cpf === cpf; });
+  if(!props.length){ toast('Nenhuma proposta encontrada.','er'); return; }
+  // Pegar a mais recente
+  props.sort(function(a,b){ return new Date(b.dataCriacao||b.data) - new Date(a.dataCriacao||a.data); });
+  editProp(props[0].id);
 }
 
 </script>
