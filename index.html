@@ -3076,9 +3076,18 @@ function buildClientes(){
 
     // Checar se estão invertidos na planilha
     if(rawNasc && rawTel){
-      // Ambos preenchidos — confiar nos campos como vieram
-      if(rawNasc) mapa[key].nascimento = String(rawNasc).trim();
-      if(rawTel)  mapa[key].telefone   = String(rawTel).trim();
+      // Ambos preenchidos — verificar se nascimento realmente parece data
+      if(parece_data(rawNasc)){
+        mapa[key].nascimento = String(rawNasc).trim();
+        mapa[key].telefone   = String(rawTel).trim();
+      } else if(parece_telefone(rawNasc) && parece_data(rawTel)){
+        // Invertidos mesmo com ambos preenchidos
+        mapa[key].nascimento = String(rawTel).trim();
+        mapa[key].telefone   = String(rawNasc).trim();
+      } else {
+        mapa[key].nascimento = String(rawNasc).trim();
+        mapa[key].telefone   = String(rawTel).trim();
+      }
     } else if(rawNasc && !rawTel){
       // Só nascimento preenchido — pode ser telefone salvo no lugar errado
       if(parece_telefone(rawNasc) && !parece_data(rawNasc)){
@@ -3337,25 +3346,67 @@ function fecharParabens(){
 }
 
 // Editar cliente — abre modal de dados do cliente
+function dataParaBR(v){
+  // Converte qualquer formato de data para DD/MM/AAAA
+  if(!v || String(v).trim()==='' || String(v).trim()==='—') return '';
+  var s = String(v).trim();
+  // Já está em DD/MM/AAAA
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
+  // Formato ISO YYYY-MM-DD
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)){
+    var pts = s.split('T')[0].split('-');
+    return pts[2]+'/'+pts[1]+'/'+pts[0];
+  }
+  // Formato longo Google Sheets: "Tue Jan 21 1975 00:00:00 GMT-..."
+  var meses = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',
+               Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  var partes = s.split(' ');
+  if(partes.length >= 4 && meses[partes[1]] !== undefined){
+    var dd = String(parseInt(partes[2])).padStart(2,'0');
+    var mm = meses[partes[1]];
+    var yy = partes[3];
+    if(parseInt(yy) > 1900) return dd+'/'+mm+'/'+yy;
+  }
+  // Tentar parse genérico via UTC
+  var dt = new Date(s);
+  if(!isNaN(dt.getTime()) && dt.getFullYear() > 1900){
+    var dd2 = String(dt.getUTCDate()).padStart(2,'0');
+    var mm2 = String(dt.getUTCMonth()+1).padStart(2,'0');
+    return dd2+'/'+mm2+'/'+dt.getUTCFullYear();
+  }
+  return '';
+}
+
 function editarCliente(cpf){
-  var c = S.clientes.find(function(x){ return x.cpf === cpf; });
-  if(!c){
-    // Buscar nas propostas
-    var p = S.props.find(function(x){ return x.cpf === cpf; });
-    if(!p){ toast('Cliente não encontrado.','er'); return; }
-    c = {nome:p.nome, cpf:p.cpf, nascimento:p.nascimento||'', telefone:p.telefone||'', convenio:p.convenio||''};
-  }
-  document.getElementById('cli-nome').value = c.nome||'';
-  document.getElementById('cli-cpf').value = c.cpf||'';
-  // Converter data para DD/MM/AAAA para exibição no campo texto
-  var nascVal = c.nascimento||'';
-  if(/^\d{4}-\d{2}-\d{2}/.test(nascVal)){
-    var pts = nascVal.split('T')[0].split('-');
-    nascVal = pts[2]+'/'+pts[1]+'/'+pts[0];
-  }
-  document.getElementById('cli-nasc').value = nascVal;
-  document.getElementById('cli-tel').value = c.telefone||'';
-  document.getElementById('cli-conv').value = c.convenio||'';
+  // Buscar direto nas propostas para pegar dados mais completos
+  var props = S.props.filter(function(x){
+    return (x.cpf||'').replace(/\D/g,'') === (cpf||'').replace(/\D/g,'');
+  });
+  // Pegar o registro mais recente/completo
+  var p = props.reduce(function(best, cur){
+    if(!best) return cur;
+    // Preferir o que tem mais campos preenchidos
+    var sc = [cur.nascimento,cur.telefone,cur.convenio].filter(Boolean).length;
+    var sb = [best.nascimento,best.telefone,best.convenio].filter(Boolean).length;
+    return sc > sb ? cur : best;
+  }, null);
+  var c = S.clientes.find(function(x){
+    return (x.cpf||'').replace(/\D/g,'') === (cpf||'').replace(/\D/g,'');
+  });
+  if(!p && !c){ toast('Cliente não encontrado.','er'); return; }
+  var nome    = (c&&c.nome)    || (p&&p.nome)    || '';
+  var cpfVal  = (c&&c.cpf)     || (p&&p.cpf)     || cpf;
+  var tel     = (c&&c.telefone)|| (p&&p.telefone) || '';
+  var conv    = (c&&c.convenio)|| (p&&p.convenio) || '';
+  // Nascimento: tentar do cliente construído primeiro, depois da proposta
+  var nascRaw = (c&&c.nascimento) || (p&&p.nascimento) || (p&&p.dataNasc) || '';
+  var nasc    = dataParaBR(nascRaw);
+
+  document.getElementById('cli-nome').value = nome;
+  document.getElementById('cli-cpf').value  = cpfVal;
+  document.getElementById('cli-nasc').value = nasc;
+  document.getElementById('cli-tel').value  = tel;
+  document.getElementById('cli-conv').value = conv;
   aM('mcli');
 }
 
