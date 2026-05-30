@@ -1914,12 +1914,18 @@ function fDH(d,h){
       var dt2=new Date(parseInt(br[2]),parseInt(br[1])-1,parseInt(br[0]));
       if(!isNaN(dt2.getTime())) return dt2.toLocaleDateString('pt-BR')+(h?' '+h:'');
     }
-    // Tentar parsear diretamente
+    // Formato longo: Mon May 18 2026 00:00:00 GMT...
     var dt3 = new Date(s);
-    if(!isNaN(dt3.getTime())) return dt3.toLocaleDateString('pt-BR')+(h?' '+h:'');
-    return s+(h?' '+h:'');
+    if(!isNaN(dt3.getTime())){
+      // Usar apenas dia/mes/ano ignorando fuso horário
+      var dd = String(dt3.getDate()).padStart(2,'0');
+      var mm = String(dt3.getMonth()+1).padStart(2,'0');
+      var yy = dt3.getFullYear();
+      return dd+'/'+mm+'/'+yy+(h?' '+h:'');
+    }
+    return '—';
   }
-  catch(e){return String(d)+(h?' '+h:'');}
+  catch(e){return '—';}
 }
 function fmtData(d){
   if(!d||d==='') return '—';
