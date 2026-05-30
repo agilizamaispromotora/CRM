@@ -3020,7 +3020,7 @@ function rCli(){
         '<span style="font-size:12px"><a href="https://wa.me/55'+((c.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--laranja)">'+X(c.telefone||'—')+'</a></span>'+
         '<span style="font-size:12px">'+X(c.convenio||'—')+'</span>'+
         '<span style="font-size:12px;color:var(--cinza-txt)">'+X(c.cadastradoPor||'—')+'</span>'+
-        '<span style="text-align:center"><span class="badge b-bl">'+c.qtdProps+'</span></span>'+
+        '<span style="text-align:center"><button class="ac" data-editcli="'+c.cpf+'" title="Editar">✏️</button></span>'+
       '</div>';
     }).join('');
   }
