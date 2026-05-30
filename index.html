@@ -1898,9 +1898,28 @@ function bSt(s){
 }
 function X(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fDH(d,h){
-  if(!d||d==='')return'—';
-  try{var pts=d.split('-');if(pts.length===3){var dt=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));return dt.toLocaleDateString('pt-BR')+(h?' '+h:'');}return d+(h?' '+h:'');}
-  catch(e){return d+(h?' '+h:'');}
+  if(!d||d===''||d==='undefined')return'—';
+  try{
+    var s = String(d).trim();
+    // Formato ISO: 2026-05-17 ou 2026-05-17T...
+    var iso = s.split('T')[0];
+    var pts = iso.split('-');
+    if(pts.length===3 && pts[0].length===4){
+      var dt=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));
+      if(!isNaN(dt.getTime())) return dt.toLocaleDateString('pt-BR')+(h?' '+h:'');
+    }
+    // Formato brasileiro: 17/05/2026
+    var br = s.split('/');
+    if(br.length===3){
+      var dt2=new Date(parseInt(br[2]),parseInt(br[1])-1,parseInt(br[0]));
+      if(!isNaN(dt2.getTime())) return dt2.toLocaleDateString('pt-BR')+(h?' '+h:'');
+    }
+    // Tentar parsear diretamente
+    var dt3 = new Date(s);
+    if(!isNaN(dt3.getTime())) return dt3.toLocaleDateString('pt-BR')+(h?' '+h:'');
+    return s+(h?' '+h:'');
+  }
+  catch(e){return String(d)+(h?' '+h:'');}
 }
 function fmtData(d){
   if(!d||d==='') return '—';
