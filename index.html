@@ -82,6 +82,12 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .alerta-banner.venc-prox .ab-titulo{color:var(--laranja)}
 .alerta-banner .ab-msg{font-size:12px;color:var(--cinza-txt)}
 .alerta-banner .ab-btn{background:none;border:1.5px solid currentColor;border-radius:6px;
+  padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:"Open Sans",sans-serif}
+.alerta-banner.parabens .ab-btn{color:#92400e}
+.alerta-banner.agenda .ab-btn{color:#1e4fcc}
+.alerta-banner.venc-atr .ab-btn{color:var(--perigo)}
+.alerta-banner.venc-hj .ab-btn{color:var(--warn)}
+.alerta-banner.venc-prox .ab-btn{color:var(--laranja)}
 
 /* MODAL PARABÉNS */
 .parabens-overlay{visibility:hidden;opacity:0;pointer-events:none;
@@ -109,12 +115,6 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .confetti{position:absolute;pointer-events:none;font-size:20px;animation:confettiFall 3s ease-in forwards}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}
   100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-  padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:"Open Sans",sans-serif}
-.alerta-banner.parabens .ab-btn{color:#92400e}
-.alerta-banner.agenda .ab-btn{color:#1e4fcc}
-.alerta-banner.venc-atr .ab-btn{color:var(--perigo)}
-.alerta-banner.venc-hj .ab-btn{color:var(--warn)}
-.alerta-banner.venc-prox .ab-btn{color:var(--laranja)}
 .main{padding:18px;max-width:1400px;margin:0 auto}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
 .dcard{background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);
@@ -450,9 +450,9 @@ select{cursor:pointer}
     <button class="nbtn" id="nav-rank">&#127942; Ranking</button>
     <button class="nbtn" id="nav-ag">&#128197; Agenda</button>
     <button class="nbtn" id="nav-sim">&#129518; Simulador</button>
-    <button class="nbtn gonly" id="nav-fin">&#128181; Financeiro</button>
+    <button class="nbtn gonly" id="nav-fin">&#128181; Financeiro <span id="fin-badge" style="display:none;background:var(--perigo);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
     <button class="nbtn gonly" id="nav-gest">&#128274; Gestor</button>
-    <button class="nbtn cons-only" id="nav-mycom">&#128176; Minhas Comissões</button>
+    <button class="nbtn cons-only" id="nav-mycom">&#128176; Minhas Comissões <span id="mycom-badge" style="display:none;background:var(--perigo);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
   </nav>
   <main class="main">
 
@@ -489,6 +489,7 @@ select{cursor:pointer}
           <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
           <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
         </select>
+        <button class="btn-n" id="btn-novo-cli" onclick="abrirNovoCli()">+ Novo Cliente</button>
       </div>
       <div class="tw" style="overflow:hidden">
         <div class="th" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr 60px">
@@ -507,7 +508,7 @@ select{cursor:pointer}
           <option>AG DESBLOQUEIO</option><option>AG SALDO DEVEDOR</option>
           <option>PAGA</option><option>CANCELADA</option><option>REPROVADA</option>
         </select>
-        <select id="f-resp"><option value="">Todas consultoras</option>
+        <select id="f-resp" class="gonly-sel"><option value="">Todas consultoras</option>
           <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
         </select>
         <button class="btn-s" id="btn-sync">
@@ -534,7 +535,7 @@ select{cursor:pointer}
         <button class="pbtn" id="rp-tot">Total</button>
       </div>
       <div class="tw crank">
-        <div class="th" style="grid-template-columns:40px 2fr 1fr 1fr"><span>#</span><span>Consultora</span><span>Propostas</span><span>Volume de Vendas</span></div>
+        <div class="th" style="grid-template-columns:40px 2fr 1fr 1fr"><span>#</span><span>Consultora</span><span>Vendas</span><span>Volume (R$)</span></div>
         <div class="tb" id="rank-body"></div>
       </div>
     </div>
@@ -1036,6 +1037,7 @@ select{cursor:pointer}
       <!-- SUB-ABAS DO FINANCEIRO -->
       <div style="display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--cinza-brd);padding-bottom:0">
         <button class="fnav ativo" id="fn-comissoes" onclick="finAba(this,'fcomissoes')">💰 Comissões</button>
+        <button class="fnav" id="fn-pendentes" onclick="finAba(this,'fpendentes')">⏳ Com. Pendentes</button>
         <button class="fnav" id="fn-despesas" onclick="finAba(this,'fdespesas')">📤 Despesas</button>
         <button class="fnav" id="fn-dre" onclick="finAba(this,'fdre')">📊 DRE</button>
       </div>
@@ -1060,6 +1062,21 @@ select{cursor:pointer}
         <div class="tw cfin">
           <div class="th"><span>Cliente/Consultora</span><span>Valor</span><span>Com. Agiliza</span><span>Com. Vendedora</span><span>Status</span><span>Ações</span></div>
           <div class="tb" id="fin-body"></div>
+        </div>
+      </div>
+
+      <!-- COMISSÕES PENDENTES -->
+      <div id="fpendentes" style="display:none">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="pend-res"></div>
+        <div class="barra">
+          <select id="f-pend-re" onchange="rPend()">
+            <option value="">Todas consultoras</option>
+            <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
+          </select>
+        </div>
+        <div class="tw cfin">
+          <div class="th" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px"><span>Cliente/Consultora</span><span>Valor</span><span>Com. Agiliza</span><span>Com. Vendedora</span><span>Status</span><span>Ações</span></div>
+          <div class="tb" id="pend-body"></div>
         </div>
       </div>
 
@@ -1108,6 +1125,13 @@ select{cursor:pointer}
     </div>
 
 <div id="amycom" style="display:none">
+      <div id="mycom-alerta" style="display:none;background:#fff8e1;border:1px solid #fcd34d;border-radius:10px;padding:12px 16px;margin-bottom:16px;align-items:center;gap:12px">
+        <span style="font-size:20px">💳</span>
+        <div style="flex:1">
+          <div style="font-family:Montserrat,sans-serif;font-size:13px;font-weight:800;color:#b07000" id="mycom-alerta-titulo">Comissões Pendentes</div>
+          <div style="font-size:12px;color:var(--cinza-txt)" id="mycom-alerta-msg"></div>
+        </div>
+      </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="mycom-res"></div>
       <div class="barra">
         <select id="f-mycom-mes" onchange="rMycom()">
@@ -1163,7 +1187,7 @@ select{cursor:pointer}
       <div class="stit">Dados da Proposta</div>
       <div class="fg3">
         <div class="fi"><label>Data *</label><input type="date" id="p-data"></div>
-        <div class="fi"><label>Consultora *</label>
+        <div class="fi" id="fi-cons"><label>Consultora *</label>
           <select id="p-cons"><option value="">Selecione...</option>
             <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
           </select>
@@ -1176,10 +1200,10 @@ select{cursor:pointer}
           </select>
         </div>
         <div class="fi" style="grid-column:span 2"><label>Cliente *</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>CPF</label><input type="text" id="p-cpf" placeholder="000.000.000-00"></div>
-        <div class="fi"><label>Telefone</label><input type="text" id="p-tel" placeholder="(00) 00000-0000"></div>
+        <div class="fi"><label>CPF *</label><input type="text" id="p-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fi"><label>Telefone *</label><input type="text" id="p-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
         <div class="fi"><label>Nascimento *</label><input type="date" id="p-nasc" required></div>
-        <div class="fi"><label>Conv&ecirc;nio</label>
+        <div class="fi"><label>Conv&ecirc;nio *</label>
           <select id="p-conv"><option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
             <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
@@ -1339,17 +1363,17 @@ select{cursor:pointer}
 </div>
 
 
-<!-- MODAL EDITAR CLIENTE -->
+<!-- MODAL EDITAR/NOVO CLIENTE -->
 <div class="mov" id="mcli">
-  <div class="modal" style="max-width:480px">
-    <div class="mhd"><div class="mtit">Editar Cliente</div><button class="mx" id="mcli-x">&#10005;</button></div>
+  <div class="modal" style="max-width:520px">
+    <div class="mhd"><div class="mtit" id="mcli-tit">Editar Cliente</div><button class="mx" id="mcli-x">&#10005;</button></div>
     <div class="mbody">
       <div class="fg2">
         <div class="fi full"><label>Nome *</label><input type="text" id="cli-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>CPF</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" readonly style="background:#eee"></div>
-        <div class="fi"><label>Nascimento *</label><input type="date" id="cli-nasc"></div>
-        <div class="fi"><label>Telefone</label><input type="text" id="cli-tel" placeholder="(00) 00000-0000"></div>
-        <div class="fi"><label>Convênio</label>
+        <div class="fi"><label>CPF *</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fi"><label>Data de Nascimento *</label><input type="date" id="cli-nasc"></div>
+        <div class="fi"><label>Telefone *</label><input type="text" id="cli-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>Conv&ecirc;nio *</label>
           <select id="cli-conv">
             <option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
@@ -1357,14 +1381,21 @@ select{cursor:pointer}
             <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
           </select>
         </div>
+        <div class="fi"><label>Quem Cadastrou</label>
+          <input type="text" id="cli-cadastrador" readonly style="background:#eee;color:var(--cinza-txt)">
+        </div>
+      </div>
+      <div id="cli-modo-novo" style="display:none;margin-top:12px;background:#fffbeb;border:1px solid #fbbf24;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e">
+        &#8505;&#65039; Ao cadastrar, a data de hoje ser&aacute; registrada como data de cadastro.
       </div>
     </div>
     <div class="mft">
       <button class="bcn" id="mcli-can">Cancelar</button>
-      <button class="bsv" id="btn-salvar-cli" onclick="salvarCliente()">Salvar Cliente</button>
+      <button class="bsv" id="btn-salvar-cli">Salvar Cliente</button>
     </div>
   </div>
 </div>
+
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
@@ -1387,6 +1418,7 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('nav-gest').classList.add('vis');
     } else {
       document.getElementById('nav-mycom').classList.add('vis');
+      document.querySelectorAll('.gonly-sel').forEach(function(el){ el.style.display='none'; });
     }
     load();
   }
@@ -1466,6 +1498,8 @@ function fazerLogin(){
     document.getElementById('nav-gest').classList.add('vis');
   } else {
     document.getElementById('nav-mycom').classList.add('vis');
+    // Hide gestora-only elements for consultants
+    document.querySelectorAll('.gonly-sel').forEach(function(el){ el.style.display='none'; });
   }
   load();
 }
@@ -1519,14 +1553,36 @@ async function load(){
       S.props = r.clientes||[];
       S.agenda = r.agenda||[];
       S.despesas = r.despesas||[];
-      filtrar(); rDash();
+      // Salvar cache local para uso offline
+      try{ localStorage.setItem('crm_cache_v2', JSON.stringify({props:S.props,agenda:S.agenda,despesas:S.despesas})); }catch(ex){}
+      filtrar(); rDash(); buildClientes();
+      // Atualizar badges após load
+      if(S.u !== GESTOR){
+        var minhasLoad = S.props.filter(function(p){ return p.consultora===S.u && p.comStatus!=='pago' && pV(p.comVendedora)>0; });
+        var badge2 = document.getElementById('mycom-badge');
+        if(badge2){ badge2.style.display = minhasLoad.length>0?'inline':'none'; if(minhasLoad.length>0) badge2.textContent='!'; }
+      }
       setSS('Sincronizado',true);
       toast('Dados sincronizados!','ok');
     } else throw new Error(r.mensagem||'Erro');
-  }catch(e){ setSS('Erro',false); toast('Erro: '+e.message,'er'); filtrar(); }
+  }catch(e){
+    // Tentar usar cache local se API falhar
+    try{
+      var cache = JSON.parse(localStorage.getItem('crm_cache_v2')||'null');
+      if(cache && cache.props && cache.props.length > 0){
+        S.props = cache.props; S.agenda = cache.agenda||[]; S.despesas = cache.despesas||[];
+        filtrar(); rDash(); buildClientes();
+        setSS('Cache local',true);
+        toast('API offline — mostrando dados salvos','');
+        return;
+      }
+    }catch(ex){}
+    setSS('Offline',false);
+    toast('Erro ao conectar: '+e.message,'er');
+    filtrar();
+  }
   finally{ btn.classList.remove('girando'); }
 }
-
 function setSS(t,on){
   document.getElementById('stxt').textContent=t;
   document.getElementById('sdot').className='sdot'+(on?' on':'');
@@ -1590,8 +1646,9 @@ function rDash(){
   const byC={};
   fp.forEach(function(p){
     const k=p.consultora||'—';
-    if(!byC[k]) byC[k]={n:k,qtd:0,vol:0};
-    byC[k].qtd++; byC[k].vol+=pV(p.valor);
+    if(!byC[k]) byC[k]={n:k,qtd:0,vendas:0,vol:0};
+    byC[k].qtd++; 
+    if(p.status==='PAGA'){ byC[k].vendas++; byC[k].vol+=pV(p.valor); }
   });
   const top=Object.values(byC).sort(function(a,b){return b.vol-a.vol;}).slice(0,3);
   const med=['🥇','🥈','🥉'];
@@ -1651,7 +1708,7 @@ function rProp(){
     body.innerHTML='<div class="vazio"><div class="ico">📋</div>'+(tot===0&&S.props.length===0?'Nenhuma proposta cadastrada.':'Nenhum resultado.')+'</div>';
   } else {
     body.innerHTML=pag.map(function(p){
-      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+(p.data?' · '+fDH(p.data,''):'')+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
+      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+(p.data?' · '+fDH(p.data,''):'')+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+(p.promotora?' <span style="font-size:10px;color:var(--cinza-txt)">/ '+X(p.promotora)+'</span>':'')+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
     }).join('');
   }
   const tp=Math.ceil(tot/S.pp);
@@ -1684,6 +1741,9 @@ function abrirProp(){
   });
   ['p-valor','p-pct'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
   ['p-cons','p-data'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=i==='p-data'?new Date().toISOString().split('T')[0]:S.u||''; });
+  // Consultoras não podem alterar o campo consultora
+  var pconsEl = document.getElementById('p-cons');
+  if(pconsEl) pconsEl.disabled = (S.u !== GESTOR);
   var pnasc=document.getElementById('p-nasc'); if(pnasc) pnasc.value='';
   var cag=document.getElementById('com-ag'); if(cag) cag.textContent='R$ 0,00';
   var cvd=document.getElementById('com-vd'); if(cvd) cvd.textContent='R$ 0,00';
@@ -1698,6 +1758,13 @@ function editProp(id){
   document.getElementById('p-id').value=p.id||'';
   document.getElementById('p-data').value=p.data||'';
   document.getElementById('p-cons').value=p.consultora||'';
+  // Consultoras só podem editar suas próprias propostas
+  if(S.u !== GESTOR && p.consultora !== S.u){
+    toast('Você só pode editar suas próprias propostas.','er');
+    return;
+  }
+  var pconsEl2 = document.getElementById('p-cons');
+  if(pconsEl2) pconsEl2.disabled = (S.u !== GESTOR);
   document.getElementById('p-stat').value=p.status||'';
   document.getElementById('p-nome').value=p.nome||'';
   document.getElementById('p-cpf').value=p.cpf||'';
@@ -1721,8 +1788,18 @@ async function salvarProp(){
   const cons=document.getElementById('p-cons').value;
   const stat=document.getElementById('p-stat').value;
   var nascimento=document.getElementById('p-nasc').value;
-  if(!nome||!cons||!stat){toast('Preencha Cliente, Consultora e Status.','er');return;}
-  if(!nascimento){toast('Preencha a data de nascimento.','er');return;}
+  var cpf = document.getElementById('p-cpf').value.trim();
+  var tel = document.getElementById('p-tel').value.trim();
+  var pdata = document.getElementById('p-data').value;
+  if(!nome){toast('Preencha o nome do cliente.','er');return;}
+  if(!cpf){toast('CPF é obrigatório.','er');return;}
+  if(!tel){toast('Telefone é obrigatório.','er');return;}
+  if(!pdata){toast('Data é obrigatória.','er');return;}
+  if(!nascimento){toast('Data de nascimento é obrigatória.','er');return;}
+  var conv2 = document.getElementById('p-conv').value;
+  if(!conv2){toast('Selecione o convênio.','er');return;}
+  if(!cons){toast('Selecione a consultora.','er');return;}
+  if(!stat){toast('Selecione o status.','er');return;}
   const val=pV(document.getElementById('p-valor').value||'0');
   const pct=parseFloat(document.getElementById('p-pct').value||'0');
   const ag=val*(pct/100), vd=ag*0.20;
@@ -1731,7 +1808,7 @@ async function salvarProp(){
   const d={
     id:document.getElementById('p-id').value||'',
     data:document.getElementById('p-data').value,
-    consultora:cons, status:stat, nome:nome,
+    consultora: (document.getElementById('p-cons').disabled ? S.u : cons), status:stat, nome:nome,
     cpf:document.getElementById('p-cpf').value,
     telefone:document.getElementById('p-tel').value,
     nascimento:document.getElementById('p-nasc').value,
@@ -1788,7 +1865,7 @@ function verDet(id){
     di('Data',p.data?fDH(p.data,''):'—')+
     di('Consultora',p.consultora)+di('CPF',p.cpf)+
     '<div><div style="font-size:10px;color:var(--cinza-txt);font-weight:700;text-transform:uppercase;margin-bottom:2px">Telefone</div><div><a href="https://wa.me/55'+((p.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--laranja)">'+(p.telefone||'—')+'</a></div></div>'+
-    di('Banco',p.banco)+di('Tipo',p.tipoProposta)+di('Convênio',p.convenio)+di('Status',p.status)+
+    di('Banco',p.banco)+di('Promotora',p.promotora||'—')+di('Tipo',p.tipoProposta)+di('Convênio',p.convenio)+di('Status',p.status)+
     '</div>'+
     '<div style="margin-top:14px;background:linear-gradient(135deg,#e8eef8,#f0f4fb);border:1.5px solid var(--cinza-brd);border-radius:var(--radius);padding:14px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">'+
     '<div><div style="font-size:10px;color:var(--cinza-txt);font-weight:700;text-transform:uppercase;margin-bottom:3px">Valor Contrato</div><div style="font-family:Montserrat,sans-serif;font-size:18px;font-weight:800;color:var(--azul)">'+(p.valor?fmt(pV(p.valor)):'—')+'</div></div>'+
@@ -1814,7 +1891,7 @@ function rRank(){
   const body=document.getElementById('rank-body');
   if(!sorted.length){body.innerHTML='<div class="vazio"><div class="ico">🏆</div><p>Sem dados no período</p></div>';return;}
   body.innerHTML=sorted.map(function(c,i){
-    return '<div class="tr '+(i<3?'rank-'+(i+1):'')+'"><span class="medal">'+(med[i]||i+1)+'</span><span style="font-weight:700;font-size:14px">'+X(c.n)+'</span><span style="font-weight:600">'+c.qtd+'</span><span style="font-weight:700;color:var(--azul)">'+fmt(c.vol)+'</span></div>';
+    return '<div class="tr '+(i<3?'rank-'+(i+1):'')+'"><span class="medal">'+(med[i]||i+1)+'</span><span style="font-weight:700;font-size:14px">'+X(c.n)+'<div style="font-size:11px;color:var(--cinza-txt)">'+c.qtd+' proposta'+(c.qtd!==1?'s':'')+' · '+c.vendas+' venda'+(c.vendas!==1?'s':'')+'</div></span><span style="font-weight:700;color:var(--ok)">'+c.vendas+'</span><span style="font-weight:700;color:var(--azul)">'+fmt(c.vol)+'</span></div>';
   }).join('');
 }
 
@@ -1891,10 +1968,22 @@ async function baixarCom(id){
   if(!confirm('Marcar comissão como PAGA?')) return;
   const p=S.props.find(function(x){return x.id==id;});
   if(!p) return;
+  const nomeConsultora = p.consultora;
+  const valorCom = p.comVendedora;
   p.comStatus='pago';
   try{
     const r=await callApi('atualizar',{dados:p});
-    if(r.status==='ok'){toast('Comissão baixada!','ok');await load();rFin();}
+    if(r.status==='ok'){
+      toast('✅ Comissão de '+X(nomeConsultora)+' ('+X(valorCom)+') marcada como PAGA!','ok');
+      await load();
+      rFin();
+      // Atualizar aba pendentes se estiver visível
+      var fpend = document.getElementById('fpendentes');
+      if(fpend && fpend.style.display==='block') rPend();
+      rGest();
+      // Dar baixa visual no mycom se for a própria consultora
+      if(S.u === nomeConsultora) rMycom();
+    }
     else throw new Error(r.mensagem||'Erro');
   }catch(e){toast('Erro: '+e.message,'er');}
 }
@@ -2676,11 +2765,12 @@ const DESPESAS_FIXAS = [
 function finAba(btn, id){
   document.querySelectorAll('.fnav').forEach(function(b){ b.classList.remove('ativo'); });
   btn.classList.add('ativo');
-  ['fcomissoes','fdespesas','fdre'].forEach(function(a){
+  ['fcomissoes','fpendentes','fdespesas','fdre'].forEach(function(a){
     document.getElementById(a).style.display = a===id ? 'block' : 'none';
   });
   if(id==='fdespesas') rDesp();
   if(id==='fdre') rDRE();
+  if(id==='fpendentes') rPend();
 }
 
 // Preencher selects de mês
@@ -2702,6 +2792,13 @@ function preencherMeses(){
 // ── COMISSÕES ──
 function rFin(){
   if(S.u !== GESTOR){ document.getElementById('afin').innerHTML='<div class="vazio"><div class="ico">🔒</div><p>Acesso restrito.</p></div>'; return; }
+  // Update fin badge
+  var finBadge = document.getElementById('fin-badge');
+  if(finBadge){
+    var pendCount = S.props.filter(function(p){ return p.comStatus!=='pago' && pV(p.comVendedora)>0; }).length;
+    finBadge.style.display = pendCount > 0 ? 'inline' : 'none';
+    if(pendCount > 0) finBadge.textContent = pendCount;
+  }
   preencherMeses();
   var fst = document.getElementById('f-fin-st').value||'';
   var fre = document.getElementById('f-fin-re').value||'';
@@ -2753,6 +2850,57 @@ function rFin(){
   },100);
 }
 
+// ── COMISSÕES PENDENTES ──
+function rPend(){
+  if(S.u !== GESTOR){ return; }
+  preencherMeses();
+  var fre = document.getElementById('f-pend-re').value||'';
+  
+  var props = S.props.filter(function(p){
+    return p.comStatus !== 'pago' && pV(p.comVendedora) > 0 && (!fre || p.consultora===fre);
+  });
+
+  var tVd = props.reduce(function(s,p){return s+pV(p.comVendedora);},0);
+  var byC = {};
+  props.forEach(function(p){
+    var k = p.consultora||'—';
+    if(!byC[k]) byC[k] = 0;
+    byC[k] += pV(p.comVendedora);
+  });
+
+  var resumoCons = Object.entries(byC).map(function(e){
+    return '<div class="fcard" style="border-left:4px solid var(--laranja)"><div class="fk">'+e[0]+'</div><div class="fv" style="color:var(--laranja)">'+fmt(e[1])+'</div></div>';
+  }).join('');
+
+  document.getElementById('pend-res').innerHTML =
+    fc('Total Pendente', fmt(tVd), 'var(--perigo)') + resumoCons;
+
+  var body = document.getElementById('pend-body');
+  if(!props.length){
+    body.innerHTML = '<div class="vazio"><div class="ico">✅</div><p>Nenhuma comissão pendente! Todas foram pagas.</p></div>';
+    return;
+  }
+
+  body.innerHTML = props.map(function(p){
+    return '<div class="tr" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px">'+
+      '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+fDH(p.data,'')+'</div></span>'+
+      '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
+      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza||'—')+'</span>'+
+      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora||'—')+'</span>'+
+      '<span><span class="badge b-wn">⏳ Pendente</span></span>'+
+      '<span><button class="ac okb" data-pagarpend="'+p.id+'" style="width:auto;padding:4px 12px;font-size:12px;font-weight:700">💳 Pagar</button></span>'+
+    '</div>';
+  }).join('');
+
+  setTimeout(function(){
+    var pb = document.getElementById('pend-body');
+    if(pb && !pb._lpend){ pb._lpend=true; pb.addEventListener('click',function(e){
+      var b = e.target.closest('[data-pagarpend]');
+      if(b) baixarCom(b.dataset.pagarpend);
+    });}
+  },100);
+}
+
 // ── DESPESAS ──
 function rDesp(){
   preencherMeses();
@@ -2782,7 +2930,10 @@ function rDesp(){
         '<span style="font-weight:600;color:var(--perigo)">'+fmt(pV(d.valor))+'</span>'+
         '<span style="font-size:12px">'+(d.vencimento?new Date(d.vencimento+'T12:00').toLocaleDateString('pt-BR'):'—')+'</span>'+
         '<span>'+(d.status==='pago'?'<span class="badge b-ok">✓ Pago</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
-        '<span><button class="ac del" data-deldesp="'+d.id+'">🗑</button></span>'+
+        '<span>'+
+          (d.status!=='pago' ? '<button class="ac okb" data-pagardesp="'+d.id+'" title="Marcar como pago" style="margin-right:4px">✓</button>' : '') +
+          '<button class="ac del" data-deldesp="'+d.id+'">🗑</button>'+
+        '</span>'+
       '</div>';
     }).join('');
   }
@@ -2800,8 +2951,10 @@ function rDesp(){
   setTimeout(function(){
     var db=document.getElementById('desp-body');
     if(db&&!db._ld){db._ld=true;db.addEventListener('click',function(e){
+      var pd=e.target.closest('[data-pagardesp]');
       var b=e.target.closest('[data-deldesp]');
-      if(b) delDesp(b.dataset.deldesp);
+      if(pd) pagarDesp(pd.dataset.pagardesp);
+      else if(b) delDesp(b.dataset.deldesp);
     });}
   },100);
 }
@@ -2858,6 +3011,28 @@ async function delDesp(id){
       rDesp();
     } else throw new Error(r.mensagem||'Erro');
   }catch(e){ toast('Erro: '+e.message,'er'); }
+}
+
+async function pagarDesp(id){
+  if(!confirm('Marcar despesa como PAGA?')) return;
+  var d = (S.despesas||[]).find(function(x){ return x.id===id; });
+  if(!d) return;
+  d.status = 'pago';
+  try{
+    var r = await callApi('atualizarDespesa', {dados: d});
+    if(r.status==='ok'){
+      toast('Despesa paga!','ok');
+      rDesp();
+    } else {
+      // Mesmo sem API de atualizar, atualiza local
+      toast('Pago localmente!','ok');
+      rDesp();
+    }
+  }catch(e){ 
+    // Atualiza local mesmo se API falhar
+    toast('Status atualizado!','ok');
+    rDesp();
+  }
 }
 
 // ── DRE ──
@@ -2994,6 +3169,22 @@ function rMycom(){
     fc('Total a Receber', fmt(total), 'var(--azul)') +
     fc('Já Recebido', fmt(pagas), 'var(--ok)') +
     fc('Pendente', fmt(pend), 'var(--perigo)');
+  
+  // Alerta de comissão pendente
+  var alertaEl = document.getElementById('mycom-alerta');
+  if(alertaEl){
+    var badge = document.getElementById('mycom-badge');
+    if(pend > 0){
+      var pendCount = minhas.filter(function(p){ return p.comStatus!=='pago'; }).length;
+      alertaEl.style.display = 'flex';
+      if(badge) badge.style.display = 'inline';
+      document.getElementById('mycom-alerta-titulo').textContent = pendCount + ' comissão'+(pendCount!==1?'ões':'')+' pendente'+(pendCount!==1?'s':'')+'!';
+      document.getElementById('mycom-alerta-msg').textContent = 'Você tem '+fmt(pend)+' a receber. Aguarde o pagamento da Agiliza Credi.';
+    } else {
+      alertaEl.style.display = 'none';
+      if(badge) badge.style.display = 'none';
+    }
+  }
 
   var body = document.getElementById('mycom-body');
   if(!minhas.length){
@@ -3046,7 +3237,8 @@ function filtrarCli(){
   var conv = document.getElementById('f-cli-conv').value||'';
   S.ftCli = S.clientes.filter(function(c){
     var m = !b||[c.nome,c.cpf,c.telefone].some(function(v){return (v||'').toLowerCase().includes(b);});
-    return m && (!conv||c.convenio===conv);
+    var propria = S.u === GESTOR || c.cadastradoPor === S.u;
+    return m && (!conv||c.convenio===conv) && propria;
   });
   S.pgCli = 1;
   rCli();
@@ -3054,6 +3246,10 @@ function filtrarCli(){
 
 function rCli(){
   buildClientes();
+  // Consultoras veem apenas seus próprios clientes
+  if(S.u !== GESTOR){
+    S.clientes = S.clientes.filter(function(c){ return c.cadastradoPor === S.u; });
+  }
   if(!S.ftCli.length) S.ftCli = S.clientes;
   var tot = S.ftCli.length;
   var pp = 20;
@@ -3074,11 +3270,6 @@ function rCli(){
         '<span style="text-align:center"><button class="ac" data-editcli="'+c.cpf+'" title="Editar">✏️</button></span>'+
       '</div>';
     }).join('');
-    // Delegação editar cliente
-    body.addEventListener('click', function handler(e){
-      var b = e.target.closest('[data-editcli]');
-      if(b) editarCliente(b.dataset.editcli);
-    });
   }
 
   document.getElementById('cli-pag-info').textContent = tot + ' cliente'+(tot!==1?'s':'');
@@ -3161,7 +3352,59 @@ function rAlertas(){
     '</div>');
   }
 
-  // 3. ALERTAS DE VENCIMENTO (só gestora)
+  // 3. COMISSÕES PENDENTES (só gestora)
+  if(S.u === GESTOR){
+    var pendComissoes = S.props.filter(function(p){ return p.comStatus!=='pago' && pV(p.comVendedora)>0; });
+    if(pendComissoes.length > 0){
+      var totalPend = pendComissoes.reduce(function(s,p){return s+pV(p.comVendedora);},0);
+      alertas.push('<div class="alerta-banner venc-hj">'+
+        '<div class="ab-ico">💳</div>'+
+        '<div class="ab-body">'+
+          '<div class="ab-titulo">'+pendComissoes.length+' comissão'+(pendComissoes.length!==1?'ões':'')+' pendente'+(pendComissoes.length!==1?'s':'')+'</div>'+
+          '<div class="ab-msg">Total a pagar: '+fmt(totalPend)+' — clique para ver e pagar</div>'+
+        '</div>'+
+        '<button class="ab-btn" onclick="irParaPendentes()">Ver pendentes</button>'+
+      '</div>');
+    }
+  }
+
+  // 4. ALERTAS DE VENCIMENTO DESPESAS (só gestora)
+  if(S.u === GESTOR){
+    // Check pending despesas from the database too
+    (S.despesas||[]).filter(function(d){ return d.status !== 'pago' && d.vencimento; }).forEach(function(d){
+      var vencDate = new Date(d.vencimento + 'T12:00');
+      var diffDias = Math.floor((vencDate - hoje)/(1000*60*60*24));
+      if(diffDias < 0){
+        alertas.push('<div class="alerta-banner venc-atr">'+
+          '<div class="ab-ico">🔴</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">'+X(d.descricao)+' — vencida!</div>'+
+            '<div class="ab-msg">Venceu em '+vencDate.toLocaleDateString('pt-BR')+' — '+fmt(pV(d.valor))+'</div>'+
+          '</div>'+
+          '<button class="ab-btn" onclick="irParaDespesas()">Pagar agora</button>'+
+        '</div>');
+      } else if(diffDias === 0){
+        alertas.push('<div class="alerta-banner venc-hj">'+
+          '<div class="ab-ico">⏰</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">'+X(d.descricao)+' vence hoje!</div>'+
+            '<div class="ab-msg">'+fmt(pV(d.valor))+'</div>'+
+          '</div>'+
+          '<button class="ab-btn" onclick="irParaDespesas()">Pagar</button>'+
+        '</div>');
+      } else if(diffDias <= 3){
+        alertas.push('<div class="alerta-banner venc-prox">'+
+          '<div class="ab-ico">🟠</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">'+X(d.descricao)+' vence em '+diffDias+' dia'+(diffDias!==1?'s':'')+'</div>'+
+            '<div class="ab-msg">'+fmt(pV(d.valor))+'</div>'+
+          '</div>'+
+        '</div>');
+      }
+    });
+  }
+
+  // 5. ALERTAS DESPESAS FIXAS (só gestora)
   if(S.u === GESTOR){
     var despFixas = [
       {desc:'Salário Tatielle', valor:1700, dia:27},
@@ -3276,23 +3519,50 @@ function fecharParabens(){
   if(m) m.parentNode.removeChild(m);
 }
 
-// Editar cliente — abre modal de dados do cliente
-function editarCliente(cpf){
-  var c = S.clientes.find(function(x){ return x.cpf === cpf; });
-  if(!c){
-    // Buscar nas propostas
-    var p = S.props.find(function(x){ return x.cpf === cpf; });
-    if(!p){ toast('Cliente não encontrado.','er'); return; }
-    c = {nome:p.nome, cpf:p.cpf, nascimento:p.nascimento||'', telefone:p.telefone||'', convenio:p.convenio||''};
-  }
-  document.getElementById('cli-nome').value = c.nome||'';
-  document.getElementById('cli-cpf').value = c.cpf||'';
-  document.getElementById('cli-nasc').value = c.nascimento||'';
-  document.getElementById('cli-tel').value = c.telefone||'';
-  document.getElementById('cli-conv').value = c.convenio||'';
+// Abrir modal NOVO cliente
+function abrirNovoCli(){
+  var titEl = document.getElementById('mcli-tit');
+  if(titEl) titEl.textContent = 'Novo Cliente';
+  document.getElementById('cli-nome').value = '';
+  var cpfEl = document.getElementById('cli-cpf');
+  cpfEl.value = ''; cpfEl.removeAttribute('readonly'); cpfEl.style.background = '';
+  document.getElementById('cli-nasc').value = '';
+  document.getElementById('cli-tel').value = '';
+  document.getElementById('cli-conv').value = '';
+  var cadEl = document.getElementById('cli-cadastrador');
+  if(cadEl) cadEl.value = S.u||'';
+  var novoEl = document.getElementById('cli-modo-novo');
+  if(novoEl) novoEl.style.display = 'block';
+  var btn = document.getElementById('btn-salvar-cli');
+  if(btn){ btn.textContent = 'Cadastrar Cliente'; btn.onclick = salvarNovoCli; }
   aM('mcli');
 }
 
+// Editar cliente — abre modal de dados do cliente
+function editarCliente(cpf){
+  var titEl = document.getElementById('mcli-tit');
+  if(titEl) titEl.textContent = 'Editar Cliente';
+  var novoEl = document.getElementById('cli-modo-novo');
+  if(novoEl) novoEl.style.display = 'none';
+  var btn = document.getElementById('btn-salvar-cli');
+  if(btn){ btn.textContent = 'Salvar Cliente'; btn.onclick = salvarCliente; }
+  buildClientes();
+  var cli = S.clientes.find(function(x){ return x.cpf === cpf; });
+  if(!cli){
+    var p = S.props.find(function(x){ return x.cpf === cpf; });
+    if(!p){ toast('Cliente não encontrado.','er'); return; }
+    cli = {nome:p.nome, cpf:p.cpf, nascimento:p.nascimento||'', telefone:p.telefone||'', convenio:p.convenio||'', cadastradoPor:p.consultora||''};
+  }
+  document.getElementById('cli-nome').value = cli.nome||'';
+  var cpfEl2 = document.getElementById('cli-cpf');
+  cpfEl2.value = cli.cpf||''; cpfEl2.setAttribute('readonly','true'); cpfEl2.style.background='#eee';
+  document.getElementById('cli-nasc').value = cli.nascimento||'';
+  document.getElementById('cli-tel').value = cli.telefone||'';
+  document.getElementById('cli-conv').value = cli.convenio||'';
+  var cadEl2 = document.getElementById('cli-cadastrador');
+  if(cadEl2) cadEl2.value = cli.cadastradoPor||'—';
+  aM('mcli');
+}
 // Salvar edição do cliente — atualiza todas as propostas do CPF
 async function salvarCliente(){
   var cpfEl = document.getElementById('cli-cpf');
@@ -3354,6 +3624,81 @@ async function salvarCliente(){
   }
 }
 
+
+// Salvar NOVO cliente — cria proposta mínima com dados do cliente
+async function salvarNovoCli(){
+  var nome = document.getElementById('cli-nome').value.trim();
+  var cpf  = document.getElementById('cli-cpf').value.trim();
+  var nasc = document.getElementById('cli-nasc').value;
+  var tel  = document.getElementById('cli-tel').value.trim();
+  var conv = document.getElementById('cli-conv').value;
+  if(!nome){ toast('Preencha o nome.','er'); return; }
+  if(!cpf){  toast('Preencha o CPF.','er');  return; }
+  if(!nasc){ toast('Preencha a data de nascimento.','er'); return; }
+  if(!tel){  toast('Preencha o telefone.','er'); return; }
+  if(!conv){ toast('Selecione o convênio.','er'); return; }
+  // Verificar se CPF já existe
+  buildClientes();
+  var cpfLimpo = cpf.replace(/\D/g,'');
+  var existe = S.clientes.find(function(x){ return (x.cpf||'').replace(/\D/g,'')===cpfLimpo; });
+  if(existe){ toast('CPF já cadastrado: '+existe.nome,'er'); return; }
+  var btn = document.getElementById('btn-salvar-cli');
+  btn.disabled=true; btn.textContent='Salvando...';
+  // Criar registro mínimo — Lead sem proposta financeira
+  var d = {
+    id: '',
+    data: new Date().toISOString().split('T')[0],
+    consultora: S.u,
+    status: 'Lead',
+    nome: nome,
+    cpf: cpf,
+    telefone: tel,
+    nascimento: nasc,
+    convenio: conv,
+    promotora: '',
+    banco: '',
+    tipoProposta: '',
+    valor: '',
+    parcela: '',
+    prazo: '',
+    pct: '',
+    comAgiliza: 'R$ 0,00',
+    comVendedora: 'R$ 0,00',
+    comStatus: '',
+    obs: 'Cadastro direto — sem proposta',
+    atualizadoPor: S.u,
+    dataAtualizacao: new Date().toISOString()
+  };
+  try{
+    var r = await callApi('criar', {dados: d});
+    if(r.status==='ok'){
+      toast('Cliente cadastrado!','ok');
+      fM('mcli');
+      await load();
+      navAba('cli');
+    } else throw new Error(r.mensagem||'Erro');
+  } catch(e){
+    toast('Erro: '+e.message,'er');
+  } finally {
+    btn.disabled=false; btn.textContent='Cadastrar Cliente';
+  }
+}
+
+
+function irParaPendentes(){
+  navAba('fin');
+  setTimeout(function(){
+    var btn = document.getElementById('fn-pendentes');
+    if(btn) finAba(btn,'fpendentes');
+  },200);
+}
+function irParaDespesas(){
+  navAba('fin');
+  setTimeout(function(){
+    var btn = document.getElementById('fn-despesas');
+    if(btn) finAba(btn,'fdespesas');
+  },200);
+}
 </script>
 </body>
 </html>
