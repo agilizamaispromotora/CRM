@@ -1509,6 +1509,68 @@ async function callApi(ac, dados){
   return r.json();
 }
 
+
+// Corrige dados antigos que vieram fora de ordem da planilha/API
+function ehDataTexto(v){
+  v = String(v || '').trim();
+  return /^\d{4}-\d{2}-\d{2}/.test(v) || /GMT|Horário Padrão|Standard Time|\w{3}\s\w{3}\s\d{2}\s\d{4}/i.test(v);
+}
+function ehTelefone(v){
+  v = String(v || '').trim();
+  var nums = v.replace(/\D/g,'');
+  return nums.length >= 8 && nums.length <= 13 && !ehDataTexto(v);
+}
+function dataParaInput(v){
+  v = String(v || '').trim();
+  if(!v) return '';
+  if(/^\d{4}-\d{2}-\d{2}/.test(v)) return v.slice(0,10);
+  var d = new Date(v);
+  if(!isNaN(d.getTime())){
+    var y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dia=String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+dia;
+  }
+  return v;
+}
+function normalizarProposta(p){
+  p = p || {};
+
+  // Caso visto nos prints: nascimento caiu em telefone e telefone caiu em convênio
+  if(ehDataTexto(p.telefone) && !p.nascimento){
+    p.nascimento = dataParaInput(p.telefone);
+    if(ehTelefone(p.convenio)){
+      p.telefone = p.convenio;
+      p.convenio = '';
+    } else {
+      p.telefone = '';
+    }
+  }
+  if(ehDataTexto(p.nascimento)) p.nascimento = dataParaInput(p.nascimento);
+  if(ehDataTexto(p.dataNasc)) p.dataNasc = dataParaInput(p.dataNasc);
+
+  // Garante parcela/prazo separados
+  if(!p.parcela && p.prazo && String(p.prazo).includes(',')){
+    p.parcela = p.prazo;
+    p.prazo = '';
+  }
+
+  // Comissão da consultora deve ser 20% da Comissão Agiliza.
+  // Se vier invertido da planilha/API, corrige na tela.
+  var ag = pV(p.comAgiliza);
+  var vd = pV(p.comVendedora);
+  if(ag > 0 && vd > ag){
+    var tmp = p.comAgiliza;
+    p.comAgiliza = p.comVendedora;
+    p.comVendedora = tmp;
+  }
+  ag = pV(p.comAgiliza);
+  vd = pV(p.comVendedora);
+  if(ag > 0 && (!vd || vd > ag)){
+    p.comVendedora = fmt(ag * 0.20);
+  }
+
+  return p;
+}
+
 async function load(){
   const btn=document.getElementById('btn-sync');
   btn.classList.add('girando');
@@ -1516,7 +1578,7 @@ async function load(){
   try{
     const r = await callApi('listar');
     if(r.status==='ok'){
-      S.props = r.clientes||[];
+      S.props = (r.clientes||[]).map(normalizarProposta);
       S.agenda = r.agenda||[];
       S.despesas = r.despesas||[];
       filtrar(); rDash();
@@ -1676,7 +1738,7 @@ function calcCom(){
 function abrirProp(){
   S.ed=null;
   document.getElementById('mprop-tit').textContent='Nova Proposta';
-  ['p-id','p-nome','p-cpf','p-tel','p-banco','p-prazo','p-obs'].forEach(function(i){
+  ['p-id','p-nome','p-cpf','p-tel','p-banco','p-parcela','p-prazo','p-obs'].forEach(function(i){
     const el=document.getElementById(i);if(el)el.value='';
   });
   ['p-conv','p-prom','p-tipo','p-cheg','p-stat'].forEach(function(i){
@@ -1702,15 +1764,16 @@ function editProp(id){
   document.getElementById('p-nome').value=p.nome||'';
   document.getElementById('p-cpf').value=p.cpf||'';
   document.getElementById('p-tel').value=p.telefone||'';
-  document.getElementById('p-nasc').value=p.nascimento||p.dataNasc||'';
+  document.getElementById('p-nasc').value=dataParaInput(p.nascimento||p.dataNasc||'');
   document.getElementById('p-conv').value=p.convenio||'';
   document.getElementById('p-prom').value=p.promotora||'';
   document.getElementById('p-banco').value=p.banco||'';
   document.getElementById('p-tipo').value=p.tipoProposta||'';
   document.getElementById('p-cheg').value=p.comoCheqou||'';
   document.getElementById('p-valor').value=p.valor||'';
-  document.getElementById('p-pct').value=p.pct||'';
+  document.getElementById('p-parcela').value=p.parcela||'';
   document.getElementById('p-prazo').value=p.prazo||'';
+  document.getElementById('p-pct').value=p.pct||'';
   document.getElementById('p-obs').value=p.obs||'';
   calcCom();
   fM('mdet'); aM('mprop');
