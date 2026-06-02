@@ -1534,35 +1534,31 @@ function dataParaInput(v){
 function normalizarProposta(p){
   p = p || {};
 
-  // 1. Datas — corrige nascimento/telefone trocados
-  if(ehDataTexto(p.telefone) && !p.nascimento){
-    p.nascimento = dataParaInput(p.telefone);
-    p.telefone = ehTelefone(p.convenio) ? p.convenio : '';
-    if(ehTelefone(p.convenio)) p.convenio = '';
-  }
-  if(ehDataTexto(p.nascimento)) p.nascimento = dataParaInput(p.nascimento);
-  if(ehDataTexto(p.dataNasc))   p.dataNasc   = dataParaInput(p.dataNasc);
+  // Normalizar datas para formato input date (YYYY-MM-DD)
+  if(p.nascimento) p.nascimento = dataParaInput(p.nascimento);
+  if(p.dataNasc)   p.nascimento = dataParaInput(p.dataNasc);
+  if(p.data)       p.data = p.data.slice(0,10); // garantir YYYY-MM-DD
 
-  // 2. Valor — se vier como texto não-numérico (ex: tipo de proposta no lugar errado)
-  var _v = String(p.valor||'').trim();
-  if(_v && pV(_v)===0 && _v.match(/[a-zA-Z]/)) p.valor = '';
-
-  // 3. Parcela / Prazo
-  if(!p.parcela && p.prazo && String(p.prazo).includes(',')){ p.parcela=p.prazo; p.prazo=''; }
+  // Prazo inteiro razoável
   var _pr = parseInt(p.prazo||'');
   if(isNaN(_pr)||_pr<=0||_pr>480) p.prazo='';
 
-  // 4. Pct
-  var _pct = parseFloat(p.pct||'');
-  if(isNaN(_pct)||_pct<0||_pct>100) p.pct='';
+  // Pct entre 0 e 100
+  var _pctN = parseFloat(p.pct||'');
+  if(isNaN(_pctN)||_pctN<0||_pctN>100) p.pct='';
 
-  // 5. Comissões
+  // Comissões: corrigir se invertidas ou ausentes
   var ag = pV(p.comAgiliza), vd = pV(p.comVendedora);
-  if(ag>0 && vd>ag){ var tmp=p.comAgiliza; p.comAgiliza=p.comVendedora; p.comVendedora=tmp; ag=pV(p.comAgiliza); vd=pV(p.comVendedora); }
+  if(ag>0 && vd>ag){
+    var tmp=p.comAgiliza; p.comAgiliza=p.comVendedora; p.comVendedora=tmp;
+    ag=pV(p.comAgiliza); vd=pV(p.comVendedora);
+  }
   if(ag>0 && (vd<=0||vd>ag)) p.comVendedora = fmt(ag*0.20);
+  // Recalcular se comAgiliza=0 mas temos valor e pct
   if(ag===0 && pV(p.valor)>0 && parseFloat(p.pct||'')>0){
     var agC = pV(p.valor)*(parseFloat(p.pct)/100);
-    p.comAgiliza = fmt(agC); p.comVendedora = fmt(agC*0.20);
+    p.comAgiliza   = fmt(agC);
+    p.comVendedora = fmt(agC*0.20);
   }
 
   return p;
@@ -1837,8 +1833,8 @@ async function salvarProp(){
     data:document.getElementById('p-data').value,
     consultora:cons, status:stat, nome:nome,
     cpf:document.getElementById('p-cpf').value,
-    telefone:document.getElementById('p-tel').value,
     nascimento:document.getElementById('p-nasc').value,
+    telefone:document.getElementById('p-tel').value,
     convenio:document.getElementById('p-conv').value,
     promotora:document.getElementById('p-prom').value,
     banco:document.getElementById('p-banco').value,
@@ -1849,7 +1845,7 @@ async function salvarProp(){
     prazo:document.getElementById('p-prazo').value,
     pct:document.getElementById('p-pct').value,
     comAgiliza:fmt(ag), comVendedora:fmt(vd),
-    comStatus: S.ed ? (S.ed.comStatus||'') : '',
+    comStatus: S.ed ? (S.ed.comStatus||'pendente') : 'pendente',
     obs:document.getElementById('p-obs').value,
     atualizadoPor:S.u, dataAtualizacao:new Date().toISOString()
   };
