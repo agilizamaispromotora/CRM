@@ -1898,9 +1898,12 @@ function rRank(){
   const byC={};
   fp.forEach(function(p){
     const k=p.consultora||'—';
-    if(!byC[k]) byC[k]={n:k,qtd:0,vol:0,ag:0,vd:0};
-    byC[k].qtd++; byC[k].vol+=pV(p.valor);
-    byC[k].ag+=pV(p.comAgiliza); byC[k].vd+=pV(p.comVendedora);
+    if(!byC[k]) byC[k]={n:k,qtd:0,vendas:0,vol:0,ag:0,vd:0};
+    byC[k].qtd++;
+    byC[k].vol+=pV(p.valor);
+    byC[k].ag+=pV(p.comAgiliza);
+    byC[k].vd+=pV(p.comVendedora);
+    if(p.status==='PAGA') byC[k].vendas++;
   });
   const sorted=Object.values(byC).sort(function(a,b){return b.vol-a.vol;});
   const med=['🥇','🥈','🥉'];
@@ -2823,9 +2826,9 @@ function rFin(){
   body.innerHTML=props.map(function(p){
     return '<div class="tr" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px">'+
       '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+fDH(p.data,'')+'</div></span>'+
-      '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
-      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza||'—')+'</span>'+
-      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora||'—')+'</span>'+
+      '<span>'+(pV(p.valor)>0?fmt(pV(p.valor)):(p.valor||'—'))+'</span>'+
+      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza&&pV(p.comAgiliza)>0?p.comAgiliza:'—')+'</span>'+
+      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora&&pV(p.comVendedora)>0?p.comVendedora:'—')+'</span>'+
       '<span>'+(p.comStatus==='pago'?'<span class="badge b-ok">✓ Paga</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
       '<span>'+
         (p.comStatus!=='pago'?'<button class="ac okb" data-baixar="'+p.id+'" title="Pagar">✓</button> ':'') +
