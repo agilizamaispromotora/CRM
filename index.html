@@ -1900,10 +1900,10 @@ function rRank(){
     const k=p.consultora||'—';
     if(!byC[k]) byC[k]={n:k,qtd:0,vendas:0,vol:0,ag:0,vd:0};
     byC[k].qtd++;
+    byC[k].vendas++; // toda proposta digitada conta no ranking
     byC[k].vol+=pV(p.valor);
     byC[k].ag+=pV(p.comAgiliza);
     byC[k].vd+=pV(p.comVendedora);
-    if(p.status==='PAGA') byC[k].vendas++;
   });
   const sorted=Object.values(byC).sort(function(a,b){return b.vol-a.vol;});
   const med=['🥇','🥈','🥉'];
