@@ -459,9 +459,9 @@ select{cursor:pointer}
     <div id="adash">
       <div class="psel">
         <span>Per&iacute;odo:</span>
-        <button class="pbtn ativo" id="p-sem">Esta semana</button>
+        <button class="pbtn" id="p-sem">Esta semana</button>
         <button class="pbtn" id="p-mes">Este m&ecirc;s</button>
-        <button class="pbtn" id="p-ano">Este ano</button>
+        <button class="pbtn ativo" id="p-ano">Este ano</button>
         <button class="pbtn" id="p-tot">Total</button>
       </div>
       <div class="alerta-wrap" id="alerta-wrap"></div>
@@ -529,9 +529,9 @@ select{cursor:pointer}
     <div id="arank" style="display:none">
       <div class="psel">
         <span>Per&iacute;odo:</span>
-        <button class="pbtn ativo" id="rp-mes">Este m&ecirc;s</button>
+        <button class="pbtn" id="rp-mes">Este m&ecirc;s</button>
         <button class="pbtn" id="rp-ano">Este ano</button>
-        <button class="pbtn" id="rp-tot">Total</button>
+        <button class="pbtn ativo" id="rp-tot">Total</button>
       </div>
       <div class="tw crank">
         <div class="th" style="grid-template-columns:40px 2fr 1fr 1fr"><span>#</span><span>Consultora</span><span>Propostas</span><span>Volume de Vendas</span></div>
@@ -1172,7 +1172,7 @@ select{cursor:pointer}
         <div class="fi"><label>CPF *</label><input type="text" id="p-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
         <div class="fi"><label>Telefone *</label><input type="text" id="p-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
         <div class="fi"><label>Nascimento *</label><input type="date" id="p-nasc"></div>
-        <div class="fi"><label>Conven&ccedil;&atilde;o *</label>
+        <div class="fi"><label>Conv&ecirc;nio *</label>
           <select id="p-conv"><option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
             <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
@@ -1369,7 +1369,7 @@ select{cursor:pointer}
 const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
 const GESTOR = 'Ana Lucia';
-let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes',clientes:[],ftCli:[],pgCli:1};
+let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'ano',rankP:'total',clientes:[],ftCli:[],pgCli:1};
 
 // EVENTOS
 document.addEventListener('DOMContentLoaded', function(){
@@ -1417,11 +1417,14 @@ document.getElementById('nav-gest').addEventListener('click', function(){ navAba
   document.getElementById('nav-mycom').addEventListener('click', function(){ navAba('mycom'); });
 document.getElementById('p-sem').addEventListener('click', function(){ setPer('sem',this); });
 document.getElementById('p-mes').addEventListener('click', function(){ setPer('mes',this); });
+// Iniciar com "Este mês" para mostrar todos os dados recentes
+S.periodo = 'ano';
 document.getElementById('p-ano').addEventListener('click', function(){ setPer('ano',this); });
 document.getElementById('p-tot').addEventListener('click', function(){ setPer('total',this); });
 document.getElementById('rp-mes').addEventListener('click', function(){ setRankPer('mes',this); });
 document.getElementById('rp-ano').addEventListener('click', function(){ setRankPer('ano',this); });
 document.getElementById('rp-tot').addEventListener('click', function(){ setRankPer('total',this); });
+S.rankP = 'total';
 document.getElementById('busca-prop').addEventListener('input', filtrar);
 document.getElementById('f-stat').addEventListener('change', filtrar);
 document.getElementById('f-resp').addEventListener('change', filtrar);
@@ -1598,21 +1601,39 @@ function setRankPer(p,btn){
 }
 
 function filtroPer(lista){
-  const hoje=new Date();
+  var hoje=new Date();
   return lista.filter(function(p){
     if(!p.data) return S.periodo==='total';
-    const d=new Date(p.data);
-    if(S.periodo==='sem'){const ini=new Date(hoje);ini.setDate(hoje.getDate()-hoje.getDay());return d>=ini;}
+    // Suportar tanto YYYY-MM-DD quanto outros formatos
+    var dataStr = String(p.data).trim();
+    var d;
+    if(dataStr.match(/^\d{4}-\d{2}-\d{2}/)){
+      // ISO: usar partes para evitar problema de fuso horário
+      var pts = dataStr.slice(0,10).split('-');
+      d = new Date(parseInt(pts[0]), parseInt(pts[1])-1, parseInt(pts[2]));
+    } else {
+      d = new Date(dataStr);
+    }
+    if(isNaN(d.getTime())) return S.periodo==='total';
+    if(S.periodo==='sem'){var ini=new Date(hoje);ini.setDate(hoje.getDate()-hoje.getDay());ini.setHours(0,0,0,0);return d>=ini;}
     if(S.periodo==='mes') return d.getMonth()===hoje.getMonth()&&d.getFullYear()===hoje.getFullYear();
     if(S.periodo==='ano') return d.getFullYear()===hoje.getFullYear();
     return true;
   });
 }
 function filtroPerRank(lista){
-  const hoje=new Date();
+  var hoje=new Date();
   return lista.filter(function(p){
     if(!p.data) return S.rankP==='total';
-    const d=new Date(p.data);
+    var dataStr = String(p.data).trim();
+    var d;
+    if(dataStr.match(/^\d{4}-\d{2}-\d{2}/)){
+      var pts = dataStr.slice(0,10).split('-');
+      d = new Date(parseInt(pts[0]), parseInt(pts[1])-1, parseInt(pts[2]));
+    } else {
+      d = new Date(dataStr);
+    }
+    if(isNaN(d.getTime())) return S.rankP==='total';
     if(S.rankP==='mes') return d.getMonth()===hoje.getMonth()&&d.getFullYear()===hoje.getFullYear();
     if(S.rankP==='ano') return d.getFullYear()===hoje.getFullYear();
     return true;
