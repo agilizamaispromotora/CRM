@@ -1161,11 +1161,22 @@ select{cursor:pointer}
     <div class="mbody">
       <input type="hidden" id="p-id">
       <div class="stit">Dados da Proposta</div>
-      <div class="fg3">
+      <div class="fg2">
         <div class="fi"><label>Data *</label><input type="date" id="p-data"></div>
         <div class="fi"><label>Consultora *</label>
           <select id="p-cons"><option value="">Selecione...</option>
             <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
+          </select>
+        </div>
+        <div class="fi full"><label>Cliente *</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
+        <div class="fi"><label>CPF *</label><input type="text" id="p-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fi"><label>Telefone *</label><input type="text" id="p-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>Nascimento *</label><input type="date" id="p-nasc"></div>
+        <div class="fi"><label>Conven&ccedil;&atilde;o *</label>
+          <select id="p-conv"><option value="">Selecione...</option>
+            <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
+            <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
+            <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
           </select>
         </div>
         <div class="fi"><label>Status *</label>
@@ -1175,23 +1186,12 @@ select{cursor:pointer}
             <option>PAGA</option><option>CANCELADA</option><option>REPROVADA</option>
           </select>
         </div>
-        <div class="fi" style="grid-column:span 2"><label>Cliente *</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>CPF</label><input type="text" id="p-cpf" placeholder="000.000.000-00"></div>
-        <div class="fi"><label>Telefone</label><input type="text" id="p-tel" placeholder="(00) 00000-0000"></div>
-        <div class="fi"><label>Nascimento *</label><input type="date" id="p-nasc" required></div>
-        <div class="fi"><label>Conv&ecirc;nio</label>
-          <select id="p-conv"><option value="">Selecione...</option>
-            <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
-            <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
-            <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
-          </select>
-        </div>
+        <div class="fi"><label>Banco</label><input type="text" id="p-banco" placeholder="Ex: FACTA, BMG..."></div>
         <div class="fi"><label>Promotora</label>
           <select id="p-prom"><option value="">Selecione...</option>
             <option>Conect</option><option>&#218;nica</option><option>Nova</option><option>Bevi</option>
           </select>
         </div>
-        <div class="fi"><label>Banco</label><input type="text" id="p-banco" placeholder="Ex: FACTA, BMG..."></div>
         <div class="fi"><label>Tipo de Proposta</label>
           <select id="p-tipo"><option value="">Selecione...</option>
             <option>NOVO</option><option>REFIN</option><option>PORTABILIDADE+REFIN</option>
@@ -1207,14 +1207,14 @@ select{cursor:pointer}
             <option>FACE</option><option>INSTAGRAM</option><option>WHATSAPP</option><option>OUTROS</option>
           </select>
         </div>
+        <div class="fi full"><label>Observa&ccedil;&otilde;es</label><input type="text" id="p-obs" placeholder="Informa&ccedil;&otilde;es adicionais"></div>
       </div>
       <div class="stit">Valores e Comiss&atilde;o</div>
-      <div class="fg3">
-        <div class="fi"><label>Valor do Contrato (R$) *</label><input type="text" id="p-valor" placeholder="0,00"></div>
+      <div class="fg2">
+        <div class="fi"><label>Valor do Contrato (R$) *</label><input type="text" id="p-valor" placeholder="0,00" oninput="mVal(this);calcCom()"></div>
+        <div class="fi"><label>% Comiss&atilde;o Total</label><input type="number" id="p-pct" placeholder="Ex: 8.5" step="0.1" oninput="calcCom()"></div>
         <div class="fi"><label>Parcela (R$)</label><input type="text" id="p-parcela" placeholder="0,00"></div>
         <div class="fi"><label>Prazo (meses)</label><input type="number" id="p-prazo" placeholder="Ex: 96"></div>
-        <div class="fi"><label>% Comiss&atilde;o Total</label><input type="number" id="p-pct" placeholder="Ex: 8.5" step="0.1"></div>
-        <div class="fi"><label>Observa&ccedil;&otilde;es</label><input type="text" id="p-obs" placeholder="Info adicionais"></div>
       </div>
       <div class="cbox">
         <div class="cit"><div class="ck">Comiss&atilde;o Agiliza</div><div class="cv" id="com-ag">R$ 0,00</div></div>
@@ -1534,43 +1534,39 @@ function dataParaInput(v){
 function normalizarProposta(p){
   p = p || {};
 
-  // Caso visto nos prints: nascimento caiu em telefone e telefone caiu em convênio
+  // 1. Datas — corrige nascimento/telefone trocados
   if(ehDataTexto(p.telefone) && !p.nascimento){
     p.nascimento = dataParaInput(p.telefone);
-    if(ehTelefone(p.convenio)){
-      p.telefone = p.convenio;
-      p.convenio = '';
-    } else {
-      p.telefone = '';
-    }
+    p.telefone = ehTelefone(p.convenio) ? p.convenio : '';
+    if(ehTelefone(p.convenio)) p.convenio = '';
   }
   if(ehDataTexto(p.nascimento)) p.nascimento = dataParaInput(p.nascimento);
-  if(ehDataTexto(p.dataNasc)) p.dataNasc = dataParaInput(p.dataNasc);
+  if(ehDataTexto(p.dataNasc))   p.dataNasc   = dataParaInput(p.dataNasc);
 
-  // Garante parcela/prazo separados
-  if(!p.parcela && p.prazo && String(p.prazo).includes(',')){
-    p.parcela = p.prazo;
-    p.prazo = '';
-  }
+  // 2. Valor — se vier como texto não-numérico (ex: tipo de proposta no lugar errado)
+  var _v = String(p.valor||'').trim();
+  if(_v && pV(_v)===0 && _v.match(/[a-zA-Z]/)) p.valor = '';
 
-  // Comissão da consultora deve ser 20% da Comissão Agiliza.
-  // Se vier invertido da planilha/API, corrige na tela.
-  var ag = pV(p.comAgiliza);
-  var vd = pV(p.comVendedora);
-  if(ag > 0 && vd > ag){
-    var tmp = p.comAgiliza;
-    p.comAgiliza = p.comVendedora;
-    p.comVendedora = tmp;
-  }
-  ag = pV(p.comAgiliza);
-  vd = pV(p.comVendedora);
-  if(ag > 0 && (!vd || vd > ag)){
-    p.comVendedora = fmt(ag * 0.20);
+  // 3. Parcela / Prazo
+  if(!p.parcela && p.prazo && String(p.prazo).includes(',')){ p.parcela=p.prazo; p.prazo=''; }
+  var _pr = parseInt(p.prazo||'');
+  if(isNaN(_pr)||_pr<=0||_pr>480) p.prazo='';
+
+  // 4. Pct
+  var _pct = parseFloat(p.pct||'');
+  if(isNaN(_pct)||_pct<0||_pct>100) p.pct='';
+
+  // 5. Comissões
+  var ag = pV(p.comAgiliza), vd = pV(p.comVendedora);
+  if(ag>0 && vd>ag){ var tmp=p.comAgiliza; p.comAgiliza=p.comVendedora; p.comVendedora=tmp; ag=pV(p.comAgiliza); vd=pV(p.comVendedora); }
+  if(ag>0 && (vd<=0||vd>ag)) p.comVendedora = fmt(ag*0.20);
+  if(ag===0 && pV(p.valor)>0 && parseFloat(p.pct||'')>0){
+    var agC = pV(p.valor)*(parseFloat(p.pct)/100);
+    p.comAgiliza = fmt(agC); p.comVendedora = fmt(agC*0.20);
   }
 
   return p;
 }
-
 async function load(){
   const btn=document.getElementById('btn-sync');
   btn.classList.add('girando');
@@ -1682,9 +1678,10 @@ function filtrar(){
   const re=document.getElementById('f-resp').value||'';
   S.ft=S.props.filter(function(p){
     const m=!b||[p.nome,p.cpf,p.banco,p.consultora].some(function(v){return (v||'').toLowerCase().includes(b);});
-    // Consultoras só veem as próprias propostas
     const propria = S.u===GESTOR || p.consultora===S.u;
-    return m&&(!st||p.status===st)&&(!re||p.consultora===re)&&propria;
+    // Excluir Leads da lista de propostas (são só cadastros de clientes)
+    const naoLead = p.status !== 'Lead';
+    return m&&(!st||p.status===st)&&(!re||p.consultora===re)&&propria&&naoLead;
   });
   S.pg=1; rProp();
   // Delegação de eventos para tabela propostas
@@ -1738,54 +1735,98 @@ function calcCom(){
 function abrirProp(){
   S.ed=null;
   document.getElementById('mprop-tit').textContent='Nova Proposta';
-  ['p-id','p-nome','p-cpf','p-tel','p-banco','p-parcela','p-prazo','p-obs'].forEach(function(i){
-    const el=document.getElementById(i);if(el)el.value='';
+  // Limpar todos os campos de texto
+  ['p-id','p-nome','p-cpf','p-tel','p-banco','p-parcela','p-prazo','p-obs','p-valor','p-pct'].forEach(function(i){
+    var el=document.getElementById(i); if(el) el.value='';
   });
+  // Limpar selects
   ['p-conv','p-prom','p-tipo','p-cheg','p-stat'].forEach(function(i){
-    const el=document.getElementById(i);if(el)el.value='';
+    var el=document.getElementById(i); if(el) el.value='';
   });
-  ['p-valor','p-pct'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
-  ['p-cons','p-data'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=i==='p-data'?new Date().toISOString().split('T')[0]:S.u||''; });
+  // Data de hoje
+  var pdata=document.getElementById('p-data'); if(pdata) pdata.value=new Date().toISOString().split('T')[0];
+  // Nascimento vazio
   var pnasc=document.getElementById('p-nasc'); if(pnasc) pnasc.value='';
+  // Consultora: pre-preencher com usuário logado e bloquear se não for gestora
+  var pcons=document.getElementById('p-cons');
+  if(pcons){ pcons.value=S.u||''; pcons.disabled=(S.u!==GESTOR); }
+  // Zerar comissões
   var cag=document.getElementById('com-ag'); if(cag) cag.textContent='R$ 0,00';
   var cvd=document.getElementById('com-vd'); if(cvd) cvd.textContent='R$ 0,00';
   aM('mprop');
 }
 
 function editProp(id){
-  const p=S.props.find(function(x){return x.id==id;});
-  if(!p) return;
+  var p=S.props.find(function(x){return x.id==id;});
+  if(!p){ toast('Proposta não encontrada.','er'); return; }
+  // Consultoras só podem editar suas próprias
+  if(S.u!==GESTOR && p.consultora!==S.u){
+    toast('Você só pode editar suas próprias propostas.','er'); return;
+  }
   S.ed=p;
   document.getElementById('mprop-tit').textContent='Editar Proposta';
-  document.getElementById('p-id').value=p.id||'';
-  document.getElementById('p-data').value=p.data||'';
-  document.getElementById('p-cons').value=p.consultora||'';
-  document.getElementById('p-stat').value=p.status||'';
-  document.getElementById('p-nome').value=p.nome||'';
-  document.getElementById('p-cpf').value=p.cpf||'';
-  document.getElementById('p-tel').value=p.telefone||'';
-  document.getElementById('p-nasc').value=dataParaInput(p.nascimento||p.dataNasc||'');
-  document.getElementById('p-conv').value=p.convenio||'';
-  document.getElementById('p-prom').value=p.promotora||'';
-  document.getElementById('p-banco').value=p.banco||'';
-  document.getElementById('p-tipo').value=p.tipoProposta||'';
-  document.getElementById('p-cheg').value=p.comoCheqou||'';
-  document.getElementById('p-valor').value=p.valor||'';
-  document.getElementById('p-parcela').value=p.parcela||'';
-  document.getElementById('p-prazo').value=p.prazo||'';
-  document.getElementById('p-pct').value=p.pct||'';
-  document.getElementById('p-obs').value=p.obs||'';
+
+  // Campos de texto/data
+  document.getElementById('p-id').value    = p.id||'';
+  document.getElementById('p-data').value  = p.data||'';
+  document.getElementById('p-nome').value  = p.nome||'';
+  document.getElementById('p-cpf').value   = p.cpf||'';
+  document.getElementById('p-banco').value = p.banco||'';
+  document.getElementById('p-obs').value   = p.obs||'';
+
+  // Telefone — só colocar se realmente for telefone
+  var tel = p.telefone||'';
+  if(ehDataTexto(tel)) tel = '';
+  document.getElementById('p-tel').value = tel;
+
+  // Nascimento — converter para formato input date
+  document.getElementById('p-nasc').value = dataParaInput(p.nascimento||p.dataNasc||'');
+
+  // Selects
+  document.getElementById('p-cons').value = p.consultora||'';
+  document.getElementById('p-stat').value = p.status||'';
+  document.getElementById('p-conv').value = p.convenio||'';
+  document.getElementById('p-prom').value = p.promotora||'';
+  document.getElementById('p-tipo').value = p.tipoProposta||'';
+  document.getElementById('p-cheg').value = p.comoCheqou||'';
+
+  // Valores numéricos — verificar que são realmente números
+  var valor = p.valor||'';
+  // Se valor vier como texto não-numérico (ex: "OUTROS"), zerar
+  if(valor && isNaN(pV(valor)) && pV(valor)===0 && String(valor).match(/[a-zA-Z]/)) valor='';
+  document.getElementById('p-valor').value = valor;
+
+  var pct = p.pct||'';
+  // pct deve ser número <= 100
+  if(pct && (isNaN(parseFloat(pct)) || parseFloat(pct)>100)) pct='';
+  document.getElementById('p-pct').value = pct;
+
+  var parcela = p.parcela||'';
+  document.getElementById('p-parcela').value = parcela;
+
+  var prazo = p.prazo||'';
+  // prazo deve ser número razoável (1-360)
+  if(prazo && (isNaN(parseInt(prazo)) || parseInt(prazo)>360)) prazo='';
+  document.getElementById('p-prazo').value = prazo;
+
+  // Bloquear consultora para não-gestora
+  var pconsEl = document.getElementById('p-cons');
+  if(pconsEl) pconsEl.disabled = (S.u!==GESTOR);
+
   calcCom();
   fM('mdet'); aM('mprop');
 }
 
 async function salvarProp(){
   const nome=document.getElementById('p-nome').value.trim();
-  const cons=document.getElementById('p-cons').value;
+  var pconsEl=document.getElementById('p-cons');
+  const cons = pconsEl.disabled ? S.u : (pconsEl.value||S.u);
   const stat=document.getElementById('p-stat').value;
   var nascimento=document.getElementById('p-nasc').value;
-  if(!nome||!cons||!stat){toast('Preencha Cliente, Consultora e Status.','er');return;}
-  if(!nascimento){toast('Preencha a data de nascimento.','er');return;}
+  if(!nome){ toast('Preencha o nome do cliente.','er'); return; }
+  if(!cons){ toast('Selecione a consultora.','er'); return; }
+  if(!stat){ toast('Selecione o status.','er'); return; }
+  if(!nascimento){ toast('Preencha a data de nascimento.','er'); return; }
   const val=pV(document.getElementById('p-valor').value||'0');
   const pct=parseFloat(document.getElementById('p-pct').value||'0');
   const ag=val*(pct/100), vd=ag*0.20;
