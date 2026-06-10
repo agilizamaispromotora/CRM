@@ -449,6 +449,7 @@ select{cursor:pointer}
     <button class="nbtn" id="nav-prop">&#128203; Propostas</button>
     <button class="nbtn" id="nav-rank">&#127942; Ranking</button>
     <button class="nbtn" id="nav-ag">&#128197; Agenda</button>
+    <button class="nbtn" id="nav-leads">&#127919; Leads <span id="leads-badge" style="display:none;background:var(--laranja);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
     <button class="nbtn" id="nav-sim">&#129518; Simulador</button>
     <button class="nbtn gonly" id="nav-fin">&#128181; Financeiro <span id="fin-badge" style="display:none;background:var(--perigo);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
     <button class="nbtn gonly" id="nav-gest">&#128274; Gestor</button>
@@ -1175,6 +1176,78 @@ select{cursor:pointer}
       </div>
     </div>
 
+    <!-- ABA LEADS -->
+    <div id="aleads" style="display:none">
+
+      <!-- HEADER COM MÉTRICAS DO DIA -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:Montserrat,sans-serif;font-size:18px;font-weight:800;color:var(--azul)">&#127919; Leads</div>
+          <div style="font-size:12px;color:var(--cinza-txt)" id="leads-subtitulo">Acompanhe os contatos em tempo real</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-n" onclick="abrirNovoLead()">+ Novo Lead</button>
+          <button class="btn-n" onclick="abrirImportarLeads()" style="background:var(--azul)">&#128229; Importar CSV</button>
+        </div>
+      </div>
+
+      <!-- CARDS DE ATIVIDADE HOJE -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px" id="leads-cards"></div>
+
+      <!-- ALERTAS DE RETORNO -->
+      <div id="leads-alertas-wrap"></div>
+
+      <!-- FILTROS -->
+      <div class="barra">
+        <input type="text" id="busca-leads" placeholder="&#128269; Buscar lead, telefone..." oninput="filtrarLeads()">
+        <select id="f-leads-cons" onchange="filtrarLeads()" class="gonly-sel">
+          <option value="">Todas consultoras</option>
+          <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
+        </select>
+        <select id="f-leads-status" onchange="filtrarLeads()">
+          <option value="">Todos os status</option>
+          <option value="novo">🆕 Novo</option>
+          <option value="contatado">📞 Contatado</option>
+          <option value="interesse">⭐ Interesse</option>
+          <option value="retornar">🔔 Retornar</option>
+          <option value="sem_resposta">😶 Sem resposta</option>
+          <option value="fechado">✅ Fechado</option>
+          <option value="descartado">❌ Descartado</option>
+        </select>
+        <select id="f-leads-conv" onchange="filtrarLeads()">
+          <option value="">Todos convênios</option>
+          <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
+          <option>Governo PR</option><option>Outros</option>
+        </select>
+      </div>
+
+      <!-- TABELA DE LEADS -->
+      <div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);overflow:hidden;box-shadow:var(--sombra)">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 100px;padding:10px 14px;background:var(--azul);font-size:11px;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.8px;font-weight:700">
+          <span>Lead / Contato</span>
+          <span>Consultora</span>
+          <span>Convênio</span>
+          <span>Status</span>
+          <span>Retorno</span>
+          <span>Contatos Hoje</span>
+          <span>Ações</span>
+        </div>
+        <div id="leads-body" style="max-height:60vh;overflow-y:auto">
+          <div class="loading"><div class="spin"></div>Carregando...</div>
+        </div>
+      </div>
+
+      <!-- PAINEL GESTORA: ATIVIDADE POR CONSULTORA -->
+      <div id="leads-painel-gest" style="display:none;margin-top:18px">
+        <div style="font-family:Montserrat,sans-serif;font-size:13px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px">
+          <span style="width:3px;height:16px;background:var(--laranja);border-radius:2px;display:inline-block"></span>
+          Atividade por Consultora — Hoje
+        </div>
+        <div id="leads-atividade" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"></div>
+      </div>
+
+    </div>
+
   </main>
 </div>
 
@@ -1249,6 +1322,121 @@ select{cursor:pointer}
       </div>
     </div>
     <div class="mft"><button class="bcn" id="mprop-can">Cancelar</button><button class="bsv" id="btn-salvar-prop">Salvar Proposta</button></div>
+  </div>
+</div>
+
+<!-- MODAL LEAD -->
+<div class="mov" id="mlead">
+  <div class="modal" style="max-width:560px">
+    <div class="mhd"><div class="mtit" id="mlead-tit">Novo Lead</div><button class="mx" id="mlead-x">&#10005;</button></div>
+    <div class="mbody">
+      <input type="hidden" id="lead-id">
+      <div class="stit">Dados do Lead</div>
+      <div class="fg2">
+        <div class="fi full"><label>Nome *</label><input type="text" id="lead-nome" placeholder="Nome completo"></div>
+        <div class="fi"><label>Telefone *</label><input type="text" id="lead-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>CPF</label><input type="text" id="lead-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="fi"><label>Convênio</label>
+          <select id="lead-conv">
+            <option value="">Selecione...</option>
+            <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
+            <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
+            <option>Outros</option>
+          </select>
+        </div>
+        <div class="fi"><label>Consultora Responsável *</label>
+          <select id="lead-cons">
+            <option value="">Selecione...</option>
+            <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
+          </select>
+        </div>
+        <div class="fi"><label>Como Chegou</label>
+          <select id="lead-origem">
+            <option value="">Selecione...</option>
+            <option>WhatsApp</option><option>Instagram</option><option>Facebook</option>
+            <option>Indicação</option><option>Planilha</option><option>Outros</option>
+          </select>
+        </div>
+        <div class="fi full"><label>Anotações Importantes</label>
+          <textarea id="lead-anotacoes" placeholder="Situação do cliente, margem disponível, interesse, observações..." style="min-height:70px"></textarea>
+        </div>
+      </div>
+      <div class="stit">Status e Retorno</div>
+      <div class="fg2">
+        <div class="fi"><label>Status *</label>
+          <select id="lead-status">
+            <option value="novo">🆕 Novo</option>
+            <option value="contatado">📞 Contatado</option>
+            <option value="interesse">⭐ Interesse</option>
+            <option value="retornar">🔔 Agendar Retorno</option>
+            <option value="sem_resposta">😶 Sem Resposta</option>
+            <option value="fechado">✅ Fechado</option>
+            <option value="descartado">❌ Descartado</option>
+          </select>
+        </div>
+        <div class="fi" id="fi-retorno-data">
+          <label>Data do Retorno</label>
+          <input type="date" id="lead-retorno-data">
+        </div>
+        <div class="fi" id="fi-retorno-hora">
+          <label>Hora do Retorno</label>
+          <input type="time" id="lead-retorno-hora">
+        </div>
+        <div class="fi full" id="fi-retorno-obs">
+          <label>Motivo do Retorno</label>
+          <input type="text" id="lead-retorno-obs" placeholder="Ex: Cliente tem margem em julho, ligar para verificar...">
+        </div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="bcn" id="mlead-can">Cancelar</button>
+      <button class="bsv" id="btn-salvar-lead">Salvar Lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONTATO LEAD -->
+<div class="mov" id="mcontato">
+  <div class="modal" style="max-width:440px">
+    <div class="mhd"><div class="mtit">Registrar Contato</div><button class="mx" id="mcontato-x">&#10005;</button></div>
+    <div class="mbody">
+      <input type="hidden" id="contato-lead-id">
+      <div style="background:var(--cinza-bg);border-radius:8px;padding:12px 14px;margin-bottom:14px">
+        <div style="font-weight:700;font-size:14px" id="contato-nome-display"></div>
+        <div style="font-size:12px;color:var(--cinza-txt)" id="contato-tel-display"></div>
+      </div>
+      <div class="fg2">
+        <div class="fi full"><label>Como foi o contato?</label>
+          <select id="contato-resultado">
+            <option value="contatado">📞 Contatei — sem interesse agora</option>
+            <option value="interesse">⭐ Demonstrou interesse</option>
+            <option value="retornar">🔔 Quero retornar depois</option>
+            <option value="sem_resposta">😶 Não atendeu / Sem resposta</option>
+            <option value="fechado">✅ Fechou negócio!</option>
+            <option value="descartado">❌ Descartar lead</option>
+          </select>
+        </div>
+        <div class="fi full"><label>Observação</label>
+          <textarea id="contato-obs" placeholder="O que foi conversado, situação atual..."></textarea>
+        </div>
+        <div class="fi" id="fi-cont-retorno-data" style="display:none">
+          <label>Data do Retorno</label>
+          <input type="date" id="contato-retorno-data">
+        </div>
+        <div class="fi" id="fi-cont-retorno-hora" style="display:none">
+          <label>Hora do Retorno</label>
+          <input type="time" id="contato-retorno-hora">
+        </div>
+        <div class="fi full" id="fi-cont-retorno-obs" style="display:none">
+          <label>Motivo do Retorno</label>
+          <input type="text" id="contato-retorno-obs" placeholder="Por que retornar?">
+        </div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="bcn" id="mcontato-can">Cancelar</button>
+      <button class="bsv" id="btn-salvar-contato" style="background:var(--ok)">&#128222; Registrar Contato</button>
+    </div>
   </div>
 </div>
 
@@ -1400,7 +1588,7 @@ select{cursor:pointer}
 const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
 const GESTOR = 'Ana Lucia';
-let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'ano',rankP:'total',clientes:[],ftCli:[],pgCli:1};
+let S = {u:null,props:[],agenda:[],leads:[],ftLeads:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'ano',rankP:'total',clientes:[],ftCli:[],pgCli:1};
 
 // EVENTOS
 document.addEventListener('DOMContentLoaded', function(){
@@ -1447,6 +1635,28 @@ document.getElementById('nav-sim').addEventListener('click', function(){ navAba(
 document.getElementById('nav-fin').addEventListener('click', function(){ navAba('fin'); });
 document.getElementById('nav-gest').addEventListener('click', function(){ navAba('gest'); });
   document.getElementById('nav-mycom').addEventListener('click', function(){ navAba('mycom'); });
+  document.getElementById('nav-leads').addEventListener('click', function(){ navAba('leads'); });
+  // Lead modal events
+  document.getElementById('mlead-x').addEventListener('click', function(){ fM('mlead'); });
+  document.getElementById('mlead-can').addEventListener('click', function(){ fM('mlead'); });
+  document.getElementById('btn-salvar-lead').addEventListener('click', salvarLead);
+  document.getElementById('mcontato-x').addEventListener('click', function(){ fM('mcontato'); });
+  document.getElementById('mcontato-can').addEventListener('click', function(){ fM('mcontato'); });
+  document.getElementById('btn-salvar-contato').addEventListener('click', salvarContato);
+  // Mostrar/ocultar campos de retorno no modal de lead
+  document.getElementById('lead-status').addEventListener('change', function(){
+    var mostrar = this.value === 'retornar' || this.value === 'interesse';
+    document.getElementById('fi-retorno-data').style.display = mostrar ? '' : 'none';
+    document.getElementById('fi-retorno-hora').style.display = mostrar ? '' : 'none';
+    document.getElementById('fi-retorno-obs').style.display = mostrar ? '' : 'none';
+  });
+  // Mostrar/ocultar campos de retorno no modal de contato
+  document.getElementById('contato-resultado').addEventListener('change', function(){
+    var mostrar = this.value === 'retornar' || this.value === 'interesse';
+    document.getElementById('fi-cont-retorno-data').style.display = mostrar ? '' : 'none';
+    document.getElementById('fi-cont-retorno-hora').style.display = mostrar ? '' : 'none';
+    document.getElementById('fi-cont-retorno-obs').style.display = mostrar ? '' : 'none';
+  });
 document.getElementById('p-sem').addEventListener('click', function(){ setPer('sem',this); });
 document.getElementById('p-mes').addEventListener('click', function(){ setPer('mes',this); });
 document.getElementById('p-ano').addEventListener('click', function(){ setPer('ano',this); });
@@ -1518,18 +1728,34 @@ function sair(){
 
 function navAba(id){
   document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('ativo');});
-  document.getElementById('nav-'+id).classList.add('ativo');
-  ['dash','cli','prop','rank','ag','sim','fin','gest','mycom'].forEach(function(a){
-    const el=document.getElementById('a'+a);
+  var navBtn = document.getElementById('nav-'+id);
+  if(navBtn) navBtn.classList.add('ativo');
+  ['dash','cli','prop','rank','ag','sim','fin','gest','mycom','leads'].forEach(function(a){
+    var el=document.getElementById('a'+a);
     if(el) el.style.display = a===id ? 'block' : 'none';
   });
   if(id==='dash') rDash();
   if(id==='rank') rRank();
   if(id==='ag') rAg();
   if(id==='cli') rCli();
-  if(id==='fin') rFin();
-  if(id==='gest') rGest();
+  if(id==='fin'){ if(S.u===GESTOR) rFin(); }
+  if(id==='gest'){ if(S.u===GESTOR) rGest(); }
   if(id==='mycom') rMycom();
+  if(id==='prop') filtrar();
+  if(id==='leads'){
+    if(!S.leads||S.leads.length===0){
+      var hoje = new Date().toISOString().split('T')[0];
+      var amanha = new Date(Date.now()+86400000).toISOString().split('T')[0];
+      S.leads = [
+        {id:'demo1',data:hoje,consultora:'Tatielle',nome:'MARIA JOSE DA SILVA',cpf:'123.456.789-00',convenio:'INSS',telefone:'(41) 99999-1111',status:'interesse',anotacoes:hoje+': Tem margem de R$ 180. Quer refinanciamento.',retornoData:amanha,retornoHora:'09:00',retornoObs:'Confirmar margem',totalContatos:'2',ultimoContato:hoje,ultimoResultado:'interesse',origem:'WhatsApp'},
+        {id:'demo2',data:hoje,consultora:'Tatielle',nome:'JOAO PEREIRA SANTOS',cpf:'987.654.321-00',convenio:'FGTS',telefone:'(41) 98888-2222',status:'retornar',anotacoes:hoje+': Nao pode falar agora.',retornoData:hoje,retornoHora:'15:00',retornoObs:'Tem saldo FGTS',totalContatos:'1',ultimoContato:hoje,ultimoResultado:'retornar',origem:'Planilha'},
+        {id:'demo3',data:hoje,consultora:'Nicoly',nome:'CARLOS EDUARDO LIMA',cpf:'555.666.777-88',convenio:'INSS',telefone:'(41) 96666-4444',status:'novo',anotacoes:'Lead novo da planilha',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'0',ultimoContato:'',ultimoResultado:'',origem:'Planilha'},
+        {id:'demo4',data:hoje,consultora:'Tatielle',nome:'ROSA APARECIDA GOMES',cpf:'999.888.777-66',convenio:'CLT',telefone:'(41) 95555-5555',status:'fechado',anotacoes:hoje+': Fechou! R$ 12.000 FGTS.',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'3',ultimoContato:hoje,ultimoResultado:'fechado',origem:'Indicacao'},
+        {id:'demo5',data:hoje,consultora:'Ana Lucia',nome:'PEDRO HENRIQUE COSTA',cpf:'444.333.222-11',convenio:'SIAPE',telefone:'(41) 94444-6666',status:'sem_resposta',anotacoes:hoje+': Tentei 2x, nao atende.',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'2',ultimoContato:hoje,ultimoResultado:'sem_resposta',origem:'WhatsApp'},
+      ];
+    }
+    rLeads();
+  }
 }
 
 async function callApi(ac, dados){
@@ -1553,6 +1779,20 @@ async function load(){
       S.props = r.clientes||[];
       S.agenda = r.agenda||[];
       S.despesas = r.despesas||[];
+      S.leads = r.leads||[];
+      // Se não há leads ainda, mostrar dados de demonstração
+      if(S.leads.length === 0){
+        var hoje = new Date().toISOString().split('T')[0];
+        var amanha = new Date(Date.now()+86400000).toISOString().split('T')[0];
+        S.leads = [
+          {id:'demo1',data:hoje,consultora:'Tatielle',nome:'MARIA JOSE DA SILVA',cpf:'123.456.789-00',convenio:'INSS',telefone:'(41) 99999-1111',status:'interesse',anotacoes:hoje+': Tem margem de R$ 180. Quer fazer refinanciamento. Ligar amanhã cedo.',retornoData:amanha,retornoHora:'09:00',retornoObs:'Confirmar margem e enviar proposta',totalContatos:'2',ultimoContato:hoje,ultimoResultado:'interesse',origem:'WhatsApp'},
+          {id:'demo2',data:hoje,consultora:'Tatielle',nome:'JOÃO PEREIRA SANTOS',cpf:'987.654.321-00',convenio:'FGTS',telefone:'(41) 98888-2222',status:'retornar',anotacoes:hoje+': Não pode falar agora. Ligar à tarde.',retornoData:hoje,retornoHora:'15:00',retornoObs:'Ligar à tarde - tem saldo FGTS disponível',totalContatos:'1',ultimoContato:hoje,ultimoResultado:'retornar',origem:'Planilha'},
+          {id:'demo3',data:hoje,consultora:'Nicoly',nome:'ANA LUCIA FERREIRA',cpf:'111.222.333-44',convenio:'Governo PR',telefone:'(41) 97777-3333',status:'contatado',anotacoes:hoje+': Não tem interesse no momento.',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'1',ultimoContato:hoje,ultimoResultado:'contatado',origem:'Instagram'},
+          {id:'demo4',data:hoje,consultora:'Nicoly',nome:'CARLOS EDUARDO LIMA',cpf:'555.666.777-88',convenio:'INSS',telefone:'(41) 96666-4444',status:'novo',anotacoes:'Lead novo da planilha semanal',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'0',ultimoContato:'',ultimoResultado:'',origem:'Planilha'},
+          {id:'demo5',data:hoje,consultora:'Tatielle',nome:'ROSA APARECIDA GOMES',cpf:'999.888.777-66',convenio:'CLT',telefone:'(41) 95555-5555',status:'fechado',anotacoes:hoje+': Fechou! Proposta de R$ 12.000 FGTS.',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'3',ultimoContato:hoje,ultimoResultado:'fechado',origem:'Indicação'},
+          {id:'demo6',data:hoje,consultora:'Ana Lucia',nome:'PEDRO HENRIQUE COSTA',cpf:'444.333.222-11',convenio:'SIAPE',telefone:'(41) 94444-6666',status:'sem_resposta',anotacoes:hoje+': Tentei 2x, não atende.',retornoData:'',retornoHora:'',retornoObs:'',totalContatos:'2',ultimoContato:hoje,ultimoResultado:'sem_resposta',origem:'WhatsApp'},
+        ];
+      }
       // Salvar cache local para uso offline
       try{ localStorage.setItem('crm_cache_v2', JSON.stringify({props:S.props,agenda:S.agenda,despesas:S.despesas})); }catch(ex){}
       filtrar(); rDash(); buildClientes();
@@ -1564,6 +1804,7 @@ async function load(){
       }
       setSS('Sincronizado',true);
       toast('Dados sincronizados!','ok');
+      verificarLeadsBadge();
     } else throw new Error(r.mensagem||'Erro');
   }catch(e){
     // Tentar usar cache local se API falhar
@@ -3707,6 +3948,463 @@ function irParaDespesas(){
     if(btn) finAba(btn,'fdespesas');
   },200);
 }
+
+
+// ══════════════════════════════════════════════════════
+// LEADS — Google Sheets + cache local
+// ══════════════════════════════════════════════════════
+
+var LEAD_STATUS_LABEL = {
+  novo:'🆕 Novo', contatado:'📞 Contatado', interesse:'⭐ Interesse',
+  retornar:'🔔 Retornar', sem_resposta:'😶 Sem resposta',
+  fechado:'✅ Fechado', descartado:'❌ Descartado'
+};
+var LEAD_STATUS_COR = {
+  novo:'var(--azul)', contatado:'var(--cinza-txt)', interesse:'var(--laranja)',
+  retornar:'var(--warn)', sem_resposta:'var(--cinza-txt)',
+  fechado:'var(--ok)', descartado:'var(--perigo)'
+};
+
+// Cache local para performance (atualizado a cada sync)
+function carregarLeadsLocal(){ try{ return JSON.parse(localStorage.getItem('crm_leads_cache')||'[]'); }catch(e){ return []; } }
+function salvarLeadsLocal(leads){ try{ localStorage.setItem('crm_leads_cache', JSON.stringify(leads)); }catch(e){} }
+
+function rLeads(){
+  // Usar dados do S.leads (carregado via API no load())
+  var todos = S.leads||[];
+  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
+  S.ftLeads = base;
+
+  rLeadsAlertas();
+  rLeadsCards(base);
+  rLeadsTabela(base);
+
+  if(S.u === GESTOR){
+    document.getElementById('leads-painel-gest').style.display = 'block';
+    rLeadsAtividade(todos);
+  }
+  atualizarLeadsBadge(todos);
+}
+
+function filtrarLeads(){
+  var b = (document.getElementById('busca-leads').value||'').toLowerCase();
+  var cons = document.getElementById('f-leads-cons').value||'';
+  var status = document.getElementById('f-leads-status').value||'';
+  var conv = document.getElementById('f-leads-conv').value||'';
+  var todos = S.leads||[];
+  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
+  S.ftLeads = base.filter(function(l){
+    var m = !b || [l.nome,l.telefone,l.cpf,l.anotacoes].some(function(v){ return (v||'').toLowerCase().includes(b); });
+    return m && (!cons||l.consultora===cons) && (!status||l.status===status) && (!conv||l.convenio===conv);
+  });
+  rLeadsTabela(S.ftLeads);
+}
+
+function rLeadsCards(lista){
+  var hojeStr = new Date().toISOString().split('T')[0];
+  var contatadosHoje = lista.filter(function(l){ return l.ultimoContato && l.ultimoContato.startsWith(hojeStr); }).length;
+  var retornarHoje = lista.filter(function(l){ return l.retornoData && l.retornoData <= hojeStr && l.status==='retornar'; }).length;
+  var interesse = lista.filter(function(l){ return l.status==='interesse'; }).length;
+  document.getElementById('leads-cards').innerHTML =
+    '<div class="dcard"><div class="lbl">Total Leads</div><div class="val">'+lista.length+'</div><div class="sub">atribuídos</div></div>'+
+    '<div class="dcard la"><div class="lbl">Contatados Hoje</div><div class="val la">'+contatadosHoje+'</div><div class="sub">registrados hoje</div></div>'+
+    '<div class="dcard wn"><div class="lbl">Retornar Hoje</div><div class="val wn">'+retornarHoje+'</div><div class="sub">alertas de retorno</div></div>'+
+    '<div class="dcard ok"><div class="lbl">Com Interesse</div><div class="val ok">'+interesse+'</div><div class="sub">aguardando fechamento</div></div>';
+}
+
+function rLeadsAlertas(){
+  var wrap = document.getElementById('leads-alertas-wrap');
+  if(!wrap) return;
+  var todos = S.leads||[];
+  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
+  var agora = new Date();
+  var hojeStr = agora.toISOString().split('T')[0];
+  var alertas = [];
+
+  base.filter(function(l){ return l.retornoData && l.status==='retornar'; })
+    .forEach(function(l){
+      var diffDias = Math.floor((new Date(l.retornoData+'T12:00') - agora)/86400000);
+      if(diffDias < 0){
+        alertas.push('<div class="alerta-banner venc-atr" data-lid="'+l.id+'">'+
+          '<div class="ab-ico">🔴</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">Retorno atrasado: '+X(l.nome)+'</div>'+
+            '<div class="ab-msg">Era '+new Date(l.retornoData+'T12:00').toLocaleDateString('pt-BR')+(l.retornoHora?' às '+l.retornoHora:'')+' · '+X(l.consultora)+'</div>'+
+          '</div>'+
+          '<button class="ab-btn btn-ac" data-lid="'+l.id+'">Registrar contato</button>'+
+        '</div>');
+      } else if(l.retornoData === hojeStr){
+        alertas.push('<div class="alerta-banner venc-hj" data-lid="'+l.id+'">'+
+          '<div class="ab-ico">🔔</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">Retornar hoje: '+X(l.nome)+'</div>'+
+            '<div class="ab-msg">'+(l.retornoHora?'Às '+l.retornoHora+' · ':'')+X(l.retornoObs||'')+'</div>'+
+          '</div>'+
+          '<button class="ab-btn btn-ac" data-lid="'+l.id+'">Contatar agora</button>'+
+        '</div>');
+      } else if(diffDias <= 2){
+        alertas.push('<div class="alerta-banner venc-prox">'+
+          '<div class="ab-ico">🟠</div>'+
+          '<div class="ab-body">'+
+            '<div class="ab-titulo">Retornar em '+diffDias+' dia'+(diffDias!==1?'s':'')+': '+X(l.nome)+'</div>'+
+            '<div class="ab-msg">'+new Date(l.retornoData+'T12:00').toLocaleDateString('pt-BR')+(l.retornoHora?' às '+l.retornoHora:'')+' · '+X(l.consultora)+'</div>'+
+          '</div>'+
+        '</div>');
+      }
+    });
+
+  wrap.innerHTML = alertas.length ? '<div style="margin-bottom:14px">'+alertas.join('')+'</div>' : '';
+  setTimeout(function(){
+    wrap.querySelectorAll('[data-lid]').forEach(function(el){
+      el.addEventListener('click', function(){ abrirContato(el.dataset.lid); });
+    });
+    wrap.querySelectorAll('.btn-ac').forEach(function(el){
+      el.addEventListener('click', function(e){ e.stopPropagation(); abrirContato(el.dataset.lid); });
+    });
+  }, 50);
+}
+
+function rLeadsTabela(lista){
+  var body = document.getElementById('leads-body');
+  if(!lista.length){
+    body.innerHTML = '<div class="vazio"><div class="ico">🎯</div><p>Nenhum lead encontrado.<br>Clique em "+ Novo Lead" para começar.</p></div>';
+    return;
+  }
+  var hojeStr = new Date().toISOString().split('T')[0];
+  body.innerHTML = lista.map(function(l){
+    var cor = LEAD_STATUS_COR[l.status]||'var(--cinza-txt)';
+    var retornoTexto = (l.retornoData && l.status==='retornar')
+      ? new Date(l.retornoData+'T12:00').toLocaleDateString('pt-BR')+(l.retornoHora?' '+l.retornoHora:'')
+      : '—';
+    var retornoCor = (l.retornoData && l.retornoData <= hojeStr && l.status==='retornar') ? 'var(--perigo)' : 'var(--cinza-txt)';
+    var contatosHoje = (l.ultimoContato && l.ultimoContato.startsWith(hojeStr)) ? '✓' : '—';
+    var totalCont = l.totalContatos||'0';
+    return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 100px;padding:11px 14px;border-bottom:1px solid var(--cinza-brd);align-items:center">'+
+      '<span><div style="font-weight:600;font-size:13px">'+X(l.nome)+'</div>'+
+        '<div style="font-size:11px;color:var(--cinza-txt)">'+
+          '<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok)">'+X(l.telefone||'—')+'</a>'+
+          (l.cpf?' · '+X(l.cpf):'')+
+          (l.anotacoes?' · '+X(l.anotacoes).slice(0,40):'')+
+        '</div>'+
+      '</span>'+
+      '<span style="font-size:12px">'+X(l.consultora||'—')+'</span>'+
+      '<span style="font-size:12px">'+X(l.convenio||'—')+'</span>'+
+      '<span><span style="font-size:11px;font-weight:700;color:'+cor+'">'+X(LEAD_STATUS_LABEL[l.status]||l.status)+'</span></span>'+
+      '<span style="font-size:11px;color:'+retornoCor+'">'+retornoTexto+'</span>'+
+      '<span style="font-size:12px;text-align:center">'+
+        '<span style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--laranja);font-size:15px">'+totalCont+'</span>'+
+        (contatosHoje==='✓'?'<span style="color:var(--ok);font-size:11px"> hoje</span>':'')+
+      '</span>'+
+      '<span style="display:flex;gap:4px">'+
+        '<button class="ac okb" data-contato-lead="'+l.id+'" title="Registrar contato" style="width:auto;padding:4px 8px;font-size:12px">📞</button>'+
+        '<button class="ac" data-edit-lead="'+l.id+'" title="Editar">✏️</button>'+
+        (S.u===GESTOR?'<button class="ac del" data-del-lead="'+l.id+'" title="Excluir">🗑</button>':'')+
+      '</span>'+
+    '</div>';
+  }).join('');
+
+  setTimeout(function(){
+    if(body && !body._lleads){ body._lleads=true;
+      body.addEventListener('click', function(e){
+        var bc=e.target.closest('[data-contato-lead]');
+        var be=e.target.closest('[data-edit-lead]');
+        var bd=e.target.closest('[data-del-lead]');
+        if(bc) abrirContato(bc.dataset.contatoLead);
+        else if(be) editarLead(be.dataset.editLead);
+        else if(bd) deletarLead(bd.dataset.delLead);
+      });
+    }
+  }, 100);
+}
+
+function rLeadsAtividade(todos){
+  var hojeStr = new Date().toISOString().split('T')[0];
+  var porCons = {};
+  todos.forEach(function(l){
+    var k = l.consultora||'—';
+    if(!porCons[k]) porCons[k]={n:k,total:0,hoje:0,interesse:0,retornar:0};
+    porCons[k].total++;
+    if(l.ultimoContato && l.ultimoContato.startsWith(hojeStr)) porCons[k].hoje++;
+    if(l.status==='interesse') porCons[k].interesse++;
+    if(l.status==='retornar') porCons[k].retornar++;
+  });
+  document.getElementById('leads-atividade').innerHTML = Object.values(porCons).map(function(cc){
+    return '<div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--sombra)">'+
+      '<div style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--azul);margin-bottom:10px">'+X(cc.n)+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">'+
+        '<div><span style="color:var(--cinza-txt)">Total:</span> <strong>'+cc.total+'</strong></div>'+
+        '<div><span style="color:var(--cinza-txt)">Hoje:</span> <strong style="color:var(--laranja)">'+cc.hoje+'</strong></div>'+
+        '<div><span style="color:var(--cinza-txt)">Interesse:</span> <strong style="color:var(--ok)">'+cc.interesse+'</strong></div>'+
+        '<div><span style="color:var(--cinza-txt)">Retornar:</span> <strong style="color:var(--warn)">'+cc.retornar+'</strong></div>'+
+      '</div>'+
+    '</div>';
+  }).join('') || '<div class="vazio"><p>Nenhuma atividade ainda.</p></div>';
+}
+
+function atualizarLeadsBadge(todos){
+  var badge = document.getElementById('leads-badge');
+  if(!badge) return;
+  var hojeStr = new Date().toISOString().split('T')[0];
+  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
+  var alertas = base.filter(function(l){ return l.retornoData && l.retornoData <= hojeStr && l.status==='retornar'; }).length;
+  badge.style.display = alertas > 0 ? 'inline' : 'none';
+  if(alertas > 0) badge.textContent = alertas;
+}
+
+// ── CRUD ──
+function abrirNovoLead(){
+  document.getElementById('mlead-tit').textContent = 'Novo Lead';
+  document.getElementById('lead-id').value = '';
+  ['lead-nome','lead-tel','lead-cpf','lead-anotacoes','lead-retorno-obs'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  ['lead-conv','lead-origem'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('lead-retorno-data').value = '';
+  document.getElementById('lead-retorno-hora').value = '';
+  document.getElementById('lead-status').value = 'novo';
+  var lcons = document.getElementById('lead-cons');
+  if(lcons){ lcons.value = S.u; lcons.disabled = S.u !== GESTOR; }
+  ['fi-retorno-data','fi-retorno-hora','fi-retorno-obs'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+  aM('mlead');
+}
+
+function editarLead(id){
+  var l = (S.leads||[]).find(function(x){ return x.id===id; });
+  if(!l){ toast('Lead não encontrado.','er'); return; }
+  if(S.u !== GESTOR && l.consultora !== S.u){ toast('Você só pode editar seus próprios leads.','er'); return; }
+  document.getElementById('mlead-tit').textContent = 'Editar Lead';
+  document.getElementById('lead-id').value = l.id;
+  document.getElementById('lead-nome').value = l.nome||'';
+  document.getElementById('lead-tel').value = l.telefone||'';
+  document.getElementById('lead-cpf').value = l.cpf||'';
+  document.getElementById('lead-anotacoes').value = l.anotacoes||'';
+  document.getElementById('lead-conv').value = l.convenio||'';
+  document.getElementById('lead-origem').value = l.origem||'';
+  document.getElementById('lead-status').value = l.status||'novo';
+  document.getElementById('lead-retorno-data').value = l.retornoData||'';
+  document.getElementById('lead-retorno-hora').value = l.retornoHora||'';
+  document.getElementById('lead-retorno-obs').value = l.retornoObs||'';
+  var lcons = document.getElementById('lead-cons');
+  if(lcons){ lcons.value = l.consultora||''; lcons.disabled = S.u !== GESTOR; }
+  var mostrar = l.status==='retornar'||l.status==='interesse';
+  ['fi-retorno-data','fi-retorno-hora','fi-retorno-obs'].forEach(function(id){ document.getElementById(id).style.display=mostrar?'':'none'; });
+  aM('mlead');
+}
+
+async function salvarLead(){
+  var nome = document.getElementById('lead-nome').value.trim();
+  var tel  = document.getElementById('lead-tel').value.trim();
+  var lconsEl = document.getElementById('lead-cons');
+  var cons = lconsEl.disabled ? S.u : (lconsEl.value||S.u);
+  if(!nome){ toast('Preencha o nome.','er'); return; }
+  if(!tel){  toast('Preencha o telefone.','er'); return; }
+  if(!cons){ toast('Selecione a consultora.','er'); return; }
+  var id = document.getElementById('lead-id').value;
+  var status = document.getElementById('lead-status').value;
+  var dados = {
+    id: id||'',
+    data: new Date().toISOString().split('T')[0],
+    consultora: cons,
+    nome: nome,
+    cpf: document.getElementById('lead-cpf').value,
+    convenio: document.getElementById('lead-conv').value,
+    telefone: tel,
+    status: status,
+    anotacoes: document.getElementById('lead-anotacoes').value,
+    retornoData: document.getElementById('lead-retorno-data').value,
+    retornoHora: document.getElementById('lead-retorno-hora').value,
+    retornoObs: document.getElementById('lead-retorno-obs').value,
+    origem: document.getElementById('lead-origem').value,
+    totalContatos: id ? ((S.leads||[]).find(function(x){return x.id===id;})||{}).totalContatos||'0' : '0',
+    ultimoContato: id ? ((S.leads||[]).find(function(x){return x.id===id;})||{}).ultimoContato||'' : '',
+    ultimoResultado: id ? ((S.leads||[]).find(function(x){return x.id===id;})||{}).ultimoResultado||'' : '',
+    atualizadoPor: S.u
+  };
+  var btn = document.getElementById('btn-salvar-lead');
+  btn.disabled=true; btn.textContent='Salvando...';
+  try{
+    var acao = id ? 'atualizarLead' : 'criarLead';
+    var r = await callApi(acao, {dados: dados});
+    if(r.status==='ok'){
+      toast(id?'Lead atualizado!':'Lead cadastrado!','ok');
+      fM('mlead');
+      await load();
+      rLeads();
+    } else throw new Error(r.mensagem||'Erro');
+  }catch(e){ toast('Erro: '+e.message,'er'); }
+  finally{ btn.disabled=false; btn.textContent='Salvar Lead'; }
+}
+
+async function deletarLead(id){
+  if(!confirm('Excluir este lead?')) return;
+  try{
+    var r = await callApi('excluirLead', {id: id});
+    if(r.status==='ok'){ toast('Lead excluído.','ok'); await load(); rLeads(); }
+    else throw new Error(r.mensagem||'Erro');
+  }catch(e){ toast('Erro: '+e.message,'er'); }
+}
+
+// ── CONTATO ──
+function abrirContato(id){
+  var l = (S.leads||[]).find(function(x){ return x.id===id; });
+  if(!l){ toast('Lead não encontrado.','er'); return; }
+  document.getElementById('contato-lead-id').value = id;
+  document.getElementById('contato-nome-display').textContent = l.nome;
+  document.getElementById('contato-tel-display').innerHTML =
+    '<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok)">'+X(l.telefone)+'</a> — clique para abrir WhatsApp';
+  document.getElementById('contato-resultado').value = 'contatado';
+  document.getElementById('contato-obs').value = '';
+  document.getElementById('contato-retorno-data').value = '';
+  document.getElementById('contato-retorno-hora').value = '';
+  document.getElementById('contato-retorno-obs').value = '';
+  ['fi-cont-retorno-data','fi-cont-retorno-hora','fi-cont-retorno-obs'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+  aM('mcontato');
+}
+
+async function salvarContato(){
+  var id = document.getElementById('contato-lead-id').value;
+  var resultado = document.getElementById('contato-resultado').value;
+  var obs = document.getElementById('contato-obs').value.trim();
+  var l = (S.leads||[]).find(function(x){ return x.id===id; });
+  if(!l){ toast('Lead não encontrado.','er'); return; }
+  var hojeStr = new Date().toISOString().split('T')[0];
+  var totalContatos = (parseInt(l.totalContatos||'0')+1).toString();
+  var dados = Object.assign({}, l, {
+    status: resultado,
+    totalContatos: totalContatos,
+    ultimoContato: hojeStr,
+    ultimoResultado: resultado,
+    anotacoes: obs ? (l.anotacoes ? l.anotacoes+' | '+hojeStr+': '+obs : hojeStr+': '+obs) : l.anotacoes,
+    retornoData: (resultado==='retornar'||resultado==='interesse') ? document.getElementById('contato-retorno-data').value : '',
+    retornoHora: (resultado==='retornar'||resultado==='interesse') ? document.getElementById('contato-retorno-hora').value : '',
+    retornoObs:  (resultado==='retornar'||resultado==='interesse') ? document.getElementById('contato-retorno-obs').value : '',
+    atualizadoPor: S.u
+  });
+  var btn = document.getElementById('btn-salvar-contato');
+  btn.disabled=true; btn.textContent='Salvando...';
+  try{
+    var r = await callApi('atualizarLead', {dados: dados});
+    if(r.status==='ok'){
+      if(resultado==='fechado') toast('✅ Lead fechado! Cadastre a proposta agora.','ok');
+      else toast('Contato registrado!','ok');
+      fM('mcontato');
+      await load();
+      rLeads();
+    } else throw new Error(r.mensagem||'Erro');
+  }catch(e){ toast('Erro: '+e.message,'er'); }
+  finally{ btn.disabled=false; btn.textContent='📞 Registrar Contato'; }
+}
+
+// ── IMPORTAR CSV ──
+function abrirImportarLeads(){
+  var html = '<div class="mov ab" id="mimport" style="z-index:999">'+
+    '<div class="modal" style="max-width:600px">'+
+      '<div class="mhd"><div class="mtit">&#128229; Importar Leads via CSV</div><button class="mx" id="mimport-x">✕</button></div>'+
+      '<div class="mbody">'+
+        '<div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px">'+
+          '<strong>Formato esperado do CSV:</strong><br>'+
+          'Colunas na ordem: <code>nome, cpf, convenio, telefone, anotacoes</code><br>'+
+          'Separador: <strong>ponto e vírgula (;)</strong> — salve como CSV UTF-8<br>'+
+          'A primeira linha pode ser cabeçalho (será ignorada se não for dados).'+
+        '</div>'+
+        '<div class="fi" style="margin-bottom:12px">'+
+          '<label>Consultora Responsável</label>'+
+          '<select id="import-cons"><option value="">Selecione...</option><option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option></select>'+
+        '</div>'+
+        '<div class="fi">'+
+          '<label>Arquivo CSV</label>'+
+          '<input type="file" id="import-file" accept=".csv,.txt" style="background:#fff;padding:8px">'+
+        '</div>'+
+        '<div id="import-preview" style="margin-top:12px"></div>'+
+      '</div>'+
+      '<div class="mft">'+
+        '<button class="bcn" id="mimport-can">Cancelar</button>'+
+        '<button class="bsv" onclick="previewCSV()" style="background:var(--azul)">👁 Preview</button>'+
+        '<button class="bsv" id="btn-importar" onclick="executarImport()" style="display:none">📥 Importar</button>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+  document.getElementById('import-file').addEventListener('change', previewCSV);
+  document.getElementById('mimport-x').addEventListener('click', function(){ document.getElementById('mimport').remove(); });
+  document.getElementById('mimport-can').addEventListener('click', function(){ document.getElementById('mimport').remove(); });
+}
+
+var _csvLeadsParaImportar = [];
+
+function previewCSV(){
+  var file = document.getElementById('import-file').files[0];
+  var cons = document.getElementById('import-cons').value;
+  if(!file){ toast('Selecione um arquivo.','er'); return; }
+  if(!cons){ toast('Selecione a consultora.','er'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var text = e.target.result;
+    var lines = text.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(function(l){ return l; });
+    var leads = [];
+    // Detectar se primeira linha é cabeçalho
+    var startIdx = 0;
+    var firstLine = lines[0].toLowerCase();
+    if(firstLine.includes('nome') || firstLine.includes('cpf') || firstLine.includes('telefone')) startIdx = 1;
+    lines.slice(startIdx).forEach(function(line){
+      var cols = line.split(';');
+      if(cols.length >= 1 && cols[0].trim()){
+        leads.push({
+          nome: (cols[0]||'').trim(),
+          cpf:  (cols[1]||'').trim(),
+          convenio: (cols[2]||'').trim(),
+          telefone: (cols[3]||'').trim(),
+          anotacoes: (cols[4]||'').trim(),
+          consultora: cons,
+          status: 'novo'
+        });
+      }
+    });
+    _csvLeadsParaImportar = leads;
+    var preview = document.getElementById('import-preview');
+    if(!leads.length){ preview.innerHTML='<div style="color:var(--perigo)">Nenhum lead encontrado no arquivo.</div>'; return; }
+    preview.innerHTML =
+      '<div style="margin-bottom:8px;font-weight:600;color:var(--azul)">'+leads.length+' leads encontrados — preview dos primeiros 5:</div>'+
+      '<div style="max-height:200px;overflow-y:auto;border:1px solid var(--cinza-brd);border-radius:8px;overflow:hidden">'+
+        '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;background:var(--azul);color:#fff;font-size:11px;font-weight:700;padding:8px 12px;text-transform:uppercase">'+
+          '<span>Nome</span><span>Telefone</span><span>Convênio</span><span>CPF</span>'+
+        '</div>'+
+        leads.slice(0,5).map(function(l){
+          return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:8px 12px;border-bottom:1px solid var(--cinza-brd);font-size:12px">'+
+            '<span>'+X(l.nome)+'</span><span>'+X(l.telefone)+'</span><span>'+X(l.convenio)+'</span><span>'+X(l.cpf)+'</span>'+
+          '</div>';
+        }).join('')+
+      '</div>';
+    document.getElementById('btn-importar').style.display = 'block';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+async function executarImport(){
+  if(!_csvLeadsParaImportar.length){ toast('Nenhum lead para importar.','er'); return; }
+  var btn = document.getElementById('btn-importar');
+  btn.disabled=true; btn.textContent='Importando...';
+  try{
+    // Importar em lotes de 50 para não sobrecarregar a API
+    var lote = 50, total = 0;
+    for(var i=0; i<_csvLeadsParaImportar.length; i+=lote){
+      var batch = _csvLeadsParaImportar.slice(i, i+lote);
+      var p = new URLSearchParams({acao:'importarLeads', dados: JSON.stringify(batch)});
+      var r = await fetch(API+'?'+p.toString());
+      var res = await r.json();
+      if(res.status==='ok') total += res.criados||batch.length;
+      else throw new Error(res.mensagem||'Erro no lote');
+    }
+    toast('✅ '+total+' leads importados!','ok');
+    document.getElementById('mimport').remove();
+    await load();
+    rLeads();
+  }catch(e){ toast('Erro: '+e.message,'er'); btn.disabled=false; btn.textContent='📥 Importar'; }
+}
+
+function verificarLeadsBadge(){
+  atualizarLeadsBadge(S.leads||[]);
+  setTimeout(verificarLeadsBadge, 300000);
+}
+
 </script>
 </body>
 </html>
