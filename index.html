@@ -4073,9 +4073,9 @@ function rLeadsTabela(lista){
     return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 100px;padding:11px 14px;border-bottom:1px solid var(--cinza-brd);align-items:center">'+
       '<span><div style="font-weight:600;font-size:13px">'+X(l.nome)+'</div>'+
         '<div style="font-size:11px;color:var(--cinza-txt)">'+
-          (l.telefone?'<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok);margin-right:6px">'+X(l.telefone)+'</a>':'')+
-          (l.telefone2?'<a href="https://wa.me/55'+((l.telefone2||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--azul);margin-right:6px">'+X(l.telefone2)+'</a>':'')+
-          (l.telefone3?'<a href="https://wa.me/55'+((l.telefone3||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--cinza-txt)">'+X(l.telefone3)+'</a>':'')+
+          (l.telefone?'<span style="margin-right:6px;user-select:text">'+X(l.telefone)+'</span>':'')+
+          (l.telefone2?'<span style="margin-right:6px;color:var(--azul);user-select:text">'+X(l.telefone2)+'</span>':'')+
+          (l.telefone3?'<span style="color:var(--cinza-txt);user-select:text">'+X(l.telefone3)+'</span>':'')+
           (l.cpf?' · '+X(l.cpf):'')+
         '</div>'+
       '</span>'+
