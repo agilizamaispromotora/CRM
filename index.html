@@ -1334,7 +1334,9 @@ select{cursor:pointer}
       <div class="stit">Dados do Lead</div>
       <div class="fg2">
         <div class="fi full"><label>Nome *</label><input type="text" id="lead-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>Telefone *</label><input type="text" id="lead-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>Telefone 1 *</label><input type="text" id="lead-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>Telefone 2</label><input type="text" id="lead-tel2" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>Telefone 3</label><input type="text" id="lead-tel3" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
         <div class="fi"><label>CPF</label><input type="text" id="lead-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
         <div class="fi"><label>Convênio</label>
           <select id="lead-conv">
@@ -2840,6 +2842,8 @@ function salvar(conv){
     nome: nome,
     cpf: cpf,
     telefone: tel,
+    telefone2: document.getElementById('lead-tel2')?document.getElementById('lead-tel2').value:'',
+    telefone3: document.getElementById('lead-tel3')?document.getElementById('lead-tel3').value:'',
     totalLib: totalLib,
     totalParc: totalParc,
     msg: msg.substring(0, 300)
@@ -4060,9 +4064,10 @@ function rLeadsTabela(lista){
     return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 100px;padding:11px 14px;border-bottom:1px solid var(--cinza-brd);align-items:center">'+
       '<span><div style="font-weight:600;font-size:13px">'+X(l.nome)+'</div>'+
         '<div style="font-size:11px;color:var(--cinza-txt)">'+
-          '<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok)">'+X(l.telefone||'—')+'</a>'+
+          (l.telefone?'<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok);margin-right:6px">'+X(l.telefone)+'</a>':'')+
+          (l.telefone2?'<a href="https://wa.me/55'+((l.telefone2||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--azul);margin-right:6px">'+X(l.telefone2)+'</a>':'')+
+          (l.telefone3?'<a href="https://wa.me/55'+((l.telefone3||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--cinza-txt)">'+X(l.telefone3)+'</a>':'')+
           (l.cpf?' · '+X(l.cpf):'')+
-          (l.anotacoes?' · '+X(l.anotacoes).slice(0,40):'')+
         '</div>'+
       '</span>'+
       '<span style="font-size:12px">'+X(l.consultora||'—')+'</span>'+
@@ -4152,6 +4157,8 @@ function editarLead(id){
   document.getElementById('lead-id').value = l.id;
   document.getElementById('lead-nome').value = l.nome||'';
   document.getElementById('lead-tel').value = l.telefone||'';
+  var lt2=document.getElementById('lead-tel2'); if(lt2) lt2.value=l.telefone2||'';
+  var lt3=document.getElementById('lead-tel3'); if(lt3) lt3.value=l.telefone3||'';
   document.getElementById('lead-cpf').value = l.cpf||'';
   document.getElementById('lead-anotacoes').value = l.anotacoes||'';
   document.getElementById('lead-conv').value = l.convenio||'';
@@ -4226,8 +4233,11 @@ function abrirContato(id){
   if(!l){ toast('Lead não encontrado.','er'); return; }
   document.getElementById('contato-lead-id').value = id;
   document.getElementById('contato-nome-display').textContent = l.nome;
-  document.getElementById('contato-tel-display').innerHTML =
-    '<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok)">'+X(l.telefone)+'</a> — clique para abrir WhatsApp';
+  var tels = '';
+  if(l.telefone) tels += '<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok);margin-right:12px">📱 '+X(l.telefone)+'</a>';
+  if(l.telefone2) tels += '<a href="https://wa.me/55'+((l.telefone2||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok);margin-right:12px">📱 '+X(l.telefone2)+'</a>';
+  if(l.telefone3) tels += '<a href="https://wa.me/55'+((l.telefone3||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok)">📱 '+X(l.telefone3)+'</a>';
+  document.getElementById('contato-tel-display').innerHTML = tels || '—';
   document.getElementById('contato-resultado').value = 'contatado';
   document.getElementById('contato-obs').value = '';
   document.getElementById('contato-retorno-data').value = '';
@@ -4330,7 +4340,9 @@ function previewCSV(){
           cpf:  (cols[1]||'').trim(),
           convenio: (cols[2]||'').trim(),
           telefone: (cols[3]||'').trim(),
-          anotacoes: (cols[4]||'').trim(),
+          telefone2: (cols[4]||'').trim(),
+          telefone3: (cols[5]||'').trim(),
+          anotacoes: (cols[6]||'').trim(),
           consultora: cons,
           status: 'novo'
         });
