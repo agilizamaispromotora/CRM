@@ -1212,6 +1212,9 @@ select{cursor:pointer}
           <option value="retornar">🔔 Retornar</option>
           <option value="sem_resposta">😶 Sem resposta</option>
           <option value="fechado">✅ Fechado</option>
+          <option value="sem_margem">💰 Sem margem</option>
+          <option value="negativo_inss">🚫 Negativo INSS</option>
+          <option value="fora_regra">⛔ Fora da regra</option>
           <option value="descartado">❌ Descartado</option>
         </select>
         <select id="f-leads-conv" onchange="filtrarLeads()">
@@ -1373,6 +1376,9 @@ select{cursor:pointer}
             <option value="retornar">🔔 Agendar Retorno</option>
             <option value="sem_resposta">😶 Sem Resposta</option>
             <option value="fechado">✅ Fechado</option>
+            <option value="sem_margem">💰 Sem Margem</option>
+            <option value="negativo_inss">🚫 Negativo INSS</option>
+            <option value="fora_regra">⛔ Fora da Regra</option>
             <option value="descartado">❌ Descartado</option>
           </select>
         </div>
@@ -3939,12 +3945,12 @@ function irParaDespesas(){
 var LEAD_STATUS_LABEL = {
   novo:'🆕 Novo', contatado:'📞 Contatado', interesse:'⭐ Interesse',
   retornar:'🔔 Retornar', sem_resposta:'😶 Sem resposta',
-  fechado:'✅ Fechado', descartado:'❌ Descartado'
+  fechado:'✅ Fechado', sem_margem:'💰 Sem Margem', negativo_inss:'🚫 Negativo INSS', fora_regra:'⛔ Fora da Regra', descartado:'❌ Descartado'
 };
 var LEAD_STATUS_COR = {
   novo:'var(--azul)', contatado:'var(--cinza-txt)', interesse:'var(--laranja)',
   retornar:'var(--warn)', sem_resposta:'var(--cinza-txt)',
-  fechado:'var(--ok)', descartado:'var(--perigo)'
+  fechado:'var(--ok)', sem_margem:'var(--cinza-txt)', negativo_inss:'var(--perigo)', fora_regra:'var(--cinza-txt)', descartado:'var(--perigo)'
 };
 
 // Cache local para performance (atualizado a cada sync)
