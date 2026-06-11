@@ -4374,7 +4374,7 @@ async function executarImport(){
   btn.disabled=true; btn.textContent='Importando...';
   try{
     // Importar em lotes de 50 para não sobrecarregar a API
-    var lote = 50, total = 0;
+    var lote = 10, total = 0;
     for(var i=0; i<_csvLeadsParaImportar.length; i+=lote){
       var batch = _csvLeadsParaImportar.slice(i, i+lote);
       var p = new URLSearchParams({acao:'importarLeads', dados: JSON.stringify(batch)});
