@@ -82,12 +82,6 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .alerta-banner.venc-prox .ab-titulo{color:var(--laranja)}
 .alerta-banner .ab-msg{font-size:12px;color:var(--cinza-txt)}
 .alerta-banner .ab-btn{background:none;border:1.5px solid currentColor;border-radius:6px;
-  padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:"Open Sans",sans-serif}
-.alerta-banner.parabens .ab-btn{color:#92400e}
-.alerta-banner.agenda .ab-btn{color:#1e4fcc}
-.alerta-banner.venc-atr .ab-btn{color:var(--perigo)}
-.alerta-banner.venc-hj .ab-btn{color:var(--warn)}
-.alerta-banner.venc-prox .ab-btn{color:var(--laranja)}
 
 /* MODAL PARABÉNS */
 .parabens-overlay{visibility:hidden;opacity:0;pointer-events:none;
@@ -115,6 +109,12 @@ body{font-family:"Open Sans",sans-serif;background:var(--cinza-bg);color:var(--t
 .confetti{position:absolute;pointer-events:none;font-size:20px;animation:confettiFall 3s ease-in forwards}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}
   100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+  padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:"Open Sans",sans-serif}
+.alerta-banner.parabens .ab-btn{color:#92400e}
+.alerta-banner.agenda .ab-btn{color:#1e4fcc}
+.alerta-banner.venc-atr .ab-btn{color:var(--perigo)}
+.alerta-banner.venc-hj .ab-btn{color:var(--warn)}
+.alerta-banner.venc-prox .ab-btn{color:var(--laranja)}
 .main{padding:18px;max-width:1400px;margin:0 auto}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
 .dcard{background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);
@@ -449,20 +449,19 @@ select{cursor:pointer}
     <button class="nbtn" id="nav-prop">&#128203; Propostas</button>
     <button class="nbtn" id="nav-rank">&#127942; Ranking</button>
     <button class="nbtn" id="nav-ag">&#128197; Agenda</button>
-    <button class="nbtn" id="nav-leads">&#127919; Leads <span id="leads-badge" style="display:none;background:var(--laranja);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
     <button class="nbtn" id="nav-sim">&#129518; Simulador</button>
-    <button class="nbtn gonly" id="nav-fin">&#128181; Financeiro <span id="fin-badge" style="display:none;background:var(--perigo);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
+    <button class="nbtn gonly" id="nav-fin">&#128181; Financeiro</button>
     <button class="nbtn gonly" id="nav-gest">&#128274; Gestor</button>
-    <button class="nbtn cons-only" id="nav-mycom">&#128176; Minhas Comissões <span id="mycom-badge" style="display:none;background:var(--perigo);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px">!</span></button>
+    <button class="nbtn cons-only" id="nav-mycom">&#128176; Minhas Comissões</button>
   </nav>
   <main class="main">
 
     <div id="adash">
       <div class="psel">
         <span>Per&iacute;odo:</span>
-        <button class="pbtn" id="p-sem">Esta semana</button>
+        <button class="pbtn ativo" id="p-sem">Esta semana</button>
         <button class="pbtn" id="p-mes">Este m&ecirc;s</button>
-        <button class="pbtn ativo" id="p-ano">Este ano</button>
+        <button class="pbtn" id="p-ano">Este ano</button>
         <button class="pbtn" id="p-tot">Total</button>
       </div>
       <div class="alerta-wrap" id="alerta-wrap"></div>
@@ -490,7 +489,6 @@ select{cursor:pointer}
           <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
           <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
         </select>
-        <button class="btn-n" id="btn-novo-cli" onclick="abrirNovoCli()">+ Novo Cliente</button>
       </div>
       <div class="tw" style="overflow:hidden">
         <div class="th" style="grid-template-columns:2fr 1.2fr 1fr 1fr 1fr 1fr 60px">
@@ -509,7 +507,7 @@ select{cursor:pointer}
           <option>AG DESBLOQUEIO</option><option>AG SALDO DEVEDOR</option>
           <option>PAGA</option><option>CANCELADA</option><option>REPROVADA</option>
         </select>
-        <select id="f-resp" class="gonly-sel"><option value="">Todas consultoras</option>
+        <select id="f-resp"><option value="">Todas consultoras</option>
           <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
         </select>
         <button class="btn-s" id="btn-sync">
@@ -531,12 +529,12 @@ select{cursor:pointer}
     <div id="arank" style="display:none">
       <div class="psel">
         <span>Per&iacute;odo:</span>
-        <button class="pbtn" id="rp-mes">Este m&ecirc;s</button>
+        <button class="pbtn ativo" id="rp-mes">Este m&ecirc;s</button>
         <button class="pbtn" id="rp-ano">Este ano</button>
-        <button class="pbtn ativo" id="rp-tot">Total</button>
+        <button class="pbtn" id="rp-tot">Total</button>
       </div>
       <div class="tw crank">
-        <div class="th" style="grid-template-columns:40px 2fr 1fr 1fr"><span>#</span><span>Consultora</span><span>Vendas</span><span>Volume (R$)</span></div>
+        <div class="th" style="grid-template-columns:40px 2fr 1fr 1fr"><span>#</span><span>Consultora</span><span>Propostas</span><span>Volume de Vendas</span></div>
         <div class="tb" id="rank-body"></div>
       </div>
     </div>
@@ -1038,7 +1036,6 @@ select{cursor:pointer}
       <!-- SUB-ABAS DO FINANCEIRO -->
       <div style="display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--cinza-brd);padding-bottom:0">
         <button class="fnav ativo" id="fn-comissoes" onclick="finAba(this,'fcomissoes')">💰 Comissões</button>
-        <button class="fnav" id="fn-pendentes" onclick="finAba(this,'fpendentes')">⏳ Com. Pendentes</button>
         <button class="fnav" id="fn-despesas" onclick="finAba(this,'fdespesas')">📤 Despesas</button>
         <button class="fnav" id="fn-dre" onclick="finAba(this,'fdre')">📊 DRE</button>
       </div>
@@ -1063,21 +1060,6 @@ select{cursor:pointer}
         <div class="tw cfin">
           <div class="th"><span>Cliente/Consultora</span><span>Valor</span><span>Com. Agiliza</span><span>Com. Vendedora</span><span>Status</span><span>Ações</span></div>
           <div class="tb" id="fin-body"></div>
-        </div>
-      </div>
-
-      <!-- COMISSÕES PENDENTES -->
-      <div id="fpendentes" style="display:none">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="pend-res"></div>
-        <div class="barra">
-          <select id="f-pend-re" onchange="rPend()">
-            <option value="">Todas consultoras</option>
-            <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
-          </select>
-        </div>
-        <div class="tw cfin">
-          <div class="th" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px"><span>Cliente/Consultora</span><span>Valor</span><span>Com. Agiliza</span><span>Com. Vendedora</span><span>Status</span><span>Ações</span></div>
-          <div class="tb" id="pend-body"></div>
         </div>
       </div>
 
@@ -1126,13 +1108,6 @@ select{cursor:pointer}
     </div>
 
 <div id="amycom" style="display:none">
-      <div id="mycom-alerta" style="display:none;background:#fff8e1;border:1px solid #fcd34d;border-radius:10px;padding:12px 16px;margin-bottom:16px;align-items:center;gap:12px">
-        <span style="font-size:20px">💳</span>
-        <div style="flex:1">
-          <div style="font-family:Montserrat,sans-serif;font-size:13px;font-weight:800;color:#b07000" id="mycom-alerta-titulo">Comissões Pendentes</div>
-          <div style="font-size:12px;color:var(--cinza-txt)" id="mycom-alerta-msg"></div>
-        </div>
-      </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px" id="mycom-res"></div>
       <div class="barra">
         <select id="f-mycom-mes" onchange="rMycom()">
@@ -1176,81 +1151,6 @@ select{cursor:pointer}
       </div>
     </div>
 
-    <!-- ABA LEADS -->
-    <div id="aleads" style="display:none">
-
-      <!-- HEADER COM MÉTRICAS DO DIA -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <div>
-          <div style="font-family:Montserrat,sans-serif;font-size:18px;font-weight:800;color:var(--azul)">&#127919; Leads</div>
-          <div style="font-size:12px;color:var(--cinza-txt)" id="leads-subtitulo">Acompanhe os contatos em tempo real</div>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-n" onclick="abrirNovoLead()">+ Novo Lead</button>
-          <button class="btn-n" onclick="abrirImportarLeads()" style="background:var(--azul)">&#128229; Importar CSV</button>
-        </div>
-      </div>
-
-      <!-- CARDS DE ATIVIDADE HOJE -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px" id="leads-cards"></div>
-
-      <!-- ALERTAS DE RETORNO -->
-      <div id="leads-alertas-wrap"></div>
-
-      <!-- FILTROS -->
-      <div class="barra">
-        <input type="text" id="busca-leads" placeholder="&#128269; Buscar lead, telefone..." oninput="filtrarLeads()">
-        <select id="f-leads-cons" onchange="filtrarLeads()" class="gonly-sel">
-          <option value="">Todas consultoras</option>
-          <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
-        </select>
-        <select id="f-leads-status" onchange="filtrarLeads()">
-          <option value="">Todos os status</option>
-          <option value="novo">🆕 Novo</option>
-          <option value="contatado">📞 Contatado</option>
-          <option value="interesse">⭐ Interesse</option>
-          <option value="retornar">🔔 Retornar</option>
-          <option value="sem_resposta">😶 Sem resposta</option>
-          <option value="fechado">✅ Fechado</option>
-          <option value="sem_margem">💰 Sem margem</option>
-          <option value="negativo_inss">🚫 Negativo INSS</option>
-          <option value="fora_regra">⛔ Fora da regra</option>
-          <option value="descartado">❌ Descartado</option>
-        </select>
-        <select id="f-leads-conv" onchange="filtrarLeads()">
-          <option value="">Todos convênios</option>
-          <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
-          <option>Governo PR</option><option>Outros</option>
-        </select>
-      </div>
-
-      <!-- TABELA DE LEADS -->
-      <div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);overflow:hidden;box-shadow:var(--sombra)">
-        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 100px;padding:10px 14px;background:var(--azul);font-size:11px;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.8px;font-weight:700">
-          <span>Lead / Contato</span>
-          <span>Consultora</span>
-          <span>Convênio</span>
-          <span>Status</span>
-          <span>Retorno</span>
-          <span>Contatos Hoje</span>
-          <span>Ações</span>
-        </div>
-        <div id="leads-body" style="max-height:60vh;overflow-y:auto">
-          <div class="loading"><div class="spin"></div>Carregando...</div>
-        </div>
-      </div>
-
-      <!-- PAINEL GESTORA: ATIVIDADE POR CONSULTORA -->
-      <div id="leads-painel-gest" style="display:none;margin-top:18px">
-        <div style="font-family:Montserrat,sans-serif;font-size:13px;font-weight:800;color:var(--azul);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px">
-          <span style="width:3px;height:16px;background:var(--laranja);border-radius:2px;display:inline-block"></span>
-          Atividade por Consultora — Hoje
-        </div>
-        <div id="leads-atividade" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"></div>
-      </div>
-
-    </div>
-
   </main>
 </div>
 
@@ -1263,7 +1163,7 @@ select{cursor:pointer}
       <div class="stit">Dados da Proposta</div>
       <div class="fg3">
         <div class="fi"><label>Data *</label><input type="date" id="p-data"></div>
-        <div class="fi" id="fi-cons"><label>Consultora *</label>
+        <div class="fi"><label>Consultora *</label>
           <select id="p-cons"><option value="">Selecione...</option>
             <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
           </select>
@@ -1276,10 +1176,10 @@ select{cursor:pointer}
           </select>
         </div>
         <div class="fi" style="grid-column:span 2"><label>Cliente *</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>CPF *</label><input type="text" id="p-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
-        <div class="fi"><label>Telefone *</label><input type="text" id="p-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
+        <div class="fi"><label>CPF</label><input type="text" id="p-cpf" placeholder="000.000.000-00"></div>
+        <div class="fi"><label>Telefone</label><input type="text" id="p-tel" placeholder="(00) 00000-0000"></div>
         <div class="fi"><label>Nascimento *</label><input type="date" id="p-nasc" required></div>
-        <div class="fi"><label>Conv&ecirc;nio *</label>
+        <div class="fi"><label>Conv&ecirc;nio</label>
           <select id="p-conv"><option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
             <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
@@ -1325,129 +1225,6 @@ select{cursor:pointer}
       </div>
     </div>
     <div class="mft"><button class="bcn" id="mprop-can">Cancelar</button><button class="bsv" id="btn-salvar-prop">Salvar Proposta</button></div>
-  </div>
-</div>
-
-<!-- MODAL LEAD -->
-<div class="mov" id="mlead">
-  <div class="modal" style="max-width:560px">
-    <div class="mhd"><div class="mtit" id="mlead-tit">Novo Lead</div><button class="mx" id="mlead-x">&#10005;</button></div>
-    <div class="mbody">
-      <input type="hidden" id="lead-id">
-      <div class="stit">Dados do Lead</div>
-      <div class="fg2">
-        <div class="fi full"><label>Nome *</label><input type="text" id="lead-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>Telefone 1 *</label><input type="text" id="lead-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
-        <div class="fi"><label>Telefone 2</label><input type="text" id="lead-tel2" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
-        <div class="fi"><label>Telefone 3</label><input type="text" id="lead-tel3" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
-        <div class="fi"><label>CPF</label><input type="text" id="lead-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
-        <div class="fi"><label>Convênio</label>
-          <select id="lead-conv">
-            <option value="">Selecione...</option>
-            <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
-            <option>Governo PR</option><option>Governo SP</option><option>Prefeitura Curitiba</option>
-            <option>Outros</option>
-          </select>
-        </div>
-        <div class="fi"><label>Consultora Responsável *</label>
-          <select id="lead-cons">
-            <option value="">Selecione...</option>
-            <option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option>
-          </select>
-        </div>
-        <div class="fi"><label>Como Chegou</label>
-          <select id="lead-origem">
-            <option value="">Selecione...</option>
-            <option>WhatsApp</option><option>Instagram</option><option>Facebook</option>
-            <option>Indicação</option><option>Planilha</option><option>Outros</option>
-          </select>
-        </div>
-        <div class="fi full"><label>Anotações Importantes</label>
-          <textarea id="lead-anotacoes" placeholder="Situação do cliente, margem disponível, interesse, observações..." style="min-height:70px"></textarea>
-        </div>
-      </div>
-      <div class="stit">Status e Retorno</div>
-      <div class="fg2">
-        <div class="fi"><label>Status *</label>
-          <select id="lead-status">
-            <option value="novo">🆕 Novo</option>
-            <option value="contatado">📞 Contatado</option>
-            <option value="interesse">⭐ Interesse</option>
-            <option value="retornar">🔔 Agendar Retorno</option>
-            <option value="sem_resposta">😶 Sem Resposta</option>
-            <option value="fechado">✅ Fechado</option>
-            <option value="sem_margem">💰 Sem Margem</option>
-            <option value="negativo_inss">🚫 Negativo INSS</option>
-            <option value="fora_regra">⛔ Fora da Regra</option>
-            <option value="descartado">❌ Descartado</option>
-          </select>
-        </div>
-        <div class="fi" id="fi-retorno-data">
-          <label>Data do Retorno</label>
-          <input type="date" id="lead-retorno-data">
-        </div>
-        <div class="fi" id="fi-retorno-hora">
-          <label>Hora do Retorno</label>
-          <input type="time" id="lead-retorno-hora">
-        </div>
-        <div class="fi full" id="fi-retorno-obs">
-          <label>Motivo do Retorno</label>
-          <input type="text" id="lead-retorno-obs" placeholder="Ex: Cliente tem margem em julho, ligar para verificar...">
-        </div>
-      </div>
-    </div>
-    <div class="mft">
-      <button class="bcn" id="mlead-can">Cancelar</button>
-      <button class="bsv" id="btn-salvar-lead">Salvar Lead</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CONTATO LEAD -->
-<div class="mov" id="mcontato">
-  <div class="modal" style="max-width:440px">
-    <div class="mhd"><div class="mtit">Registrar Contato</div><button class="mx" id="mcontato-x">&#10005;</button></div>
-    <div class="mbody">
-      <input type="hidden" id="contato-lead-id">
-      <div style="background:var(--cinza-bg);border-radius:8px;padding:12px 14px;margin-bottom:14px">
-        <div style="font-weight:700;font-size:14px" id="contato-nome-display"></div>
-        <div style="font-size:12px;color:var(--cinza-txt)" id="contato-tel-display"></div>
-      </div>
-      <div class="fg2">
-        <div class="fi full"><label>Como foi o contato?</label>
-          <select id="contato-resultado">
-            <option value="contatado">📞 Contatei — sem interesse agora</option>
-            <option value="interesse">⭐ Demonstrou interesse</option>
-            <option value="retornar">🔔 Quero retornar depois</option>
-            <option value="sem_resposta">😶 Não atendeu / Sem resposta</option>
-            <option value="fechado">✅ Fechou negócio!</option>
-            <option value="sem_margem">💰 Cliente sem margem</option>
-            <option value="negativo_inss">🚫 Cliente negativo no INSS</option>
-            <option value="fora_regra">⛔ Fora da regra</option>
-            <option value="descartado">❌ Descartar lead</option>
-          </select>
-        </div>
-        <div class="fi full"><label>Observação</label>
-          <textarea id="contato-obs" placeholder="O que foi conversado, situação atual..."></textarea>
-        </div>
-        <div class="fi" id="fi-cont-retorno-data" style="display:none">
-          <label>Data do Retorno</label>
-          <input type="date" id="contato-retorno-data">
-        </div>
-        <div class="fi" id="fi-cont-retorno-hora" style="display:none">
-          <label>Hora do Retorno</label>
-          <input type="time" id="contato-retorno-hora">
-        </div>
-        <div class="fi full" id="fi-cont-retorno-obs" style="display:none">
-          <label>Motivo do Retorno</label>
-          <input type="text" id="contato-retorno-obs" placeholder="Por que retornar?">
-        </div>
-      </div>
-    </div>
-    <div class="mft">
-      <button class="bcn" id="mcontato-can">Cancelar</button>
-      <button class="bsv" id="btn-salvar-contato" style="background:var(--ok)">&#128222; Registrar Contato</button>
-    </div>
   </div>
 </div>
 
@@ -1562,17 +1339,17 @@ select{cursor:pointer}
 </div>
 
 
-<!-- MODAL EDITAR/NOVO CLIENTE -->
+<!-- MODAL EDITAR CLIENTE -->
 <div class="mov" id="mcli">
-  <div class="modal" style="max-width:520px">
-    <div class="mhd"><div class="mtit" id="mcli-tit">Editar Cliente</div><button class="mx" id="mcli-x">&#10005;</button></div>
+  <div class="modal" style="max-width:480px">
+    <div class="mhd"><div class="mtit">Editar Cliente</div><button class="mx" id="mcli-x">&#10005;</button></div>
     <div class="mbody">
       <div class="fg2">
         <div class="fi full"><label>Nome *</label><input type="text" id="cli-nome" placeholder="Nome completo"></div>
-        <div class="fi"><label>CPF *</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
-        <div class="fi"><label>Data de Nascimento *</label><input type="date" id="cli-nasc"></div>
-        <div class="fi"><label>Telefone *</label><input type="text" id="cli-tel" placeholder="(00) 00000-0000" oninput="maskTel(this)"></div>
-        <div class="fi"><label>Conv&ecirc;nio *</label>
+        <div class="fi"><label>CPF</label><input type="text" id="cli-cpf" placeholder="000.000.000-00" readonly style="background:#eee"></div>
+        <div class="fi"><label>Nascimento *</label><input type="date" id="cli-nasc"></div>
+        <div class="fi"><label>Telefone</label><input type="text" id="cli-tel" placeholder="(00) 00000-0000"></div>
+        <div class="fi"><label>Convênio</label>
           <select id="cli-conv">
             <option value="">Selecione...</option>
             <option>INSS</option><option>FGTS</option><option>CLT</option><option>SIAPE</option>
@@ -1580,26 +1357,19 @@ select{cursor:pointer}
             <option>Prefeitura SP</option><option>Federal</option><option>Outros</option>
           </select>
         </div>
-        <div class="fi"><label>Quem Cadastrou</label>
-          <input type="text" id="cli-cadastrador" readonly style="background:#eee;color:var(--cinza-txt)">
-        </div>
-      </div>
-      <div id="cli-modo-novo" style="display:none;margin-top:12px;background:#fffbeb;border:1px solid #fbbf24;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e">
-        &#8505;&#65039; Ao cadastrar, a data de hoje ser&aacute; registrada como data de cadastro.
       </div>
     </div>
     <div class="mft">
       <button class="bcn" id="mcli-can">Cancelar</button>
-      <button class="bsv" id="btn-salvar-cli" onclick="salvarClienteModal()">Salvar Cliente</button>
+      <button class="bsv" id="btn-salvar-cli" onclick="salvarCliente()">Salvar Cliente</button>
     </div>
   </div>
 </div>
-
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbzheIeC37cPN_XyKlwrAdej-8NNO5P97soa947M8V76A__XlAiQBKI6p_BVGlLDdrSq/exec';
 const US = {'Ana Lucia':'Facta15@','Tatielle':'Taty@123','Nicoly':'Nic@123'};
 const GESTOR = 'Ana Lucia';
-let S = {u:null,props:[],agenda:[],leads:[],ftLeads:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'ano',rankP:'total',clientes:[],ftCli:[],pgCli:1};
+let S = {u:null,props:[],agenda:[],ft:[],pg:1,pp:15,ed:null,det:null,periodo:'mes',rankP:'mes',clientes:[],ftCli:[],pgCli:1};
 
 // EVENTOS
 document.addEventListener('DOMContentLoaded', function(){
@@ -1617,7 +1387,6 @@ document.addEventListener('DOMContentLoaded', function(){
       document.getElementById('nav-gest').classList.add('vis');
     } else {
       document.getElementById('nav-mycom').classList.add('vis');
-      document.querySelectorAll('.gonly-sel').forEach(function(el){ el.style.display='none'; });
     }
     load();
   }
@@ -1646,28 +1415,6 @@ document.getElementById('nav-sim').addEventListener('click', function(){ navAba(
 document.getElementById('nav-fin').addEventListener('click', function(){ navAba('fin'); });
 document.getElementById('nav-gest').addEventListener('click', function(){ navAba('gest'); });
   document.getElementById('nav-mycom').addEventListener('click', function(){ navAba('mycom'); });
-  document.getElementById('nav-leads').addEventListener('click', function(){ navAba('leads'); });
-  // Lead modal events
-  document.getElementById('mlead-x').addEventListener('click', function(){ fM('mlead'); });
-  document.getElementById('mlead-can').addEventListener('click', function(){ fM('mlead'); });
-  document.getElementById('btn-salvar-lead').addEventListener('click', salvarLead);
-  document.getElementById('mcontato-x').addEventListener('click', function(){ fM('mcontato'); });
-  document.getElementById('mcontato-can').addEventListener('click', function(){ fM('mcontato'); });
-  document.getElementById('btn-salvar-contato').addEventListener('click', salvarContato);
-  // Mostrar/ocultar campos de retorno no modal de lead
-  document.getElementById('lead-status').addEventListener('change', function(){
-    var mostrar = this.value === 'retornar' || this.value === 'interesse';
-    document.getElementById('fi-retorno-data').style.display = mostrar ? '' : 'none';
-    document.getElementById('fi-retorno-hora').style.display = mostrar ? '' : 'none';
-    document.getElementById('fi-retorno-obs').style.display = mostrar ? '' : 'none';
-  });
-  // Mostrar/ocultar campos de retorno no modal de contato
-  document.getElementById('contato-resultado').addEventListener('change', function(){
-    var mostrar = this.value === 'retornar' || this.value === 'interesse';
-    document.getElementById('fi-cont-retorno-data').style.display = mostrar ? '' : 'none';
-    document.getElementById('fi-cont-retorno-hora').style.display = mostrar ? '' : 'none';
-    document.getElementById('fi-cont-retorno-obs').style.display = mostrar ? '' : 'none';
-  });
 document.getElementById('p-sem').addEventListener('click', function(){ setPer('sem',this); });
 document.getElementById('p-mes').addEventListener('click', function(){ setPer('mes',this); });
 document.getElementById('p-ano').addEventListener('click', function(){ setPer('ano',this); });
@@ -1699,7 +1446,7 @@ document.querySelectorAll('.mov').forEach(function(m){
   document.getElementById('btn-gerar-recibo').addEventListener('click', gerarRecibo);
   document.getElementById('mcli-x').addEventListener('click', function(){ fM('mcli'); });
   document.getElementById('mcli-can').addEventListener('click', function(){ fM('mcli'); });
-  // btn-salvar-cli onclick is set dynamically by abrirNovoCli / editarCliente
+  document.getElementById('btn-salvar-cli').addEventListener('click', salvarCliente);
 }); // fim DOMContentLoaded
 
 function fazerLogin(){
@@ -1719,8 +1466,6 @@ function fazerLogin(){
     document.getElementById('nav-gest').classList.add('vis');
   } else {
     document.getElementById('nav-mycom').classList.add('vis');
-    // Hide gestora-only elements for consultants
-    document.querySelectorAll('.gonly-sel').forEach(function(el){ el.style.display='none'; });
   }
   load();
 }
@@ -1739,23 +1484,19 @@ function sair(){
 
 function navAba(id){
   document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('ativo');});
-  var navBtn = document.getElementById('nav-'+id);
-  if(navBtn) navBtn.classList.add('ativo');
-  ['dash','cli','prop','rank','ag','sim','fin','gest','mycom','leads'].forEach(function(a){
-    var el=document.getElementById('a'+a);
+  document.getElementById('nav-'+id).classList.add('ativo');
+  ['dash','cli','prop','rank','ag','sim','fin','gest','mycom'].forEach(function(a){
+    const el=document.getElementById('a'+a);
     if(el) el.style.display = a===id ? 'block' : 'none';
   });
   if(id==='dash') rDash();
   if(id==='rank') rRank();
   if(id==='ag') rAg();
   if(id==='cli') rCli();
-  if(id==='fin'){ if(S.u===GESTOR) rFin(); }
-  if(id==='gest'){ if(S.u===GESTOR) rGest(); }
+  if(id==='prop') preencherMesesProp();
+  if(id==='fin') rFin();
+  if(id==='gest') rGest();
   if(id==='mycom') rMycom();
-  if(id==='prop') filtrar();
-  if(id==='leads'){
-    rLeads();
-  }
 }
 
 async function callApi(ac, dados){
@@ -1779,40 +1520,14 @@ async function load(){
       S.props = r.clientes||[];
       S.agenda = r.agenda||[];
       S.despesas = r.despesas||[];
-      S.leads = r.leads||[];
-      // Se não há leads ainda, mostrar dados de demonstração
-      
-      // Salvar cache local para uso offline
-      try{ localStorage.setItem('crm_cache_v2', JSON.stringify({props:S.props,agenda:S.agenda,despesas:S.despesas})); }catch(ex){}
-      filtrar(); rDash(); buildClientes();
-      // Atualizar badges após load
-      if(S.u !== GESTOR){
-        var minhasLoad = S.props.filter(function(p){ return p.consultora===S.u && p.comStatus!=='pago' && pV(p.comVendedora)>0; });
-        var badge2 = document.getElementById('mycom-badge');
-        if(badge2){ badge2.style.display = minhasLoad.length>0?'inline':'none'; if(minhasLoad.length>0) badge2.textContent='!'; }
-      }
+      filtrar(); rDash();
       setSS('Sincronizado',true);
       toast('Dados sincronizados!','ok');
-      verificarLeadsBadge();
     } else throw new Error(r.mensagem||'Erro');
-  }catch(e){
-    // Tentar usar cache local se API falhar
-    try{
-      var cache = JSON.parse(localStorage.getItem('crm_cache_v2')||'null');
-      if(cache && cache.props && cache.props.length > 0){
-        S.props = cache.props; S.agenda = cache.agenda||[]; S.despesas = cache.despesas||[];
-        filtrar(); rDash(); buildClientes();
-        setSS('Cache local',true);
-        toast('API offline — mostrando dados salvos','');
-        return;
-      }
-    }catch(ex){}
-    setSS('Offline',false);
-    toast('Erro ao conectar: '+e.message,'er');
-    filtrar();
-  }
+  }catch(e){ setSS('Erro',false); toast('Erro: '+e.message,'er'); filtrar(); }
   finally{ btn.classList.remove('girando'); }
 }
+
 function setSS(t,on){
   document.getElementById('stxt').textContent=t;
   document.getElementById('sdot').className='sdot'+(on?' on':'');
@@ -1829,38 +1544,22 @@ function setRankPer(p,btn){
   btn.classList.add('ativo'); rRank();
 }
 
-function parsarData(str){
-  if(!str) return null;
-  var s = String(str).trim();
-  var isoM = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(isoM) return new Date(parseInt(isoM[1]),parseInt(isoM[2])-1,parseInt(isoM[3]));
-  var brM = s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-  if(brM) return new Date(parseInt(brM[3]),parseInt(brM[2])-1,parseInt(brM[1]));
-  var meses={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-  var lM = s.match(/([A-Z][a-z]{2})\s+([A-Z][a-z]{2})\s+(\d{1,2})(?:\s+(\d{4}))?/);
-  if(lM){ var mes=meses[lM[2]],dia=parseInt(lM[3]),ano=lM[4]?parseInt(lM[4]):new Date().getFullYear(); if(mes!==undefined) return new Date(ano,mes,dia); }
-  var d=new Date(s); if(!isNaN(d.getTime())) return d;
-  return null;
-}
-
 function filtroPer(lista){
-  var hoje=new Date();
+  const hoje=new Date();
   return lista.filter(function(p){
     if(!p.data) return S.periodo==='total';
-    var d=parsarData(p.data);
-    if(!d||isNaN(d.getTime())) return S.periodo==='total';
-    if(S.periodo==='sem'){var ini=new Date(hoje);ini.setDate(hoje.getDate()-hoje.getDay());ini.setHours(0,0,0,0);return d>=ini;}
+    const d=new Date(p.data);
+    if(S.periodo==='sem'){const ini=new Date(hoje);ini.setDate(hoje.getDate()-hoje.getDay());return d>=ini;}
     if(S.periodo==='mes') return d.getMonth()===hoje.getMonth()&&d.getFullYear()===hoje.getFullYear();
     if(S.periodo==='ano') return d.getFullYear()===hoje.getFullYear();
     return true;
   });
 }
 function filtroPerRank(lista){
-  var hoje=new Date();
+  const hoje=new Date();
   return lista.filter(function(p){
     if(!p.data) return S.rankP==='total';
-    var d=parsarData(p.data);
-    if(!d||isNaN(d.getTime())) return S.rankP==='total';
+    const d=new Date(p.data);
     if(S.rankP==='mes') return d.getMonth()===hoje.getMonth()&&d.getFullYear()===hoje.getFullYear();
     if(S.rankP==='ano') return d.getFullYear()===hoje.getFullYear();
     return true;
@@ -1892,9 +1591,8 @@ function rDash(){
   const byC={};
   fp.forEach(function(p){
     const k=p.consultora||'—';
-    if(!byC[k]) byC[k]={n:k,qtd:0,vendas:0,vol:0};
-    byC[k].qtd++; 
-    if(p.status==='PAGA'){ byC[k].vendas++; byC[k].vol+=pV(p.valor); }
+    if(!byC[k]) byC[k]={n:k,qtd:0,vol:0};
+    byC[k].qtd++; byC[k].vol+=pV(p.valor);
   });
   const top=Object.values(byC).sort(function(a,b){return b.vol-a.vol;}).slice(0,3);
   const med=['🥇','🥈','🥉'];
@@ -1921,11 +1619,12 @@ function filtrar(){
   const b=(document.getElementById('busca-prop').value||'').toLowerCase();
   const st=document.getElementById('f-stat').value||'';
   const re=document.getElementById('f-resp').value||'';
+  const mes=document.getElementById('f-mes-prop')?document.getElementById('f-mes-prop').value||'':'';
   S.ft=S.props.filter(function(p){
     const m=!b||[p.nome,p.cpf,p.banco,p.consultora].some(function(v){return (v||'').toLowerCase().includes(b);});
-    // Consultoras só veem as próprias propostas
     const propria = S.u===GESTOR || p.consultora===S.u;
-    return m&&(!st||p.status===st)&&(!re||p.consultora===re)&&propria;
+    const mesOk = !mes || (p.data||'').startsWith(mes);
+    return m&&(!st||p.status===st)&&(!re||p.consultora===re)&&propria&&mesOk;
   });
   S.pg=1; rProp();
   // Delegação de eventos para tabela propostas
@@ -1954,7 +1653,7 @@ function rProp(){
     body.innerHTML='<div class="vazio"><div class="ico">📋</div>'+(tot===0&&S.props.length===0?'Nenhuma proposta cadastrada.':'Nenhum resultado.')+'</div>';
   } else {
     body.innerHTML=pag.map(function(p){
-      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+(p.data?' · '+fDH(p.data,''):'')+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+(p.promotora?' <span style="font-size:10px;color:var(--cinza-txt)">/ '+X(p.promotora)+'</span>':'')+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
+      return '<div class="tr" data-pid="'+p.id+'" style="'+(p.status==='PAGA'?'background:#f0fdf4;border-left:3px solid #16a34a':p.status==='CANCELADA'||p.status==='REPROVADA'?'background:#fff5f5;border-left:3px solid #dc2626':p.status==='FORMALIZAÇÃO'?'background:#eff6ff;border-left:3px solid #3b82f6':p.status==='EM ANÁLISE'?'background:#fffbeb;border-left:3px solid #f59e0b':p.status==='AG DESBLOQUEIO'||p.status==='AG SALDO DEVEDOR'?'background:#fff7ed;border-left:3px solid #f97316':'')+'"><span style="font-weight:600;font-size:13px">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.cpf)+(p.data?' · '+fDH(p.data,''):'')+'</div></span><span class="hm" style="font-size:12px">'+X(p.consultora)+'</span><span class="hm" style="font-size:12px">'+X(p.banco)+'</span><span class="hm" style="font-size:12px;font-weight:600">'+(p.valor?fmt(pV(p.valor)):'\u2014')+'</span><span class="hm" style="font-size:12px;color:var(--ok);font-weight:600">'+(p.comAgiliza?fmt(pV(p.comAgiliza)):'\u2014')+'</span><span>'+bSt(p.status)+'</span><span data-stop="1"><button class="ac" data-edit="'+p.id+'">✏️</button> <button class="ac del" data-del="'+p.id+'" data-nome="'+X(p.nome)+'">🗑</button></span></div>';
     }).join('');
   }
   const tp=Math.ceil(tot/S.pp);
@@ -1987,9 +1686,6 @@ function abrirProp(){
   });
   ['p-valor','p-pct'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
   ['p-cons','p-data'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=i==='p-data'?new Date().toISOString().split('T')[0]:S.u||''; });
-  // Consultoras não podem alterar o campo consultora
-  var pconsEl = document.getElementById('p-cons');
-  if(pconsEl) pconsEl.disabled = (S.u !== GESTOR);
   var pnasc=document.getElementById('p-nasc'); if(pnasc) pnasc.value='';
   var cag=document.getElementById('com-ag'); if(cag) cag.textContent='R$ 0,00';
   var cvd=document.getElementById('com-vd'); if(cvd) cvd.textContent='R$ 0,00';
@@ -2004,13 +1700,6 @@ function editProp(id){
   document.getElementById('p-id').value=p.id||'';
   document.getElementById('p-data').value=p.data||'';
   document.getElementById('p-cons').value=p.consultora||'';
-  // Consultoras só podem editar suas próprias propostas
-  if(S.u !== GESTOR && p.consultora !== S.u){
-    toast('Você só pode editar suas próprias propostas.','er');
-    return;
-  }
-  var pconsEl2 = document.getElementById('p-cons');
-  if(pconsEl2) pconsEl2.disabled = (S.u !== GESTOR);
   document.getElementById('p-stat').value=p.status||'';
   document.getElementById('p-nome').value=p.nome||'';
   document.getElementById('p-cpf').value=p.cpf||'';
@@ -2034,18 +1723,8 @@ async function salvarProp(){
   const cons=document.getElementById('p-cons').value;
   const stat=document.getElementById('p-stat').value;
   var nascimento=document.getElementById('p-nasc').value;
-  var cpf = document.getElementById('p-cpf').value.trim();
-  var tel = document.getElementById('p-tel').value.trim();
-  var pdata = document.getElementById('p-data').value;
-  if(!nome){toast('Preencha o nome do cliente.','er');return;}
-  if(!cpf){toast('CPF é obrigatório.','er');return;}
-  if(!tel){toast('Telefone é obrigatório.','er');return;}
-  if(!pdata){toast('Data é obrigatória.','er');return;}
-  if(!nascimento){toast('Data de nascimento é obrigatória.','er');return;}
-  var conv2 = document.getElementById('p-conv').value;
-  if(!conv2){toast('Selecione o convênio.','er');return;}
-  if(!cons){toast('Selecione a consultora.','er');return;}
-  if(!stat){toast('Selecione o status.','er');return;}
+  if(!nome||!cons||!stat){toast('Preencha Cliente, Consultora e Status.','er');return;}
+  if(!nascimento){toast('Preencha a data de nascimento.','er');return;}
   const val=pV(document.getElementById('p-valor').value||'0');
   const pct=parseFloat(document.getElementById('p-pct').value||'0');
   const ag=val*(pct/100), vd=ag*0.20;
@@ -2054,7 +1733,7 @@ async function salvarProp(){
   const d={
     id:document.getElementById('p-id').value||'',
     data:document.getElementById('p-data').value,
-    consultora: (document.getElementById('p-cons').disabled ? S.u : cons), status:stat, nome:nome,
+    consultora:cons, status:stat, nome:nome,
     cpf:document.getElementById('p-cpf').value,
     telefone:document.getElementById('p-tel').value,
     nascimento:document.getElementById('p-nasc').value,
@@ -2111,7 +1790,7 @@ function verDet(id){
     di('Data',p.data?fDH(p.data,''):'—')+
     di('Consultora',p.consultora)+di('CPF',p.cpf)+
     '<div><div style="font-size:10px;color:var(--cinza-txt);font-weight:700;text-transform:uppercase;margin-bottom:2px">Telefone</div><div><a href="https://wa.me/55'+((p.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--laranja)">'+(p.telefone||'—')+'</a></div></div>'+
-    di('Banco',p.banco)+di('Promotora',p.promotora||'—')+di('Tipo',p.tipoProposta)+di('Convênio',p.convenio)+di('Status',p.status)+
+    di('Banco',p.banco)+di('Tipo',p.tipoProposta)+di('Convênio',p.convenio)+di('Status',p.status)+
     '</div>'+
     '<div style="margin-top:14px;background:linear-gradient(135deg,#e8eef8,#f0f4fb);border:1.5px solid var(--cinza-brd);border-radius:var(--radius);padding:14px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">'+
     '<div><div style="font-size:10px;color:var(--cinza-txt);font-weight:700;text-transform:uppercase;margin-bottom:3px">Valor Contrato</div><div style="font-family:Montserrat,sans-serif;font-size:18px;font-weight:800;color:var(--azul)">'+(p.valor?fmt(pV(p.valor)):'—')+'</div></div>'+
@@ -2128,19 +1807,16 @@ function rRank(){
   const byC={};
   fp.forEach(function(p){
     const k=p.consultora||'—';
-    if(!byC[k]) byC[k]={n:k,qtd:0,vendas:0,vol:0,ag:0,vd:0};
-    byC[k].qtd++;
-    byC[k].vendas++; // toda proposta digitada conta no ranking
-    byC[k].vol+=pV(p.valor);
-    byC[k].ag+=pV(p.comAgiliza);
-    byC[k].vd+=pV(p.comVendedora);
+    if(!byC[k]) byC[k]={n:k,qtd:0,vol:0,ag:0,vd:0};
+    byC[k].qtd++; byC[k].vol+=pV(p.valor);
+    byC[k].ag+=pV(p.comAgiliza); byC[k].vd+=pV(p.comVendedora);
   });
   const sorted=Object.values(byC).sort(function(a,b){return b.vol-a.vol;});
   const med=['🥇','🥈','🥉'];
   const body=document.getElementById('rank-body');
   if(!sorted.length){body.innerHTML='<div class="vazio"><div class="ico">🏆</div><p>Sem dados no período</p></div>';return;}
   body.innerHTML=sorted.map(function(c,i){
-    return '<div class="tr '+(i<3?'rank-'+(i+1):'')+'"><span class="medal">'+(med[i]||i+1)+'</span><span style="font-weight:700;font-size:14px">'+X(c.n)+'<div style="font-size:11px;color:var(--cinza-txt)">'+c.qtd+' proposta'+(c.qtd!==1?'s':'')+' · '+c.vendas+' venda'+(c.vendas!==1?'s':'')+'</div></span><span style="font-weight:700;color:var(--ok)">'+c.vendas+'</span><span style="font-weight:700;color:var(--azul)">'+fmt(c.vol)+'</span></div>';
+    return '<div class="tr '+(i<3?'rank-'+(i+1):'')+'"><span class="medal">'+(med[i]||i+1)+'</span><span style="font-weight:700;font-size:14px">'+X(c.n)+'</span><span style="font-weight:600">'+c.qtd+'</span><span style="font-weight:700;color:var(--azul)">'+fmt(c.vol)+'</span></div>';
   }).join('');
 }
 
@@ -2217,22 +1893,10 @@ async function baixarCom(id){
   if(!confirm('Marcar comissão como PAGA?')) return;
   const p=S.props.find(function(x){return x.id==id;});
   if(!p) return;
-  const nomeConsultora = p.consultora;
-  const valorCom = p.comVendedora;
   p.comStatus='pago';
   try{
     const r=await callApi('atualizar',{dados:p});
-    if(r.status==='ok'){
-      toast('✅ Comissão de '+X(nomeConsultora)+' ('+X(valorCom)+') marcada como PAGA!','ok');
-      await load();
-      rFin();
-      // Atualizar aba pendentes se estiver visível
-      var fpend = document.getElementById('fpendentes');
-      if(fpend && fpend.style.display==='block') rPend();
-      rGest();
-      // Dar baixa visual no mycom se for a própria consultora
-      if(S.u === nomeConsultora) rMycom();
-    }
+    if(r.status==='ok'){toast('Comissão baixada!','ok');await load();rFin();}
     else throw new Error(r.mensagem||'Erro');
   }catch(e){toast('Erro: '+e.message,'er');}
 }
@@ -2288,14 +1952,34 @@ function bSt(s){
 }
 function X(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fDH(d,h){
-  if(!d||d===''||d==='undefined') return '—';
+  if(!d||d===''||d==='undefined')return'—';
   try{
-    var dt=parsarData(String(d));
-    if(dt&&!isNaN(dt.getTime())){
-      return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear()+(h?' '+h:'');
+    var s = String(d).trim();
+    // Formato ISO: 2026-05-17 ou 2026-05-17T...
+    var iso = s.split('T')[0];
+    var pts = iso.split('-');
+    if(pts.length===3 && pts[0].length===4){
+      var dt=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));
+      if(!isNaN(dt.getTime())) return dt.toLocaleDateString('pt-BR')+(h?' '+h:'');
+    }
+    // Formato brasileiro: 17/05/2026
+    var br = s.split('/');
+    if(br.length===3){
+      var dt2=new Date(parseInt(br[2]),parseInt(br[1])-1,parseInt(br[0]));
+      if(!isNaN(dt2.getTime())) return dt2.toLocaleDateString('pt-BR')+(h?' '+h:'');
+    }
+    // Formato longo: Mon May 18 2026 00:00:00 GMT...
+    var dt3 = new Date(s);
+    if(!isNaN(dt3.getTime())){
+      // Usar apenas dia/mes/ano ignorando fuso horário
+      var dd = String(dt3.getDate()).padStart(2,'0');
+      var mm = String(dt3.getMonth()+1).padStart(2,'0');
+      var yy = dt3.getFullYear();
+      return dd+'/'+mm+'/'+yy+(h?' '+h:'');
     }
     return '—';
-  }catch(e){return '—';}
+  }
+  catch(e){return '—';}
 }
 function fmtData(d){
   if(!d||d==='') return '—';
@@ -2851,8 +2535,6 @@ function salvar(conv){
     nome: nome,
     cpf: cpf,
     telefone: tel,
-    telefone2: document.getElementById('lead-tel2')?document.getElementById('lead-tel2').value:'',
-    telefone3: document.getElementById('lead-tel3')?document.getElementById('lead-tel3').value:'',
     totalLib: totalLib,
     totalParc: totalParc,
     msg: msg.substring(0, 300)
@@ -2996,12 +2678,11 @@ const DESPESAS_FIXAS = [
 function finAba(btn, id){
   document.querySelectorAll('.fnav').forEach(function(b){ b.classList.remove('ativo'); });
   btn.classList.add('ativo');
-  ['fcomissoes','fpendentes','fdespesas','fdre'].forEach(function(a){
+  ['fcomissoes','fdespesas','fdre'].forEach(function(a){
     document.getElementById(a).style.display = a===id ? 'block' : 'none';
   });
   if(id==='fdespesas') rDesp();
   if(id==='fdre') rDRE();
-  if(id==='fpendentes') rPend();
 }
 
 // Preencher selects de mês
@@ -3023,13 +2704,6 @@ function preencherMeses(){
 // ── COMISSÕES ──
 function rFin(){
   if(S.u !== GESTOR){ document.getElementById('afin').innerHTML='<div class="vazio"><div class="ico">🔒</div><p>Acesso restrito.</p></div>'; return; }
-  // Update fin badge
-  var finBadge = document.getElementById('fin-badge');
-  if(finBadge){
-    var pendCount = S.props.filter(function(p){ return p.comStatus!=='pago' && pV(p.comVendedora)>0; }).length;
-    finBadge.style.display = pendCount > 0 ? 'inline' : 'none';
-    if(pendCount > 0) finBadge.textContent = pendCount;
-  }
   preencherMeses();
   var fst = document.getElementById('f-fin-st').value||'';
   var fre = document.getElementById('f-fin-re').value||'';
@@ -3058,9 +2732,9 @@ function rFin(){
   body.innerHTML=props.map(function(p){
     return '<div class="tr" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px">'+
       '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+fDH(p.data,'')+'</div></span>'+
-      '<span>'+(pV(p.valor)>0?fmt(pV(p.valor)):(p.valor||'—'))+'</span>'+
-      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza&&pV(p.comAgiliza)>0?p.comAgiliza:'—')+'</span>'+
-      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora&&pV(p.comVendedora)>0?p.comVendedora:'—')+'</span>'+
+      '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
+      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza||'—')+'</span>'+
+      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora||'—')+'</span>'+
       '<span>'+(p.comStatus==='pago'?'<span class="badge b-ok">✓ Paga</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
       '<span>'+
         (p.comStatus!=='pago'?'<button class="ac okb" data-baixar="'+p.id+'" title="Pagar">✓</button> ':'') +
@@ -3077,57 +2751,6 @@ function rFin(){
       var ed=e.target.closest('[data-editfin]');
       if(b) baixarCom(b.dataset.baixar);
       else if(ed) editProp(ed.dataset.editfin);
-    });}
-  },100);
-}
-
-// ── COMISSÕES PENDENTES ──
-function rPend(){
-  if(S.u !== GESTOR){ return; }
-  preencherMeses();
-  var fre = document.getElementById('f-pend-re').value||'';
-  
-  var props = S.props.filter(function(p){
-    return p.comStatus !== 'pago' && pV(p.comVendedora) > 0 && (!fre || p.consultora===fre);
-  });
-
-  var tVd = props.reduce(function(s,p){return s+pV(p.comVendedora);},0);
-  var byC = {};
-  props.forEach(function(p){
-    var k = p.consultora||'—';
-    if(!byC[k]) byC[k] = 0;
-    byC[k] += pV(p.comVendedora);
-  });
-
-  var resumoCons = Object.entries(byC).map(function(e){
-    return '<div class="fcard" style="border-left:4px solid var(--laranja)"><div class="fk">'+e[0]+'</div><div class="fv" style="color:var(--laranja)">'+fmt(e[1])+'</div></div>';
-  }).join('');
-
-  document.getElementById('pend-res').innerHTML =
-    fc('Total Pendente', fmt(tVd), 'var(--perigo)') + resumoCons;
-
-  var body = document.getElementById('pend-body');
-  if(!props.length){
-    body.innerHTML = '<div class="vazio"><div class="ico">✅</div><p>Nenhuma comissão pendente! Todas foram pagas.</p></div>';
-    return;
-  }
-
-  body.innerHTML = props.map(function(p){
-    return '<div class="tr" style="grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 90px">'+
-      '<span style="font-size:13px;font-weight:600">'+X(p.nome)+'<div style="font-size:11px;color:var(--cinza-txt)">'+X(p.consultora)+' · '+fDH(p.data,'')+'</div></span>'+
-      '<span>'+(p.valor?fmt(pV(p.valor)):'—')+'</span>'+
-      '<span style="color:var(--ok);font-weight:600">'+(p.comAgiliza||'—')+'</span>'+
-      '<span style="color:var(--laranja);font-weight:600">'+(p.comVendedora||'—')+'</span>'+
-      '<span><span class="badge b-wn">⏳ Pendente</span></span>'+
-      '<span><button class="ac okb" data-pagarpend="'+p.id+'" style="width:auto;padding:4px 12px;font-size:12px;font-weight:700">💳 Pagar</button></span>'+
-    '</div>';
-  }).join('');
-
-  setTimeout(function(){
-    var pb = document.getElementById('pend-body');
-    if(pb && !pb._lpend){ pb._lpend=true; pb.addEventListener('click',function(e){
-      var b = e.target.closest('[data-pagarpend]');
-      if(b) baixarCom(b.dataset.pagarpend);
     });}
   },100);
 }
@@ -3161,10 +2784,7 @@ function rDesp(){
         '<span style="font-weight:600;color:var(--perigo)">'+fmt(pV(d.valor))+'</span>'+
         '<span style="font-size:12px">'+(d.vencimento?new Date(d.vencimento+'T12:00').toLocaleDateString('pt-BR'):'—')+'</span>'+
         '<span>'+(d.status==='pago'?'<span class="badge b-ok">✓ Pago</span>':'<span class="badge b-wn">Pendente</span>')+'</span>'+
-        '<span>'+
-          (d.status!=='pago' ? '<button class="ac okb" data-pagardesp="'+d.id+'" title="Marcar como pago" style="margin-right:4px">✓</button>' : '') +
-          '<button class="ac del" data-deldesp="'+d.id+'">🗑</button>'+
-        '</span>'+
+        '<span><button class="ac del" data-deldesp="'+d.id+'">🗑</button></span>'+
       '</div>';
     }).join('');
   }
@@ -3182,10 +2802,8 @@ function rDesp(){
   setTimeout(function(){
     var db=document.getElementById('desp-body');
     if(db&&!db._ld){db._ld=true;db.addEventListener('click',function(e){
-      var pd=e.target.closest('[data-pagardesp]');
       var b=e.target.closest('[data-deldesp]');
-      if(pd) pagarDesp(pd.dataset.pagardesp);
-      else if(b) delDesp(b.dataset.deldesp);
+      if(b) delDesp(b.dataset.deldesp);
     });}
   },100);
 }
@@ -3242,28 +2860,6 @@ async function delDesp(id){
       rDesp();
     } else throw new Error(r.mensagem||'Erro');
   }catch(e){ toast('Erro: '+e.message,'er'); }
-}
-
-async function pagarDesp(id){
-  if(!confirm('Marcar despesa como PAGA?')) return;
-  var d = (S.despesas||[]).find(function(x){ return x.id===id; });
-  if(!d) return;
-  d.status = 'pago';
-  try{
-    var r = await callApi('atualizarDespesa', {dados: d});
-    if(r.status==='ok'){
-      toast('Despesa paga!','ok');
-      rDesp();
-    } else {
-      // Mesmo sem API de atualizar, atualiza local
-      toast('Pago localmente!','ok');
-      rDesp();
-    }
-  }catch(e){ 
-    // Atualiza local mesmo se API falhar
-    toast('Status atualizado!','ok');
-    rDesp();
-  }
 }
 
 // ── DRE ──
@@ -3400,22 +2996,6 @@ function rMycom(){
     fc('Total a Receber', fmt(total), 'var(--azul)') +
     fc('Já Recebido', fmt(pagas), 'var(--ok)') +
     fc('Pendente', fmt(pend), 'var(--perigo)');
-  
-  // Alerta de comissão pendente
-  var alertaEl = document.getElementById('mycom-alerta');
-  if(alertaEl){
-    var badge = document.getElementById('mycom-badge');
-    if(pend > 0){
-      var pendCount = minhas.filter(function(p){ return p.comStatus!=='pago'; }).length;
-      alertaEl.style.display = 'flex';
-      if(badge) badge.style.display = 'inline';
-      document.getElementById('mycom-alerta-titulo').textContent = pendCount + ' comissão'+(pendCount!==1?'ões':'')+' pendente'+(pendCount!==1?'s':'')+'!';
-      document.getElementById('mycom-alerta-msg').textContent = 'Você tem '+fmt(pend)+' a receber. Aguarde o pagamento da Agiliza Credi.';
-    } else {
-      alertaEl.style.display = 'none';
-      if(badge) badge.style.display = 'none';
-    }
-  }
 
   var body = document.getElementById('mycom-body');
   if(!minhas.length){
@@ -3468,8 +3048,7 @@ function filtrarCli(){
   var conv = document.getElementById('f-cli-conv').value||'';
   S.ftCli = S.clientes.filter(function(c){
     var m = !b||[c.nome,c.cpf,c.telefone].some(function(v){return (v||'').toLowerCase().includes(b);});
-    var propria = S.u === GESTOR || c.cadastradoPor === S.u;
-    return m && (!conv||c.convenio===conv) && propria;
+    return m && (!conv||c.convenio===conv);
   });
   S.pgCli = 1;
   rCli();
@@ -3477,10 +3056,6 @@ function filtrarCli(){
 
 function rCli(){
   buildClientes();
-  // Consultoras veem apenas seus próprios clientes
-  if(S.u !== GESTOR){
-    S.clientes = S.clientes.filter(function(c){ return c.cadastradoPor === S.u; });
-  }
   if(!S.ftCli.length) S.ftCli = S.clientes;
   var tot = S.ftCli.length;
   var pp = 20;
@@ -3501,6 +3076,11 @@ function rCli(){
         '<span style="text-align:center"><button class="ac" data-editcli="'+c.cpf+'" title="Editar">✏️</button></span>'+
       '</div>';
     }).join('');
+    // Delegação editar cliente
+    body.addEventListener('click', function handler(e){
+      var b = e.target.closest('[data-editcli]');
+      if(b) editarCliente(b.dataset.editcli);
+    });
   }
 
   document.getElementById('cli-pag-info').textContent = tot + ' cliente'+(tot!==1?'s':'');
@@ -3583,59 +3163,7 @@ function rAlertas(){
     '</div>');
   }
 
-  // 3. COMISSÕES PENDENTES (só gestora)
-  if(S.u === GESTOR){
-    var pendComissoes = S.props.filter(function(p){ return p.comStatus!=='pago' && pV(p.comVendedora)>0; });
-    if(pendComissoes.length > 0){
-      var totalPend = pendComissoes.reduce(function(s,p){return s+pV(p.comVendedora);},0);
-      alertas.push('<div class="alerta-banner venc-hj">'+
-        '<div class="ab-ico">💳</div>'+
-        '<div class="ab-body">'+
-          '<div class="ab-titulo">'+pendComissoes.length+' comissão'+(pendComissoes.length!==1?'ões':'')+' pendente'+(pendComissoes.length!==1?'s':'')+'</div>'+
-          '<div class="ab-msg">Total a pagar: '+fmt(totalPend)+' — clique para ver e pagar</div>'+
-        '</div>'+
-        '<button class="ab-btn" onclick="irParaPendentes()">Ver pendentes</button>'+
-      '</div>');
-    }
-  }
-
-  // 4. ALERTAS DE VENCIMENTO DESPESAS (só gestora)
-  if(S.u === GESTOR){
-    // Check pending despesas from the database too
-    (S.despesas||[]).filter(function(d){ return d.status !== 'pago' && d.vencimento; }).forEach(function(d){
-      var vencDate = new Date(d.vencimento + 'T12:00');
-      var diffDias = Math.floor((vencDate - hoje)/(1000*60*60*24));
-      if(diffDias < 0){
-        alertas.push('<div class="alerta-banner venc-atr">'+
-          '<div class="ab-ico">🔴</div>'+
-          '<div class="ab-body">'+
-            '<div class="ab-titulo">'+X(d.descricao)+' — vencida!</div>'+
-            '<div class="ab-msg">Venceu em '+vencDate.toLocaleDateString('pt-BR')+' — '+fmt(pV(d.valor))+'</div>'+
-          '</div>'+
-          '<button class="ab-btn" onclick="irParaDespesas()">Pagar agora</button>'+
-        '</div>');
-      } else if(diffDias === 0){
-        alertas.push('<div class="alerta-banner venc-hj">'+
-          '<div class="ab-ico">⏰</div>'+
-          '<div class="ab-body">'+
-            '<div class="ab-titulo">'+X(d.descricao)+' vence hoje!</div>'+
-            '<div class="ab-msg">'+fmt(pV(d.valor))+'</div>'+
-          '</div>'+
-          '<button class="ab-btn" onclick="irParaDespesas()">Pagar</button>'+
-        '</div>');
-      } else if(diffDias <= 3){
-        alertas.push('<div class="alerta-banner venc-prox">'+
-          '<div class="ab-ico">🟠</div>'+
-          '<div class="ab-body">'+
-            '<div class="ab-titulo">'+X(d.descricao)+' vence em '+diffDias+' dia'+(diffDias!==1?'s':'')+'</div>'+
-            '<div class="ab-msg">'+fmt(pV(d.valor))+'</div>'+
-          '</div>'+
-        '</div>');
-      }
-    });
-  }
-
-  // 5. ALERTAS DESPESAS FIXAS (só gestora)
+  // 3. ALERTAS DE VENCIMENTO (só gestora)
   if(S.u === GESTOR){
     var despFixas = [
       {desc:'Salário Tatielle', valor:1700, dia:27},
@@ -3750,52 +3278,23 @@ function fecharParabens(){
   if(m) m.parentNode.removeChild(m);
 }
 
-// Abrir modal NOVO cliente
-function abrirNovoCli(){
-  var titEl = document.getElementById('mcli-tit');
-  if(titEl) titEl.textContent = 'Novo Cliente';
-  document.getElementById('cli-nome').value = '';
-  var cpfEl = document.getElementById('cli-cpf');
-  cpfEl.value = ''; cpfEl.removeAttribute('readonly'); cpfEl.style.background = '';
-  document.getElementById('cli-nasc').value = '';
-  document.getElementById('cli-tel').value = '';
-  document.getElementById('cli-conv').value = '';
-  var cadEl = document.getElementById('cli-cadastrador');
-  if(cadEl) cadEl.value = S.u||'';
-  var novoEl = document.getElementById('cli-modo-novo');
-  if(novoEl) novoEl.style.display = 'block';
-  _modoClienteNovo = true;
-  var btn = document.getElementById('btn-salvar-cli');
-  if(btn){ btn.textContent = 'Cadastrar Cliente'; }
+// Editar cliente — abre modal de dados do cliente
+function editarCliente(cpf){
+  var c = S.clientes.find(function(x){ return x.cpf === cpf; });
+  if(!c){
+    // Buscar nas propostas
+    var p = S.props.find(function(x){ return x.cpf === cpf; });
+    if(!p){ toast('Cliente não encontrado.','er'); return; }
+    c = {nome:p.nome, cpf:p.cpf, nascimento:p.nascimento||'', telefone:p.telefone||'', convenio:p.convenio||''};
+  }
+  document.getElementById('cli-nome').value = c.nome||'';
+  document.getElementById('cli-cpf').value = c.cpf||'';
+  document.getElementById('cli-nasc').value = c.nascimento||'';
+  document.getElementById('cli-tel').value = c.telefone||'';
+  document.getElementById('cli-conv').value = c.convenio||'';
   aM('mcli');
 }
 
-// Editar cliente — abre modal de dados do cliente
-function editarCliente(cpf){
-  var titEl = document.getElementById('mcli-tit');
-  if(titEl) titEl.textContent = 'Editar Cliente';
-  var novoEl = document.getElementById('cli-modo-novo');
-  if(novoEl) novoEl.style.display = 'none';
-  _modoClienteNovo = false;
-  var btn = document.getElementById('btn-salvar-cli');
-  if(btn){ btn.textContent = 'Salvar Cliente'; }
-  buildClientes();
-  var cli = S.clientes.find(function(x){ return x.cpf === cpf; });
-  if(!cli){
-    var p = S.props.find(function(x){ return x.cpf === cpf; });
-    if(!p){ toast('Cliente não encontrado.','er'); return; }
-    cli = {nome:p.nome, cpf:p.cpf, nascimento:p.nascimento||'', telefone:p.telefone||'', convenio:p.convenio||'', cadastradoPor:p.consultora||''};
-  }
-  document.getElementById('cli-nome').value = cli.nome||'';
-  var cpfEl2 = document.getElementById('cli-cpf');
-  cpfEl2.value = cli.cpf||''; cpfEl2.setAttribute('readonly','true'); cpfEl2.style.background='#eee';
-  document.getElementById('cli-nasc').value = cli.nascimento||'';
-  document.getElementById('cli-tel').value = cli.telefone||'';
-  document.getElementById('cli-conv').value = cli.convenio||'';
-  var cadEl2 = document.getElementById('cli-cadastrador');
-  if(cadEl2) cadEl2.value = cli.cadastradoPor||'—';
-  aM('mcli');
-}
 // Salvar edição do cliente — atualiza todas as propostas do CPF
 async function salvarCliente(){
   var cpfEl = document.getElementById('cli-cpf');
@@ -3857,551 +3356,19 @@ async function salvarCliente(){
   }
 }
 
-
-// Wrapper que decide qual função chamar baseado no modo do modal
-var _modoClienteNovo = false;
-function salvarClienteModal(){
-  if(_modoClienteNovo) salvarNovoCli();
-  else salvarCliente();
-}
-
-// Salvar NOVO cliente — cria proposta mínima com dados do cliente
-async function salvarNovoCli(){
-  var nome = document.getElementById('cli-nome').value.trim();
-  var cpf  = document.getElementById('cli-cpf').value.trim();
-  var nasc = document.getElementById('cli-nasc').value;
-  var tel  = document.getElementById('cli-tel').value.trim();
-  var conv = document.getElementById('cli-conv').value;
-  if(!nome){ toast('Preencha o nome.','er'); return; }
-  if(!cpf){  toast('Preencha o CPF.','er');  return; }
-  if(!nasc){ toast('Preencha a data de nascimento.','er'); return; }
-  if(!tel){  toast('Preencha o telefone.','er'); return; }
-  if(!conv){ toast('Selecione o convênio.','er'); return; }
-  // Verificar se CPF já existe
-  buildClientes();
-  var cpfLimpo = cpf.replace(/\D/g,'');
-  var existe = S.clientes.find(function(x){ return (x.cpf||'').replace(/\D/g,'')===cpfLimpo; });
-  if(existe){ toast('CPF já cadastrado: '+existe.nome,'er'); return; }
-  var btn = document.getElementById('btn-salvar-cli');
-  btn.disabled=true; btn.textContent='Salvando...';
-  // Criar registro mínimo — Lead sem proposta financeira
-  var d = {
-    id: '',
-    data: new Date().toISOString().split('T')[0],
-    consultora: S.u,
-    status: 'Lead',
-    nome: nome,
-    cpf: cpf,
-    telefone: tel,
-    nascimento: nasc,
-    convenio: conv,
-    promotora: '',
-    banco: '',
-    tipoProposta: '',
-    valor: '',
-    parcela: '',
-    prazo: '',
-    pct: '',
-    comAgiliza: 'R$ 0,00',
-    comVendedora: 'R$ 0,00',
-    comStatus: '',
-    obs: 'Cadastro direto — sem proposta',
-    atualizadoPor: S.u,
-    dataAtualizacao: new Date().toISOString()
-  };
-  try{
-    var r = await callApi('criar', {dados: d});
-    if(r.status==='ok'){
-      toast('Cliente cadastrado!','ok');
-      fM('mcli');
-      await load();
-      navAba('cli');
-    } else throw new Error(r.mensagem||'Erro');
-  } catch(e){
-    toast('Erro: '+e.message,'er');
-  } finally {
-    btn.disabled=false; btn.textContent='Cadastrar Cliente';
+function preencherMesesProp(){
+  var el = document.getElementById('f-mes-prop');
+  if(!el || el.children.length > 1) return;
+  var hoje = new Date();
+  for(var i=0; i<18; i++){
+    var d = new Date(hoje.getFullYear(), hoje.getMonth()-i, 1);
+    var val = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    var lbl = d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+    lbl = lbl.charAt(0).toUpperCase()+lbl.slice(1);
+    var opt = document.createElement('option');
+    opt.value = val; opt.textContent = lbl;
+    el.appendChild(opt);
   }
-}
-
-
-function irParaPendentes(){
-  navAba('fin');
-  setTimeout(function(){
-    var btn = document.getElementById('fn-pendentes');
-    if(btn) finAba(btn,'fpendentes');
-  },200);
-}
-function irParaDespesas(){
-  navAba('fin');
-  setTimeout(function(){
-    var btn = document.getElementById('fn-despesas');
-    if(btn) finAba(btn,'fdespesas');
-  },200);
-}
-
-
-// ══════════════════════════════════════════════════════
-// LEADS — Google Sheets + cache local
-// ══════════════════════════════════════════════════════
-
-var LEAD_STATUS_LABEL = {
-  novo:'🆕 Novo', contatado:'📞 Contatado', interesse:'⭐ Interesse',
-  retornar:'🔔 Retornar', sem_resposta:'😶 Sem resposta',
-  fechado:'✅ Fechado', sem_margem:'💰 Sem Margem', negativo_inss:'🚫 Negativo INSS', fora_regra:'⛔ Fora da Regra', descartado:'❌ Descartado'
-};
-var LEAD_STATUS_COR = {
-  novo:'var(--azul)', contatado:'var(--cinza-txt)', interesse:'var(--laranja)',
-  retornar:'var(--warn)', sem_resposta:'var(--cinza-txt)',
-  fechado:'var(--ok)', sem_margem:'var(--cinza-txt)', negativo_inss:'var(--perigo)', fora_regra:'var(--cinza-txt)', descartado:'var(--perigo)'
-};
-
-// Cache local para performance (atualizado a cada sync)
-function carregarLeadsLocal(){ try{ return JSON.parse(localStorage.getItem('crm_leads_cache')||'[]'); }catch(e){ return []; } }
-function salvarLeadsLocal(leads){ try{ localStorage.setItem('crm_leads_cache', JSON.stringify(leads)); }catch(e){} }
-
-function rLeads(){
-  // Usar dados do S.leads (carregado via API no load())
-  var todos = S.leads||[];
-  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
-  S.ftLeads = base;
-
-  rLeadsAlertas();
-  rLeadsCards(base);
-  rLeadsTabela(base);
-
-  if(S.u === GESTOR){
-    document.getElementById('leads-painel-gest').style.display = 'block';
-    rLeadsAtividade(todos);
-  }
-  atualizarLeadsBadge(todos);
-}
-
-function filtrarLeads(){
-  var b = (document.getElementById('busca-leads').value||'').toLowerCase();
-  var cons = document.getElementById('f-leads-cons').value||'';
-  var status = document.getElementById('f-leads-status').value||'';
-  var conv = document.getElementById('f-leads-conv').value||'';
-  var todos = S.leads||[];
-  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
-  S.ftLeads = base.filter(function(l){
-    var m = !b || [l.nome,l.telefone,l.cpf,l.anotacoes].some(function(v){ return (v||'').toLowerCase().includes(b); });
-    return m && (!cons||l.consultora===cons) && (!status||l.status===status) && (!conv||l.convenio===conv);
-  });
-  rLeadsTabela(S.ftLeads);
-}
-
-function rLeadsCards(lista){
-  var hojeStr = new Date().toISOString().split('T')[0];
-  var contatadosHoje = lista.filter(function(l){ return l.ultimoContato && l.ultimoContato.startsWith(hojeStr); }).length;
-  var retornarHoje = lista.filter(function(l){ return l.retornoData && l.retornoData <= hojeStr && l.status==='retornar'; }).length;
-  var interesse = lista.filter(function(l){ return l.status==='interesse'; }).length;
-  document.getElementById('leads-cards').innerHTML =
-    '<div class="dcard"><div class="lbl">Total Leads</div><div class="val">'+lista.length+'</div><div class="sub">atribuídos</div></div>'+
-    '<div class="dcard la"><div class="lbl">Contatados Hoje</div><div class="val la">'+contatadosHoje+'</div><div class="sub">registrados hoje</div></div>'+
-    '<div class="dcard wn"><div class="lbl">Retornar Hoje</div><div class="val wn">'+retornarHoje+'</div><div class="sub">alertas de retorno</div></div>'+
-    '<div class="dcard ok"><div class="lbl">Com Interesse</div><div class="val ok">'+interesse+'</div><div class="sub">aguardando fechamento</div></div>';
-}
-
-function rLeadsAlertas(){
-  var wrap = document.getElementById('leads-alertas-wrap');
-  if(!wrap) return;
-  var todos = S.leads||[];
-  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
-  var agora = new Date();
-  var hojeStr = agora.toISOString().split('T')[0];
-  var alertas = [];
-
-  base.filter(function(l){ return l.retornoData && l.status==='retornar'; })
-    .forEach(function(l){
-      var diffDias = Math.floor((new Date(l.retornoData+'T12:00') - agora)/86400000);
-      if(diffDias < 0){
-        alertas.push('<div class="alerta-banner venc-atr" data-lid="'+l.id+'">'+
-          '<div class="ab-ico">🔴</div>'+
-          '<div class="ab-body">'+
-            '<div class="ab-titulo">Retorno atrasado: '+X(l.nome)+'</div>'+
-            '<div class="ab-msg">Era '+new Date(l.retornoData+'T12:00').toLocaleDateString('pt-BR')+(l.retornoHora?' às '+l.retornoHora:'')+' · '+X(l.consultora)+'</div>'+
-          '</div>'+
-          '<button class="ab-btn btn-ac" data-lid="'+l.id+'">Registrar contato</button>'+
-        '</div>');
-      } else if(l.retornoData === hojeStr){
-        alertas.push('<div class="alerta-banner venc-hj" data-lid="'+l.id+'">'+
-          '<div class="ab-ico">🔔</div>'+
-          '<div class="ab-body">'+
-            '<div class="ab-titulo">Retornar hoje: '+X(l.nome)+'</div>'+
-            '<div class="ab-msg">'+(l.retornoHora?'Às '+l.retornoHora+' · ':'')+X(l.retornoObs||'')+'</div>'+
-          '</div>'+
-          '<button class="ab-btn btn-ac" data-lid="'+l.id+'">Contatar agora</button>'+
-        '</div>');
-      } else if(diffDias <= 2){
-        alertas.push('<div class="alerta-banner venc-prox">'+
-          '<div class="ab-ico">🟠</div>'+
-          '<div class="ab-body">'+
-            '<div class="ab-titulo">Retornar em '+diffDias+' dia'+(diffDias!==1?'s':'')+': '+X(l.nome)+'</div>'+
-            '<div class="ab-msg">'+new Date(l.retornoData+'T12:00').toLocaleDateString('pt-BR')+(l.retornoHora?' às '+l.retornoHora:'')+' · '+X(l.consultora)+'</div>'+
-          '</div>'+
-        '</div>');
-      }
-    });
-
-  wrap.innerHTML = alertas.length ? '<div style="margin-bottom:14px">'+alertas.join('')+'</div>' : '';
-  setTimeout(function(){
-    wrap.querySelectorAll('[data-lid]').forEach(function(el){
-      el.addEventListener('click', function(){ abrirContato(el.dataset.lid); });
-    });
-    wrap.querySelectorAll('.btn-ac').forEach(function(el){
-      el.addEventListener('click', function(e){ e.stopPropagation(); abrirContato(el.dataset.lid); });
-    });
-  }, 50);
-}
-
-function rLeadsTabela(lista){
-  var body = document.getElementById('leads-body');
-  if(!lista.length){
-    body.innerHTML = '<div class="vazio"><div class="ico">🎯</div><p>Nenhum lead encontrado.<br>Clique em "+ Novo Lead" para começar.</p></div>';
-    return;
-  }
-  var hojeStr = new Date().toISOString().split('T')[0];
-  body.innerHTML = lista.map(function(l){
-    var cor = LEAD_STATUS_COR[l.status]||'var(--cinza-txt)';
-    var retornoTexto = (l.retornoData && l.status==='retornar')
-      ? new Date(l.retornoData+'T12:00').toLocaleDateString('pt-BR')+(l.retornoHora?' '+l.retornoHora:'')
-      : '—';
-    var retornoCor = (l.retornoData && l.retornoData <= hojeStr && l.status==='retornar') ? 'var(--perigo)' : 'var(--cinza-txt)';
-    var contatosHoje = (l.ultimoContato && l.ultimoContato.startsWith(hojeStr)) ? '✓' : '—';
-    var totalCont = l.totalContatos||'0';
-    return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 100px;padding:11px 14px;border-bottom:1px solid var(--cinza-brd);align-items:center">'+
-      '<span><div style="font-weight:600;font-size:13px">'+X(l.nome)+'</div>'+
-        '<div style="font-size:11px;color:var(--cinza-txt)">'+
-          (l.telefone?'<span style="margin-right:6px;user-select:text">'+X(l.telefone)+'</span>':'')+
-          (l.telefone2?'<span style="margin-right:6px;color:var(--azul);user-select:text">'+X(l.telefone2)+'</span>':'')+
-          (l.telefone3?'<span style="color:var(--cinza-txt);user-select:text">'+X(l.telefone3)+'</span>':'')+
-          (l.cpf?' · '+X(l.cpf):'')+
-        '</div>'+
-      '</span>'+
-      '<span style="font-size:12px">'+X(l.consultora||'—')+'</span>'+
-      '<span style="font-size:12px">'+X(l.convenio||'—')+'</span>'+
-      '<span><span style="font-size:11px;font-weight:700;color:'+cor+'">'+X(LEAD_STATUS_LABEL[l.status]||l.status)+'</span></span>'+
-      '<span style="font-size:11px;color:'+retornoCor+'">'+retornoTexto+'</span>'+
-      '<span style="font-size:12px;text-align:center">'+
-        '<span style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--laranja);font-size:15px">'+totalCont+'</span>'+
-        (contatosHoje==='✓'?'<span style="color:var(--ok);font-size:11px"> hoje</span>':'')+
-      '</span>'+
-      '<span style="display:flex;gap:4px">'+
-        '<button class="ac okb" data-contato-lead="'+l.id+'" title="Registrar contato" style="width:auto;padding:4px 8px;font-size:12px">📞</button>'+
-        '<button class="ac" data-edit-lead="'+l.id+'" title="Editar">✏️</button>'+
-        (S.u===GESTOR?'<button class="ac del" data-del-lead="'+l.id+'" title="Excluir">🗑</button>':'')+
-      '</span>'+
-    '</div>';
-  }).join('');
-
-  setTimeout(function(){
-    if(body && !body._lleads){ body._lleads=true;
-      body.addEventListener('click', function(e){
-        var bc=e.target.closest('[data-contato-lead]');
-        var be=e.target.closest('[data-edit-lead]');
-        var bd=e.target.closest('[data-del-lead]');
-        if(bc) abrirContato(bc.dataset.contatoLead);
-        else if(be) editarLead(be.dataset.editLead);
-        else if(bd) deletarLead(bd.dataset.delLead);
-      });
-    }
-  }, 100);
-}
-
-function rLeadsAtividade(todos){
-  var hojeStr = new Date().toISOString().split('T')[0];
-  var porCons = {};
-  todos.forEach(function(l){
-    var k = l.consultora||'—';
-    if(!porCons[k]) porCons[k]={n:k,total:0,hoje:0,interesse:0,retornar:0};
-    porCons[k].total++;
-    if(l.ultimoContato && l.ultimoContato.startsWith(hojeStr)) porCons[k].hoje++;
-    if(l.status==='interesse') porCons[k].interesse++;
-    if(l.status==='retornar') porCons[k].retornar++;
-  });
-  document.getElementById('leads-atividade').innerHTML = Object.values(porCons).map(function(cc){
-    return '<div style="background:var(--branco);border:1px solid var(--cinza-brd);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--sombra)">'+
-      '<div style="font-family:Montserrat,sans-serif;font-weight:800;color:var(--azul);margin-bottom:10px">'+X(cc.n)+'</div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">'+
-        '<div><span style="color:var(--cinza-txt)">Total:</span> <strong>'+cc.total+'</strong></div>'+
-        '<div><span style="color:var(--cinza-txt)">Hoje:</span> <strong style="color:var(--laranja)">'+cc.hoje+'</strong></div>'+
-        '<div><span style="color:var(--cinza-txt)">Interesse:</span> <strong style="color:var(--ok)">'+cc.interesse+'</strong></div>'+
-        '<div><span style="color:var(--cinza-txt)">Retornar:</span> <strong style="color:var(--warn)">'+cc.retornar+'</strong></div>'+
-      '</div>'+
-    '</div>';
-  }).join('') || '<div class="vazio"><p>Nenhuma atividade ainda.</p></div>';
-}
-
-function atualizarLeadsBadge(todos){
-  var badge = document.getElementById('leads-badge');
-  if(!badge) return;
-  var hojeStr = new Date().toISOString().split('T')[0];
-  var base = S.u === GESTOR ? todos : todos.filter(function(l){ return l.consultora === S.u; });
-  var alertas = base.filter(function(l){ return l.retornoData && l.retornoData <= hojeStr && l.status==='retornar'; }).length;
-  badge.style.display = alertas > 0 ? 'inline' : 'none';
-  if(alertas > 0) badge.textContent = alertas;
-}
-
-// ── CRUD ──
-function abrirNovoLead(){
-  document.getElementById('mlead-tit').textContent = 'Novo Lead';
-  document.getElementById('lead-id').value = '';
-  ['lead-nome','lead-tel','lead-cpf','lead-anotacoes','lead-retorno-obs'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
-  ['lead-conv','lead-origem'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
-  document.getElementById('lead-retorno-data').value = '';
-  document.getElementById('lead-retorno-hora').value = '';
-  document.getElementById('lead-status').value = 'novo';
-  var lcons = document.getElementById('lead-cons');
-  if(lcons){ lcons.value = S.u; lcons.disabled = S.u !== GESTOR; }
-  ['fi-retorno-data','fi-retorno-hora','fi-retorno-obs'].forEach(function(id){ document.getElementById(id).style.display='none'; });
-  aM('mlead');
-}
-
-function editarLead(id){
-  var l = (S.leads||[]).find(function(x){ return x.id===id; });
-  if(!l){ toast('Lead não encontrado.','er'); return; }
-  if(S.u !== GESTOR && l.consultora !== S.u){ toast('Você só pode editar seus próprios leads.','er'); return; }
-  document.getElementById('mlead-tit').textContent = 'Editar Lead';
-  document.getElementById('lead-id').value = l.id;
-  document.getElementById('lead-nome').value = l.nome||'';
-  document.getElementById('lead-tel').value = l.telefone||'';
-  var lt2=document.getElementById('lead-tel2'); if(lt2) lt2.value=l.telefone2||'';
-  var lt3=document.getElementById('lead-tel3'); if(lt3) lt3.value=l.telefone3||'';
-  document.getElementById('lead-cpf').value = l.cpf||'';
-  document.getElementById('lead-anotacoes').value = l.anotacoes||'';
-  document.getElementById('lead-conv').value = l.convenio||'';
-  document.getElementById('lead-origem').value = l.origem||'';
-  document.getElementById('lead-status').value = l.status||'novo';
-  document.getElementById('lead-retorno-data').value = l.retornoData||'';
-  document.getElementById('lead-retorno-hora').value = l.retornoHora||'';
-  document.getElementById('lead-retorno-obs').value = l.retornoObs||'';
-  var lcons = document.getElementById('lead-cons');
-  if(lcons){ lcons.value = l.consultora||''; lcons.disabled = S.u !== GESTOR; }
-  var mostrar = l.status==='retornar'||l.status==='interesse';
-  ['fi-retorno-data','fi-retorno-hora','fi-retorno-obs'].forEach(function(id){ document.getElementById(id).style.display=mostrar?'':'none'; });
-  aM('mlead');
-}
-
-async function salvarLead(){
-  var nome = document.getElementById('lead-nome').value.trim();
-  var tel  = document.getElementById('lead-tel').value.trim();
-  var lconsEl = document.getElementById('lead-cons');
-  var cons = lconsEl.disabled ? S.u : (lconsEl.value||S.u);
-  if(!nome){ toast('Preencha o nome.','er'); return; }
-  if(!tel){  toast('Preencha o telefone.','er'); return; }
-  if(!cons){ toast('Selecione a consultora.','er'); return; }
-  var id = document.getElementById('lead-id').value;
-  var status = document.getElementById('lead-status').value;
-  var dados = {
-    id: id||'',
-    data: new Date().toISOString().split('T')[0],
-    consultora: cons,
-    nome: nome,
-    cpf: document.getElementById('lead-cpf').value,
-    convenio: document.getElementById('lead-conv').value,
-    telefone: tel,
-    status: status,
-    anotacoes: document.getElementById('lead-anotacoes').value,
-    retornoData: document.getElementById('lead-retorno-data').value,
-    retornoHora: document.getElementById('lead-retorno-hora').value,
-    retornoObs: document.getElementById('lead-retorno-obs').value,
-    origem: document.getElementById('lead-origem').value,
-    totalContatos: id ? ((S.leads||[]).find(function(x){return x.id===id;})||{}).totalContatos||'0' : '0',
-    ultimoContato: id ? ((S.leads||[]).find(function(x){return x.id===id;})||{}).ultimoContato||'' : '',
-    ultimoResultado: id ? ((S.leads||[]).find(function(x){return x.id===id;})||{}).ultimoResultado||'' : '',
-    atualizadoPor: S.u
-  };
-  var btn = document.getElementById('btn-salvar-lead');
-  btn.disabled=true; btn.textContent='Salvando...';
-  try{
-    var acao = id ? 'atualizarLead' : 'criarLead';
-    var r = await callApi(acao, {dados: dados});
-    if(r.status==='ok'){
-      toast(id?'Lead atualizado!':'Lead cadastrado!','ok');
-      fM('mlead');
-      await load();
-      rLeads();
-    } else throw new Error(r.mensagem||'Erro');
-  }catch(e){ toast('Erro: '+e.message,'er'); }
-  finally{ btn.disabled=false; btn.textContent='Salvar Lead'; }
-}
-
-async function deletarLead(id){
-  if(!confirm('Excluir este lead?')) return;
-  try{
-    var r = await callApi('excluirLead', {id: id});
-    if(r.status==='ok'){ toast('Lead excluído.','ok'); await load(); rLeads(); }
-    else throw new Error(r.mensagem||'Erro');
-  }catch(e){ toast('Erro: '+e.message,'er'); }
-}
-
-// ── CONTATO ──
-function abrirContato(id){
-  var l = (S.leads||[]).find(function(x){ return x.id===id; });
-  if(!l){ toast('Lead não encontrado.','er'); return; }
-  document.getElementById('contato-lead-id').value = id;
-  document.getElementById('contato-nome-display').textContent = l.nome;
-  var tels = '';
-  if(l.telefone) tels += '<a href="https://wa.me/55'+((l.telefone||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok);margin-right:12px">📱 '+X(l.telefone)+'</a>';
-  if(l.telefone2) tels += '<a href="https://wa.me/55'+((l.telefone2||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok);margin-right:12px">📱 '+X(l.telefone2)+'</a>';
-  if(l.telefone3) tels += '<a href="https://wa.me/55'+((l.telefone3||'').replace(/\D/g,''))+'" target="_blank" style="color:var(--ok)">📱 '+X(l.telefone3)+'</a>';
-  document.getElementById('contato-tel-display').innerHTML = tels || '—';
-  document.getElementById('contato-resultado').value = 'contatado';
-  document.getElementById('contato-obs').value = '';
-  document.getElementById('contato-retorno-data').value = '';
-  document.getElementById('contato-retorno-hora').value = '';
-  document.getElementById('contato-retorno-obs').value = '';
-  ['fi-cont-retorno-data','fi-cont-retorno-hora','fi-cont-retorno-obs'].forEach(function(id){ document.getElementById(id).style.display='none'; });
-  aM('mcontato');
-}
-
-async function salvarContato(){
-  var id = document.getElementById('contato-lead-id').value;
-  var resultado = document.getElementById('contato-resultado').value;
-  var obs = document.getElementById('contato-obs').value.trim();
-  var l = (S.leads||[]).find(function(x){ return x.id===id; });
-  if(!l){ toast('Lead não encontrado.','er'); return; }
-  var hojeStr = new Date().toISOString().split('T')[0];
-  var totalContatos = (parseInt(l.totalContatos||'0')+1).toString();
-  var dados = Object.assign({}, l, {
-    status: resultado,
-    totalContatos: totalContatos,
-    ultimoContato: hojeStr,
-    ultimoResultado: resultado,
-    anotacoes: obs ? (l.anotacoes ? l.anotacoes+' | '+hojeStr+': '+obs : hojeStr+': '+obs) : l.anotacoes,
-    retornoData: (resultado==='retornar'||resultado==='interesse') ? document.getElementById('contato-retorno-data').value : '',
-    retornoHora: (resultado==='retornar'||resultado==='interesse') ? document.getElementById('contato-retorno-hora').value : '',
-    retornoObs:  (resultado==='retornar'||resultado==='interesse') ? document.getElementById('contato-retorno-obs').value : '',
-    atualizadoPor: S.u
-  });
-  var btn = document.getElementById('btn-salvar-contato');
-  btn.disabled=true; btn.textContent='Salvando...';
-  try{
-    var r = await callApi('atualizarLead', {dados: dados});
-    if(r.status==='ok'){
-      if(resultado==='fechado') toast('✅ Lead fechado! Cadastre a proposta agora.','ok');
-      else toast('Contato registrado!','ok');
-      fM('mcontato');
-      await load();
-      rLeads();
-    } else throw new Error(r.mensagem||'Erro');
-  }catch(e){ toast('Erro: '+e.message,'er'); }
-  finally{ btn.disabled=false; btn.textContent='📞 Registrar Contato'; }
-}
-
-// ── IMPORTAR CSV ──
-function abrirImportarLeads(){
-  var html = '<div class="mov ab" id="mimport" style="z-index:999">'+
-    '<div class="modal" style="max-width:600px">'+
-      '<div class="mhd"><div class="mtit">&#128229; Importar Leads via CSV</div><button class="mx" id="mimport-x">✕</button></div>'+
-      '<div class="mbody">'+
-        '<div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px">'+
-          '<strong>Formato esperado do CSV:</strong><br>'+
-          'Colunas na ordem: <code>nome, cpf, convenio, telefone, anotacoes</code><br>'+
-          'Separador: <strong>ponto e vírgula (;)</strong> — salve como CSV UTF-8<br>'+
-          'A primeira linha pode ser cabeçalho (será ignorada se não for dados).'+
-        '</div>'+
-        '<div class="fi" style="margin-bottom:12px">'+
-          '<label>Consultora Responsável</label>'+
-          '<select id="import-cons"><option value="">Selecione...</option><option>Ana Lucia</option><option>Tatielle</option><option>Nicoly</option></select>'+
-        '</div>'+
-        '<div class="fi">'+
-          '<label>Arquivo CSV</label>'+
-          '<input type="file" id="import-file" accept=".csv,.txt" style="background:#fff;padding:8px">'+
-        '</div>'+
-        '<div id="import-preview" style="margin-top:12px"></div>'+
-      '</div>'+
-      '<div class="mft">'+
-        '<button class="bcn" id="mimport-can">Cancelar</button>'+
-        '<button class="bsv" onclick="previewCSV()" style="background:var(--azul)">👁 Preview</button>'+
-        '<button class="bsv" id="btn-importar" onclick="executarImport()" style="display:none">📥 Importar</button>'+
-      '</div>'+
-    '</div>'+
-  '</div>';
-  document.body.insertAdjacentHTML('beforeend', html);
-  document.getElementById('import-file').addEventListener('change', previewCSV);
-  document.getElementById('mimport-x').addEventListener('click', function(){ document.getElementById('mimport').remove(); });
-  document.getElementById('mimport-can').addEventListener('click', function(){ document.getElementById('mimport').remove(); });
-}
-
-var _csvLeadsParaImportar = [];
-
-function previewCSV(){
-  var file = document.getElementById('import-file').files[0];
-  var cons = document.getElementById('import-cons').value;
-  if(!file){ toast('Selecione um arquivo.','er'); return; }
-  if(!cons){ toast('Selecione a consultora.','er'); return; }
-  var reader = new FileReader();
-  reader.onload = function(e){
-    var text = e.target.result;
-    var lines = text.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(function(l){ return l; });
-    var leads = [];
-    // Detectar se primeira linha é cabeçalho
-    var startIdx = 0;
-    var firstLine = lines[0].toLowerCase();
-    if(firstLine.includes('nome') || firstLine.includes('cpf') || firstLine.includes('telefone')) startIdx = 1;
-    lines.slice(startIdx).forEach(function(line){
-      var cols = line.split(';');
-      if(cols.length >= 1 && cols[0].trim()){
-        leads.push({
-          nome: (cols[0]||'').trim(),
-          cpf:  (cols[1]||'').trim(),
-          convenio: (cols[2]||'').trim(),
-          telefone: (cols[3]||'').trim(),
-          telefone2: (cols[4]||'').trim(),
-          telefone3: (cols[5]||'').trim(),
-          anotacoes: (cols[6]||'').trim(),
-          consultora: cons,
-          status: 'novo'
-        });
-      }
-    });
-    _csvLeadsParaImportar = leads;
-    var preview = document.getElementById('import-preview');
-    if(!leads.length){ preview.innerHTML='<div style="color:var(--perigo)">Nenhum lead encontrado no arquivo.</div>'; return; }
-    preview.innerHTML =
-      '<div style="margin-bottom:8px;font-weight:600;color:var(--azul)">'+leads.length+' leads encontrados — preview dos primeiros 5:</div>'+
-      '<div style="max-height:200px;overflow-y:auto;border:1px solid var(--cinza-brd);border-radius:8px;overflow:hidden">'+
-        '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;background:var(--azul);color:#fff;font-size:11px;font-weight:700;padding:8px 12px;text-transform:uppercase">'+
-          '<span>Nome</span><span>Telefone</span><span>Convênio</span><span>CPF</span>'+
-        '</div>'+
-        leads.slice(0,5).map(function(l){
-          return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:8px 12px;border-bottom:1px solid var(--cinza-brd);font-size:12px">'+
-            '<span>'+X(l.nome)+'</span><span>'+X(l.telefone)+'</span><span>'+X(l.convenio)+'</span><span>'+X(l.cpf)+'</span>'+
-          '</div>';
-        }).join('')+
-      '</div>';
-    document.getElementById('btn-importar').style.display = 'block';
-  };
-  reader.readAsText(file, 'UTF-8');
-}
-
-async function executarImport(){
-  if(!_csvLeadsParaImportar.length){ toast('Nenhum lead para importar.','er'); return; }
-  var btn = document.getElementById('btn-importar');
-  btn.disabled=true; btn.textContent='Importando...';
-  try{
-    // Importar em lotes de 50 para não sobrecarregar a API
-    var lote = 10, total = 0;
-    for(var i=0; i<_csvLeadsParaImportar.length; i+=lote){
-      var batch = _csvLeadsParaImportar.slice(i, i+lote);
-      var p = new URLSearchParams({acao:'importarLeads', dados: JSON.stringify(batch)});
-      var r = await fetch(API+'?'+p.toString());
-      var res = await r.json();
-      if(res.status==='ok') total += res.criados||batch.length;
-      else throw new Error(res.mensagem||'Erro no lote');
-    }
-    toast('✅ '+total+' leads importados!','ok');
-    document.getElementById('mimport').remove();
-    await load();
-    rLeads();
-  }catch(e){ toast('Erro: '+e.message,'er'); btn.disabled=false; btn.textContent='📥 Importar'; }
-}
-
-function verificarLeadsBadge(){
-  atualizarLeadsBadge(S.leads||[]);
-  setTimeout(verificarLeadsBadge, 300000);
 }
 
 </script>
